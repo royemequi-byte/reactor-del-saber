@@ -10,6 +10,10 @@ import {
   reportarResultado, escucharEstudiantes,
   escucharEstadoSala, cerrarSala, obtenerGradoSala
 } from './sala.js';
+import { renderRelacionar } from './tipos/relacionar.js';
+import { renderOrdenar }    from './tipos/ordenar.js';
+import { renderCrucigrama } from './tipos/crucigrama.js';
+import { renderClasifica }  from './tipos/clasifica.js';
 
 // ─── NAVEGACIÓN ────────────────────────────────────────────────────────────
 export function irA(id) {
@@ -284,10 +288,24 @@ function mostrarPregunta() {
   const etiquetas = { quimica: '⚗️ Química', fisica: '⚡ Física', biologia: '🌿 Biología', razonamiento: '🧠 Razonamiento' };
   document.getElementById('tipo-pregunta').textContent = etiquetas[p.materia] || p.materia;
 
+  // Etiqueta de formato si no es selección clásica
+  const tipoLabel = document.getElementById('tipo-formato-label');
+  const formatoLabel = {
+    relacionar:  '🔗 Relacionar',
+    ordenar:     '🔢 Ordenar',
+    crucigrama:  '📝 Crucigrama',
+    clasifica:   '📂 Clasificar',
+  };
+  if (tipoLabel) {
+    const fmt = formatoLabel[p.tipo];
+    tipoLabel.textContent = fmt || '';
+    tipoLabel.classList.toggle('oculto', !fmt);
+  }
+
   // Enunciado
   document.getElementById('enunciado').textContent = p.enunciado;
 
-  // Imagen (opcional) — URLs absolutas (Firebase) o relativas al public/
+  // Imagen (opcional)
   const imgEl = document.getElementById('img-pregunta');
   if (p.imagen) {
     imgEl.src = p.imagen.startsWith('http') ? p.imagen : (import.meta.env.BASE_URL + p.imagen);
@@ -297,52 +315,68 @@ function mostrarPregunta() {
     imgEl.classList.add('oculto');
   }
 
-  // Opciones
+  // Área de interacción
   const grid = document.getElementById('opciones-grid');
   grid.innerHTML = '';
-  const letras = ['A', 'B', 'C', 'D'];
-  p.opciones.forEach((op, i) => {
-    const btn = document.createElement('button');
-    btn.className = 'opcion-btn';
-    btn.innerHTML = `<strong>${letras[i]}.</strong> ${op}`;
-    btn.addEventListener('click', () => responder(i));
-    grid.appendChild(btn);
-  });
+  grid.className = 'opciones-grid';
+
+  const tipo = p.tipo || 'seleccion';
+
+  if (tipo === 'seleccion') {
+    const letras = ['A', 'B', 'C', 'D'];
+    p.opciones.forEach((op, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'opcion-btn';
+      btn.innerHTML = `<strong>${letras[i]}.</strong> ${op}`;
+      btn.addEventListener('click', () => responder(i));
+      grid.appendChild(btn);
+    });
+  } else {
+    grid.classList.add('tipo-interactivo');
+    const renderFn = { relacionar: renderRelacionar, ordenar: renderOrdenar,
+                       crucigrama: renderCrucigrama, clasifica: renderClasifica }[tipo];
+    if (renderFn) renderFn(p, grid, procesarRespuesta);
+  }
 
   // Barra del reactor
   const progreso = (estado.preguntaActual / 29) * 100;
   document.getElementById('reactor-bar').style.width = progreso + '%';
 
-  // Audio: timbre según materia y BPM según progreso
   setMateria(p.materia);
   setProgreso(estado.preguntaActual + 1);
-
-  // Racha
   actualizarRacha();
-
-  // Reiniciar reloj
   reiniciarReloj();
 }
 
-// ─── RESPONDER ─────────────────────────────────────────────────────────────
+// ─── RESPONDER (selección múltiple) ────────────────────────────────────────
 function responder(indiceElegido) {
   detenerReloj();
   const p = estado.preguntas[estado.preguntaActual];
   const correcta = indiceElegido === p.correcta;
 
-  // Deshabilitar todas las opciones
   document.querySelectorAll('.opcion-btn').forEach((btn, i) => {
     btn.disabled = true;
     if (i === p.correcta)    btn.classList.add('correcta');
     if (i === indiceElegido && !correcta) btn.classList.add('incorrecta');
   });
 
-  // Calcular puntaje
+  procesarRespuesta(correcta);
+}
+
+// ─── PROCESAR RESPUESTA (todos los tipos) ─────────────────────────────────
+function procesarRespuesta(esCorrecta) {
+  detenerReloj();
+  const p = estado.preguntas[estado.preguntaActual];
+  const tipo = p?.tipo || 'seleccion';
+
   let pts = 0;
-  if (correcta) {
+  if (esCorrecta) {
     pts = 100;
-    const bonusVelocidad = Math.round((estado.tiempoRestante / 30) * 50);
-    pts += bonusVelocidad;
+    // Bonus de velocidad solo en selección múltiple
+    if (tipo === 'seleccion') {
+      const tiempoBase = p?.tiempo || 30;
+      pts += Math.round((estado.tiempoRestante / tiempoBase) * 50);
+    }
     pts = Math.round(pts * estado.multiplicador);
 
     tocarAcierto();
@@ -352,17 +386,14 @@ function responder(indiceElegido) {
     else if (estado.racha >= 3) estado.multiplicador = 1.5;
     else                        estado.multiplicador = 1;
 
-    // Sonido de racha al alcanzar hitos
     if (estado.racha === 3) tocarRacha(1);
     if (estado.racha === 5) tocarRacha(2);
     if (estado.racha === 8) tocarRacha(3);
 
-    // Audio: actualizar capa de energía
     setRacha(estado.racha);
 
-    // Contar aciertos por bloque
     if (p.materia === 'razonamiento') estado.aciertos.razonamiento++;
-    else estado.aciertos.ciencias++; // química + física + biología
+    else estado.aciertos.ciencias++;
   } else {
     tocarError();
     estado.racha = 0;
@@ -371,10 +402,9 @@ function responder(indiceElegido) {
   }
 
   estado.puntaje += pts;
-  estado.respuestas.push({ correcta, puntaje: pts });
+  estado.respuestas.push({ correcta: esCorrecta, puntaje: pts });
 
-  // Ir a retroalimentación después de 600ms (para ver el color)
-  setTimeout(() => mostrarRetro(correcta, pts, p.explicacion), 600);
+  setTimeout(() => mostrarRetro(esCorrecta, pts, p?.explicacion || ''), 600);
 }
 
 // ─── RETROALIMENTACIÓN ─────────────────────────────────────────────────────
@@ -407,7 +437,8 @@ function iniciarReloj() {
 
 function reiniciarReloj() {
   detenerReloj();
-  estado.tiempoRestante = 30;
+  const p = estado.preguntas[estado.preguntaActual];
+  estado.tiempoRestante = p?.tiempo || 30;
   actualizarDisplayReloj();
   intervaloReloj = setInterval(() => {
     estado.tiempoRestante--;
@@ -416,7 +447,14 @@ function reiniciarReloj() {
     actualizarDisplayReloj();
     if (estado.tiempoRestante <= 0) {
       detenerReloj();
-      responder(-1); // -1 = tiempo agotado (ninguna opción)
+      const tipoActual = estado.preguntas[estado.preguntaActual]?.tipo || 'seleccion';
+      if (tipoActual === 'seleccion') {
+        responder(-1); // tiempo agotado → incorrecto
+      } else {
+        // Deshabilitar controles de tipos interactivos
+        document.querySelectorAll('.rel-item, .ord-item, .clas-item, .tipo-confirmar').forEach(el => { el.disabled = true; });
+        procesarRespuesta(false);
+      }
     }
   }, 1000);
 }
@@ -434,11 +472,12 @@ function actualizarDisplayReloj() {
 // ─── PODERES ───────────────────────────────────────────────────────────────
 document.getElementById('poder-catalizador').addEventListener('click', () => {
   if (!estado.poderes.catalizador) return;
+  const p = estado.preguntas[estado.preguntaActual];
+  if ((p?.tipo || 'seleccion') !== 'seleccion') return; // solo para selección múltiple
   estado.poderes.catalizador = false;
   document.getElementById('poder-catalizador').disabled = true;
   tocarPoder('catalizador');
 
-  const p = estado.preguntas[estado.preguntaActual];
   const botones = document.querySelectorAll('.opcion-btn:not(:disabled)');
   let eliminados = 0;
   botones.forEach((btn, i) => {

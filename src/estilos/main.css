@@ -1292,3 +1292,304 @@ body {
   font-size: 0.82rem;
   margin-top: 6px;
 }
+
+/* ══════════════════════════════════════════════════════════════════════════
+   TIPOS INTERACTIVOS DE PREGUNTA
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* Etiqueta de formato (🔗 Relacionar, 🔢 Ordenar, etc.) */
+.tipo-pregunta-row {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+}
+.tipo-formato-label {
+  background: rgba(255,214,0,0.15);
+  border: 1px solid var(--amarillo);
+  border-radius: 20px;
+  color: var(--amarillo);
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 3px 12px;
+  letter-spacing: 0.06em;
+}
+
+/* Grid en modo interactivo ocupa más espacio */
+.opciones-grid.tipo-interactivo {
+  display: flex; flex-direction: column; gap: 12px;
+  width: 100%; max-width: 760px;
+  grid-template-columns: unset;
+}
+
+/* Botón de confirmar compartido */
+.tipo-confirmar {
+  margin-top: 10px; align-self: center;
+  padding: 13px 32px; font-size: 1rem; font-weight: 700;
+  border-radius: 30px; border: 2px solid var(--cian);
+  background: rgba(0,229,255,0.1); color: var(--cian);
+  cursor: pointer; transition: background 0.2s, box-shadow 0.2s;
+  letter-spacing: 0.04em;
+}
+.tipo-confirmar:not(:disabled):hover {
+  background: rgba(0,229,255,0.2);
+  box-shadow: 0 0 20px rgba(0,229,255,0.4);
+}
+.tipo-confirmar:disabled { opacity: 0.35; cursor: not-allowed; }
+
+/* ── RELACIONAR ──────────────────────────────────────────────────────────── */
+.rel-instruccion {
+  font-size: 0.85rem; color: #8ab; text-align: center; margin-bottom: 4px;
+}
+
+.rel-wrapper {
+  display: flex; gap: 14px; width: 100%;
+}
+
+.rel-col {
+  display: flex; flex-direction: column; gap: 10px; flex: 1;
+}
+
+.rel-item {
+  background: var(--gris);
+  border: 2px solid #3a5070;
+  border-radius: 10px;
+  color: var(--blanco);
+  padding: 12px 14px;
+  font-size: 0.9rem;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s, color 0.15s;
+  line-height: 1.35;
+  font-family: inherit;
+}
+.rel-item:hover { border-color: var(--cian); }
+.rel-sel {
+  border-color: var(--amarillo) !important;
+  color: var(--amarillo) !important;
+  background: rgba(255,214,0,0.12) !important;
+  box-shadow: 0 0 10px rgba(255,214,0,0.3);
+}
+
+@keyframes rel-shake {
+  0%,100% { transform: translateX(0); }
+  25%      { transform: translateX(-6px); }
+  75%      { transform: translateX(6px); }
+}
+.rel-shake { animation: rel-shake 0.3s ease; }
+
+@media (max-width: 600px) {
+  .rel-item { font-size: 0.78rem; padding: 9px 10px; }
+}
+
+/* ── ORDENAR ─────────────────────────────────────────────────────────────── */
+.ord-instruccion {
+  font-size: 0.85rem; color: #8ab; text-align: center;
+}
+
+.ord-wrapper {
+  display: flex; flex-direction: column; gap: 10px; width: 100%;
+}
+
+.ord-item {
+  position: relative;
+  background: var(--gris);
+  border: 2px solid #3a5070;
+  border-radius: 10px;
+  color: var(--blanco);
+  padding: 13px 16px 13px 44px;
+  font-size: 0.9rem;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+  font-family: inherit;
+  line-height: 1.35;
+}
+.ord-item:not(:disabled):hover { border-color: var(--cian); background: #0d2a40; }
+.ord-item.ord-sel {
+  border-color: var(--cian);
+  background: rgba(0,229,255,0.1);
+  cursor: default;
+}
+.ord-item.ord-ok  { border-color: var(--verde); background: #0d2a14; color: var(--verde); }
+.ord-item.ord-mal { border-color: var(--error); background: #2a0d0d; color: var(--error); }
+.ord-item:disabled { cursor: default; }
+
+.ord-badge {
+  position: absolute;
+  left: 10px; top: 50%;
+  transform: translateY(-50%);
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  background: var(--cian);
+  color: #000;
+  font-size: 0.85rem;
+  font-weight: 900;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.ord-acciones {
+  display: flex; gap: 12px; justify-content: center; margin-top: 4px;
+}
+
+/* ── CRUCIGRAMA ──────────────────────────────────────────────────────────── */
+.cruce-pistas {
+  display: flex; gap: 20px; flex-wrap: wrap;
+  width: 100%; margin-bottom: 12px;
+  background: rgba(0,229,255,0.05);
+  border: 1px solid #2a4060;
+  border-radius: 10px;
+  padding: 12px 16px;
+}
+.cruce-pistas-col { flex: 1; min-width: 180px; }
+.cruce-pistas-col strong { color: var(--cian); font-size: 0.85rem; display: block; margin-bottom: 6px; }
+.cruce-pistas-col ol { padding-left: 18px; }
+.cruce-pistas-col li { font-size: 0.8rem; color: #b0c8d8; line-height: 1.5; margin-bottom: 4px; }
+
+.cruce-grid {
+  border-collapse: collapse;
+  margin: 0 auto 10px;
+  font-size: 0;
+}
+.cruce-td {
+  width: 40px; height: 40px;
+  padding: 0;
+}
+.cruce-bloqueada {
+  background: #0a1220;
+  border: 1px solid #0d1a2e;
+}
+.cruce-td:not(.cruce-bloqueada) {
+  position: relative;
+  border: 1px solid #2a4060;
+  background: var(--gris);
+}
+
+.cruce-num {
+  position: absolute;
+  top: 1px; left: 3px;
+  font-size: 9px;
+  color: var(--cian);
+  font-weight: 700;
+  line-height: 1;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.cruce-input {
+  position: absolute;
+  inset: 0;
+  width: 100%; height: 100%;
+  background: transparent;
+  border: none;
+  color: var(--blanco);
+  font-size: 1.1rem;
+  font-weight: 700;
+  text-align: center;
+  text-transform: uppercase;
+  caret-color: var(--cian);
+  outline: none;
+  padding-top: 6px;
+  font-family: 'Segoe UI', monospace, sans-serif;
+}
+.cruce-input:focus { background: rgba(0,229,255,0.12); }
+.cruce-activa      { background: rgba(0,229,255,0.08) !important; }
+.cruce-ok          {
+  background: rgba(57,255,20,0.12) !important;
+  color: var(--verde) !important;
+}
+
+.cruce-progreso {
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--cian);
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+@media (max-width: 480px) {
+  .cruce-td { width: 32px; height: 32px; }
+  .cruce-input { font-size: 0.95rem; }
+}
+
+/* ── CLASIFICA ───────────────────────────────────────────────────────────── */
+.clas-instruccion {
+  font-size: 0.85rem; color: #8ab; text-align: center;
+}
+
+.clas-categorias {
+  display: grid; gap: 12px; width: 100%; margin-bottom: 12px;
+}
+
+.clas-zona {
+  background: rgba(0,229,255,0.04);
+  border: 2px dashed #3a5070;
+  border-radius: 12px;
+  padding: 12px;
+  min-height: 80px;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+.clas-zona:hover { border-color: var(--cian); background: rgba(0,229,255,0.08); }
+
+.clas-zona-titulo {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--cian);
+  text-align: center;
+  margin-bottom: 8px;
+  letter-spacing: 0.04em;
+}
+
+.clas-zona-lista {
+  display: flex; flex-wrap: wrap; gap: 6px;
+  min-height: 32px;
+}
+
+.clas-chip {
+  background: rgba(0,229,255,0.15);
+  border: 1px solid var(--cian);
+  border-radius: 6px;
+  padding: 5px 10px;
+  font-size: 0.78rem;
+  color: var(--cian);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.clas-chip:hover { background: rgba(0,229,255,0.28); }
+.clas-chip.clas-ok  { border-color: var(--verde); color: var(--verde); background: rgba(57,255,20,0.12); }
+.clas-chip.clas-mal { border-color: var(--error); color: var(--error); background: rgba(255,68,68,0.12); }
+
+.clas-pool {
+  display: flex; flex-wrap: wrap; gap: 8px;
+  width: 100%; margin-bottom: 8px;
+  padding: 10px;
+  background: rgba(0,0,0,0.2);
+  border: 1px solid #2a3a50;
+  border-radius: 10px;
+}
+
+.clas-item {
+  background: var(--gris);
+  border: 2px solid #3a5070;
+  border-radius: 8px;
+  color: var(--blanco);
+  padding: 8px 14px;
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition: border-color 0.15s, opacity 0.2s;
+  font-family: inherit;
+  text-align: center;
+}
+.clas-item:hover { border-color: var(--cian); }
+.clas-item-sel {
+  border-color: var(--amarillo) !important;
+  color: var(--amarillo) !important;
+  background: rgba(255,214,0,0.12) !important;
+}
+.clas-usado {
+  opacity: 0.2;
+  pointer-events: none;
+}
+
+@media (max-width: 480px) {
+  .clas-categorias { grid-template-columns: 1fr !important; }
+  .clas-item { font-size: 0.75rem; padding: 7px 10px; }
+}

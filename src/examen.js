@@ -40,6 +40,10 @@ export function armarExamen(estudiante, gradoSala = null) {
 }
 
 function barajarOpciones(pregunta) {
+  // Los tipos interactivos no usan opciones/correcta clásicos
+  if (!pregunta.opciones || (pregunta.tipo && pregunta.tipo !== 'seleccion')) {
+    return pregunta;
+  }
   const opcionCorrecta   = pregunta.opciones[pregunta.correcta];
   const opcionesBarajadas = barajar(pregunta.opciones);
   return {
