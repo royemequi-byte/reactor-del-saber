@@ -1,5 +1,6 @@
 // examen.js — arma las 29 preguntas aleatorias de cada examen
 import { barajar, elegirN } from './azar.js';
+import { generarPreguntas10 } from './razonamiento/index.js';
 
 // Carga el banco desde el JSON (Vite lo importa como módulo)
 import bancoBruto from '../data/banco-preguntas.json';
@@ -31,8 +32,8 @@ export function armarExamen(estudiante) {
   // Elegir 19 preguntas de ciencias al azar (química + física + biología)
   const ciencias = elegirN(bancoPrioritario, 19);
 
-  // Las 10 de razonamiento (en Fase 3 se reemplaza por generadores reales)
-  const razonamiento = generarRazonamientoPlaceholder(10);
+  // Las 10 de razonamiento — generadas por código, siempre distintas
+  const razonamiento = generarPreguntas10();
 
   // Mezclar las 29 intercalando bloques
   const todas = barajar([...ciencias, ...razonamiento]);
@@ -70,38 +71,3 @@ export function guardarHistorial(estudiante, preguntas) {
   localStorage.setItem(clave, JSON.stringify(nuevo));
 }
 
-/**
- * Placeholder de razonamiento para Fase 1-2.
- * En Fase 3 se reemplaza por los generadores reales.
- */
-function generarRazonamientoPlaceholder(cantidad) {
-  const temas = [
-    { subtipo: 'secuencias', contenido: 'Tabla periódica' },
-    { subtipo: 'abstracto',  contenido: 'Propiedades de la materia' },
-    { subtipo: 'crucigrama', contenido: 'Célula' },
-    { subtipo: 'codigos',    contenido: 'Reacciones químicas' },
-    { subtipo: 'emparejamiento', contenido: 'Ecosistema' },
-    { subtipo: 'rompecabezas',   contenido: 'Organismo' },
-    { subtipo: 'secuencias', contenido: 'Nomenclatura básica' },
-    { subtipo: 'abstracto',  contenido: 'Célula' },
-    { subtipo: 'codigos',    contenido: 'Tabla periódica' },
-    { subtipo: 'emparejamiento', contenido: 'Reacciones químicas' }
-  ];
-
-  return temas.slice(0, cantidad).map((t, i) => ({
-    id: `RAZ-PH-${i + 1}`,
-    materia: 'razonamiento',
-    tema: t.contenido,
-    subtipo: t.subtipo,
-    grado: null,
-    dificultad: 2,
-    enunciado: `[Razonamiento — ${t.subtipo} sobre ${t.contenido}]\n⚙️ Este generador se activa en la Fase 3.`,
-    opciones: ['Opción A', 'Opción B', 'Opción C', 'Opción D'],
-    correcta: 0,
-    explicacion: 'Las preguntas de razonamiento se generan en la Fase 3.',
-    imagen: null,
-    autor: 'ia',
-    activa: true,
-    tipo: 'razonamiento'
-  }));
-}
