@@ -1,6 +1,8 @@
 // main.js — arranque, navegación y lógica de pantallas
 import { estado, resetearEstado } from './estado.js';
 import { armarExamen, guardarHistorial } from './examen.js';
+import { iniciarAudio, setVolumen, toggleSilencio, setMateria, setRacha, setProgreso, setTiempoRestante } from './audio/motor-audio.js';
+import { tocarAcierto, tocarError, tocarRacha, tocarPoder, tocarFanfarra, tocarIntro } from './audio/efectos.js';
 
 // ─── NAVEGACIÓN ────────────────────────────────────────────────────────────
 export function irA(id) {
@@ -35,6 +37,7 @@ export function irA(id) {
 
 // ─── PORTADA ───────────────────────────────────────────────────────────────
 document.getElementById('btn-entrar').addEventListener('click', () => {
+  iniciarAudio(); // primer clic del usuario: el navegador ya permite audio
   irA('pantalla-registro');
 });
 
@@ -69,6 +72,7 @@ function iniciarExamen() {
   estado.preguntaActual = 0;
 
   irA('pantalla-examen');
+  tocarIntro();
   mostrarPregunta();
   iniciarReloj();
 }
@@ -104,6 +108,10 @@ function mostrarPregunta() {
   const progreso = (estado.preguntaActual / 29) * 100;
   document.getElementById('reactor-bar').style.width = progreso + '%';
 
+  // Audio: timbre según materia y BPM según progreso
+  setMateria(p.materia);
+  setProgreso(estado.preguntaActual + 1);
+
   // Racha
   actualizarRacha();
 
@@ -132,18 +140,29 @@ function responder(indiceElegido) {
     pts += bonusVelocidad;
     pts = Math.round(pts * estado.multiplicador);
 
+    tocarAcierto();
     estado.racha++;
     if      (estado.racha >= 8) estado.multiplicador = 3;
     else if (estado.racha >= 5) estado.multiplicador = 2;
     else if (estado.racha >= 3) estado.multiplicador = 1.5;
     else                        estado.multiplicador = 1;
 
+    // Sonido de racha al alcanzar hitos
+    if (estado.racha === 3) tocarRacha(1);
+    if (estado.racha === 5) tocarRacha(2);
+    if (estado.racha === 8) tocarRacha(3);
+
+    // Audio: actualizar capa de energía
+    setRacha(estado.racha);
+
     // Contar aciertos por bloque
     if (p.materia === 'razonamiento') estado.aciertos.razonamiento++;
     else estado.aciertos.ciencias++; // química + física + biología
   } else {
+    tocarError();
     estado.racha = 0;
     estado.multiplicador = 1;
+    setRacha(0);
   }
 
   estado.puntaje += pts;
@@ -188,6 +207,7 @@ function reiniciarReloj() {
   intervaloReloj = setInterval(() => {
     estado.tiempoRestante--;
     estado.tiempoTotal++;
+    setTiempoRestante(estado.tiempoRestante);
     actualizarDisplayReloj();
     if (estado.tiempoRestante <= 0) {
       detenerReloj();
@@ -211,6 +231,7 @@ document.getElementById('poder-catalizador').addEventListener('click', () => {
   if (!estado.poderes.catalizador) return;
   estado.poderes.catalizador = false;
   document.getElementById('poder-catalizador').disabled = true;
+  tocarPoder('catalizador');
 
   const p = estado.preguntas[estado.preguntaActual];
   const botones = document.querySelectorAll('.opcion-btn:not(:disabled)');
@@ -228,6 +249,7 @@ document.getElementById('poder-reposo').addEventListener('click', () => {
   if (!estado.poderes.reposo) return;
   estado.poderes.reposo = false;
   document.getElementById('poder-reposo').disabled = true;
+  tocarPoder('reposo');
   detenerReloj();
   setTimeout(() => reiniciarReloj(), 15000);
 });
@@ -236,6 +258,7 @@ document.getElementById('poder-isotopo').addEventListener('click', () => {
   if (!estado.poderes.isotopo) return;
   estado.poderes.isotopo = false;
   document.getElementById('poder-isotopo').disabled = true;
+  tocarPoder('isotopo');
   // Cambiar por otra pregunta del mismo tema (si existe)
   const actual = estado.preguntas[estado.preguntaActual];
   const candidatos = estado.preguntas.filter(
@@ -252,12 +275,15 @@ document.getElementById('poder-isotopo').addEventListener('click', () => {
 
 // ─── SILENCIO / VOLUMEN ────────────────────────────────────────────────────
 document.getElementById('btn-silencio').addEventListener('click', () => {
-  estado.silencio = !estado.silencio;
-  document.getElementById('btn-silencio').textContent = estado.silencio ? '🔇' : '🔊';
+  const ahora = toggleSilencio();
+  estado.silencio = ahora;
+  document.getElementById('btn-silencio').textContent = ahora ? '🔇' : '🔊';
 });
 
 document.getElementById('ctrl-volumen').addEventListener('input', (e) => {
-  estado.volumen = parseFloat(e.target.value);
+  const v = parseFloat(e.target.value);
+  estado.volumen = v;
+  setVolumen(v);
 });
 
 // ─── FINALIZAR EXAMEN ──────────────────────────────────────────────────────
@@ -266,6 +292,11 @@ function finalizarExamen() {
   const nota = calcularNota();
   mostrarResultados(nota);
   guardarEnRanking(nota);
+  const ranking = JSON.parse(localStorage.getItem('ranking') || '[]');
+  const puesto = ranking.findIndex(r =>
+    r.nombre === estado.estudiante.nombre && r.puntaje === estado.puntaje
+  ) + 1;
+  tocarFanfarra(puesto >= 1 && puesto <= 3 ? puesto : 0);
   irA('pantalla-resultados');
 }
 
