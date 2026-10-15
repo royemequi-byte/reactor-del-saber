@@ -998,9 +998,10 @@ body {
 .btn-accion:hover { opacity: 0.82; }
 .btn-accion.verde  { background: var(--verde);    color: #000; }
 .btn-accion.cian   { background: var(--cian);     color: #000; }
-.btn-accion.rojo   { background: var(--rojo-iti); color: #fff; }
-.btn-accion.gris   { background: var(--gris);     color: var(--blanco); border: 1px solid #4a6080; }
-.btn-accion.chico  { padding: 5px 10px; font-size: 0.8rem; }
+.btn-accion.rojo    { background: var(--rojo-iti);  color: #fff; }
+.btn-accion.amarillo{ background: var(--amarillo); color: #000; }
+.btn-accion.gris    { background: var(--gris);     color: var(--blanco); border: 1px solid #4a6080; }
+.btn-accion.chico   { padding: 5px 10px; font-size: 0.8rem; }
 
 /* Lista scrolleable */
 .admin-lista {
@@ -1306,6 +1307,50 @@ body {
   color: #ff4d4d;
   font-size: 0.82rem;
   margin-top: 6px;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   PANTALLA VISTA PREVIA ADMIN
+   ══════════════════════════════════════════════════════════════════════════ */
+
+.preview-contenido {
+  display: flex; flex-direction: column; gap: 16px;
+  width: min(720px, 100%); padding: 20px;
+}
+
+.preview-header {
+  display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+}
+
+.preview-badge {
+  background: rgba(255,214,0,0.12);
+  border: 1px solid var(--amarillo);
+  border-radius: 20px;
+  color: var(--amarillo);
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 4px 14px;
+  letter-spacing: 0.04em;
+}
+
+.preview-feedback {
+  display: flex; flex-direction: column; gap: 12px;
+  background: rgba(0,229,255,0.04);
+  border: 1px solid #2a4060;
+  border-radius: 14px;
+  padding: 20px;
+  animation: aparecer 0.3s ease;
+}
+
+.preview-fb-titulo {
+  font-size: 1.6rem; font-weight: 900; text-align: center;
+}
+.preview-fb-titulo.fb-ok  { color: var(--verde); text-shadow: var(--sombra-verde); }
+.preview-fb-titulo.fb-mal { color: var(--error); }
+
+.preview-fb-acciones {
+  display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;
+  margin-top: 8px;
 }
 
 /* ══════════════════════════════════════════════════════════════════════════

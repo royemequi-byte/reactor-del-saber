@@ -331,6 +331,37 @@
     </div>
   </section>
 
+  <!-- PANTALLA: VISTA PREVIA ADMIN -->
+  <section id="pantalla-preview" class="pantalla">
+    <div class="preview-contenido">
+
+      <div class="preview-header">
+        <button id="btn-cerrar-preview" class="btn-secundario">← Admin</button>
+        <div class="preview-badge">👁 Vista previa — no afecta puntajes</div>
+      </div>
+
+      <div class="tipo-pregunta-row" style="margin-bottom:8px">
+        <div class="tipo-pregunta" id="preview-materia">Química</div>
+        <div class="tipo-formato-label oculto" id="preview-formato"></div>
+      </div>
+
+      <p class="enunciado" id="preview-enunciado" style="white-space:pre-wrap"></p>
+      <img id="preview-img" class="img-pregunta oculto" alt="Imagen de la pregunta" />
+      <div id="preview-opciones" class="opciones-grid"></div>
+
+      <div id="preview-feedback" class="preview-feedback oculto">
+        <div id="preview-fb-titulo" class="preview-fb-titulo"></div>
+        <div id="preview-correcta-box" class="retro-correcta oculto"></div>
+        <p  id="preview-explicacion"  class="retro-explicacion"></p>
+        <div class="preview-fb-acciones">
+          <button id="btn-preview-retry"  class="btn-accion cian">🔄 Reintentar</button>
+          <button id="btn-preview-volver" class="btn-secundario">← Volver al admin</button>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
   <!-- PANTALLA 7: SUPER ADMIN (oculta, acceso: Ctrl+Shift+A) -->
   <section id="pantalla-admin" class="pantalla">
 

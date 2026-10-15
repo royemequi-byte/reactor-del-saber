@@ -829,3 +829,109 @@ async function sha256(texto) {
   const buffer = await crypto.subtle.digest('SHA-256', data);
   return Array.from(new Uint8Array(buffer)).map(b => b.toString(16).padStart(2, '0')).join('');
 }
+
+// ─── VISTA PREVIA ADMIN ────────────────────────────────────────────────────
+let _preguntaPreview = null;
+
+document.getElementById('btn-cerrar-preview').addEventListener('click', () => {
+  irA('pantalla-admin');
+});
+
+document.getElementById('btn-preview-volver').addEventListener('click', () => {
+  irA('pantalla-admin');
+});
+
+document.getElementById('btn-preview-retry').addEventListener('click', () => {
+  if (_preguntaPreview) iniciarPreview(_preguntaPreview);
+});
+
+function iniciarPreview(p) {
+  _preguntaPreview = p;
+
+  const etiquetas = { quimica: '⚗️ Química', fisica: '⚡ Física', biologia: '🌿 Biología', razonamiento: '🧠 Razonamiento' };
+  document.getElementById('preview-materia').textContent = etiquetas[p.materia] || p.materia;
+
+  const formatoLabel = { relacionar: '🔗 Relacionar', ordenar: '🔢 Ordenar', crucigrama: '📝 Crucigrama', clasifica: '📂 Clasificar' };
+  const fmtEl = document.getElementById('preview-formato');
+  fmtEl.textContent = formatoLabel[p.tipo] || '';
+  fmtEl.classList.toggle('oculto', !p.tipo || p.tipo === 'seleccion');
+
+  document.getElementById('preview-enunciado').textContent = p.enunciado;
+
+  const imgEl = document.getElementById('preview-img');
+  if (p.imagen) {
+    imgEl.src = p.imagen.startsWith('http') ? p.imagen : (import.meta.env.BASE_URL + p.imagen);
+    imgEl.classList.remove('oculto');
+  } else {
+    imgEl.src = '';
+    imgEl.classList.add('oculto');
+  }
+
+  // Ocultar feedback anterior
+  document.getElementById('preview-feedback').classList.add('oculto');
+
+  // Renderizar opciones / tipo interactivo
+  const area = document.getElementById('preview-opciones');
+  area.innerHTML = '';
+  area.className = 'opciones-grid';
+
+  const tipo = p.tipo || 'seleccion';
+
+  const onRespuesta = (esCorrecta) => mostrarPreviewFeedback(p, esCorrecta);
+
+  if (tipo === 'seleccion') {
+    const letras = ['A', 'B', 'C', 'D'];
+    p.opciones.forEach((op, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'opcion-btn';
+      btn.innerHTML = `<strong>${letras[i]}.</strong> ${op}`;
+      btn.addEventListener('click', () => {
+        area.querySelectorAll('.opcion-btn').forEach((b, j) => {
+          b.disabled = true;
+          if (j === p.correcta)              b.classList.add('correcta');
+          if (j === i && i !== p.correcta)   b.classList.add('incorrecta');
+        });
+        setTimeout(() => onRespuesta(i === p.correcta), 1000);
+      });
+      area.appendChild(btn);
+    });
+  } else {
+    area.classList.add('tipo-interactivo');
+    const renderFn = { relacionar: renderRelacionar, ordenar: renderOrdenar,
+                       crucigrama: renderCrucigrama, clasifica: renderClasifica }[tipo];
+    if (renderFn) renderFn(p, area, onRespuesta);
+  }
+
+  irA('pantalla-preview');
+  // Scroll al inicio
+  document.getElementById('pantalla-preview').scrollTo(0, 0);
+}
+
+function mostrarPreviewFeedback(p, esCorrecta) {
+  const titulo = document.getElementById('preview-fb-titulo');
+  titulo.textContent = esCorrecta ? '✅ ¡Correcto!' : '❌ Incorrecto';
+  titulo.className   = 'preview-fb-titulo ' + (esCorrecta ? 'fb-ok' : 'fb-mal');
+
+  const correctaBox = document.getElementById('preview-correcta-box');
+  const tipo = p.tipo || 'seleccion';
+  if (!esCorrecta && tipo === 'seleccion' && p.opciones && p.correcta != null) {
+    correctaBox.innerHTML = `La respuesta correcta era:<br><strong>${p.opciones[p.correcta]}</strong>`;
+    correctaBox.classList.remove('oculto');
+  } else {
+    correctaBox.classList.add('oculto');
+  }
+
+  document.getElementById('preview-explicacion').textContent = p.explicacion || '(sin explicación)';
+
+  const fb = document.getElementById('preview-feedback');
+  fb.classList.remove('oculto');
+  fb.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// Exponer al admin.js (evita dependencia circular)
+window._adminPreview = (id) => {
+  const { getBanco } = window._bancoPorAdmin || {};
+  if (!getBanco) return;
+  const p = getBanco().find(q => q.id === id);
+  if (p) iniciarPreview(p);
+};

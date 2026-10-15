@@ -140,6 +140,7 @@ function renderizarPreguntas() {
         <p class="admin-card-enunciado">${snippet}</p>
         <div class="admin-card-acciones">
           <button class="btn-accion cian chico" onclick="window._adminEditar('${p.id}')">✏️ Editar</button>
+          <button class="btn-accion amarillo chico" onclick="window._adminPreview('${p.id}')">👁 Vista previa</button>
           <button class="btn-accion ${p.activa ? 'gris' : 'verde'} chico" onclick="window._adminToggle('${p.id}')">
             ${p.activa ? '🔕 Desactivar' : '🔔 Activar'}
           </button>
@@ -243,6 +244,9 @@ function guardarPregunta(e) {
   actualizarContador();
   renderizarPreguntas();
 }
+
+// Exponer getBanco al preview de main.js (evita dependencia circular)
+window._bancoPorAdmin = { getBanco };
 
 // Expuestas en window para los onclick en HTML dinámico
 window._adminEditar = (id) => abrirModal(id);
