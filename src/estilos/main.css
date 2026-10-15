@@ -286,13 +286,17 @@ body {
 .btn-entrar-olimpiadas:active { transform: scale(0.97); }
 
 .btn-admin-portada {
-  position: absolute; bottom: 18px; right: 18px;
-  background: transparent; border: 1px solid #ff00c840;
-  border-radius: 20px; color: #ff00c888;
-  padding: 5px 14px; font-size: 0.78rem; cursor: pointer;
-  transition: color 0.2s, border-color 0.2s;
+  position: absolute; bottom: 20px; right: 20px;
+  background: #0d1f3c; border: 1px solid var(--magenta);
+  border-radius: 20px; color: var(--magenta);
+  padding: 7px 18px; font-size: 0.82rem; font-weight: 600;
+  cursor: pointer; z-index: 10;
+  transition: background 0.2s, box-shadow 0.2s;
 }
-.btn-admin-portada:hover { color: var(--magenta); border-color: var(--magenta); }
+.btn-admin-portada:hover {
+  background: #1a0e2a;
+  box-shadow: 0 0 12px #ff00c866;
+}
 
 .btn-icono { font-size: 1.4rem; animation: cohete 1.5s infinite alternate; }
 @keyframes cohete {
