@@ -4,6 +4,7 @@ import {
   agregarPregunta, actualizarPregunta,
   eliminarPregunta, toggleActiva
 } from './banco.js';
+import { subirImagenPregunta } from './storage.js';
 
 let listo = false; // evitar listeners duplicados en re-login
 
@@ -36,6 +37,35 @@ export function adminInicializar() {
     .addEventListener('click', cerrarModal);
   document.getElementById('admin-modal')
     .addEventListener('click', e => { if (e.target === e.currentTarget) cerrarModal(); });
+
+  // Imagen — subida a Firebase Storage
+  document.getElementById('af-imagen-file').addEventListener('change', async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const estado = document.getElementById('af-imagen-estado');
+    const preview = document.getElementById('af-imagen-preview');
+    const btnQuitar = document.getElementById('btn-quitar-imagen');
+    estado.textContent = '⏳ Subiendo…';
+    try {
+      const url = await subirImagenPregunta(file);
+      document.getElementById('af-imagen-url').value = url;
+      preview.src = url;
+      preview.classList.remove('oculto');
+      btnQuitar.style.display = 'inline-block';
+      estado.textContent = '✅ Imagen lista';
+    } catch (err) {
+      estado.textContent = '❌ Error al subir: ' + err.message;
+    }
+  });
+
+  document.getElementById('btn-quitar-imagen').addEventListener('click', () => {
+    document.getElementById('af-imagen-url').value = '';
+    document.getElementById('af-imagen-file').value = '';
+    document.getElementById('af-imagen-preview').classList.add('oculto');
+    document.getElementById('af-imagen-preview').src = '';
+    document.getElementById('btn-quitar-imagen').style.display = 'none';
+    document.getElementById('af-imagen-estado').textContent = '';
+  });
 
   // Restaurar banco original
   document.getElementById('btn-reset-banco').addEventListener('click', () => {
@@ -126,6 +156,14 @@ function abrirModal(id) {
   const form   = document.getElementById('admin-form-pregunta');
   form.reset();
 
+  // Resetear área de imagen
+  document.getElementById('af-imagen-url').value = '';
+  document.getElementById('af-imagen-file').value = '';
+  document.getElementById('af-imagen-preview').classList.add('oculto');
+  document.getElementById('af-imagen-preview').src = '';
+  document.getElementById('btn-quitar-imagen').style.display = 'none';
+  document.getElementById('af-imagen-estado').textContent = '';
+
   if (id) {
     const p = getBanco().find(q => q.id === id);
     if (!p) return;
@@ -144,6 +182,14 @@ function abrirModal(id) {
     if (radio) radio.checked = true;
     document.getElementById('af-explicacion').value = p.explicacion || '';
     document.getElementById('af-activa').checked   = !!p.activa;
+    if (p.imagen) {
+      document.getElementById('af-imagen-url').value = p.imagen;
+      const prev = document.getElementById('af-imagen-preview');
+      prev.src = p.imagen;
+      prev.classList.remove('oculto');
+      document.getElementById('btn-quitar-imagen').style.display = 'inline-block';
+      document.getElementById('af-imagen-estado').textContent = '✅ Imagen cargada';
+    }
   } else {
     titulo.textContent = '➕ Nueva pregunta';
     document.getElementById('af-id').value = '';
@@ -182,7 +228,7 @@ function guardarPregunta(e) {
     ],
     correcta:   parseInt(radioChecked.value),
     explicacion:document.getElementById('af-explicacion').value.trim(),
-    imagen:     null,
+    imagen:     document.getElementById('af-imagen-url').value || null,
     autor:      'admin',
     activa:     document.getElementById('af-activa').checked,
   };

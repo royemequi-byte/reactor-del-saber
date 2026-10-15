@@ -210,6 +210,7 @@
     <main class="pregunta-container">
       <div class="tipo-pregunta" id="tipo-pregunta">Química</div>
       <p class="enunciado" id="enunciado">Cargando pregunta...</p>
+      <img id="img-pregunta" class="img-pregunta oculto" alt="Imagen de la pregunta" />
       <div class="opciones-grid" id="opciones-grid"></div>
     </main>
   </section>
@@ -436,6 +437,20 @@
             <div class="af-campo full">
               <label for="af-explicacion">Explicación (retroalimentación)</label>
               <textarea id="af-explicacion" rows="2" placeholder="¿Por qué esa es la respuesta correcta?"></textarea>
+            </div>
+
+            <div class="af-campo full">
+              <label>Imagen de la pregunta (opcional)</label>
+              <div class="af-imagen-area">
+                <input type="hidden" id="af-imagen-url" />
+                <img id="af-imagen-preview" class="af-imagen-preview oculto" alt="Vista previa" />
+                <div class="af-imagen-acciones">
+                  <label class="af-upload-btn" for="af-imagen-file">📁 Seleccionar imagen</label>
+                  <input type="file" id="af-imagen-file" accept="image/*" style="display:none" />
+                  <button type="button" class="btn-accion rojo chico" id="btn-quitar-imagen" style="display:none">✕ Quitar</button>
+                </div>
+                <span id="af-imagen-estado" class="af-imagen-estado"></span>
+              </div>
             </div>
 
             <div class="af-campo">

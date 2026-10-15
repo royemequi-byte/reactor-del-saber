@@ -1182,3 +1182,56 @@ body {
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
+
+/* ── IMAGEN EN EXAMEN ──────────────────────────────────────────────────────── */
+.img-pregunta {
+  display: block;
+  max-width: 100%;
+  max-height: 300px;
+  width: auto;
+  border-radius: 10px;
+  margin: 10px auto 14px;
+  border: 1px solid var(--cian);
+  object-fit: contain;
+  box-shadow: 0 0 12px rgba(0, 229, 255, 0.25);
+}
+
+/* ── UPLOAD DE IMAGEN EN ADMIN ─────────────────────────────────────────────── */
+.af-imagen-area {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.af-imagen-preview {
+  max-width: 100%;
+  max-height: 200px;
+  border-radius: 8px;
+  border: 1px solid var(--cian);
+  object-fit: contain;
+  background: #0a1628;
+}
+
+.af-imagen-acciones {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.af-upload-btn {
+  display: inline-block;
+  cursor: pointer;
+  padding: 7px 16px;
+  border: 1px dashed var(--cian);
+  border-radius: 6px;
+  color: var(--cian);
+  font-size: 0.85rem;
+  transition: background 0.2s;
+  user-select: none;
+}
+.af-upload-btn:hover { background: rgba(0,229,255,0.1); }
+
+.af-imagen-estado {
+  font-size: 0.82rem;
+  color: #aaa;
+}

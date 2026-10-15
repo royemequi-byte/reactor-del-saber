@@ -240,6 +240,16 @@ function mostrarPregunta() {
   // Enunciado
   document.getElementById('enunciado').textContent = p.enunciado;
 
+  // Imagen (opcional)
+  const imgEl = document.getElementById('img-pregunta');
+  if (p.imagen) {
+    imgEl.src = p.imagen;
+    imgEl.classList.remove('oculto');
+  } else {
+    imgEl.src = '';
+    imgEl.classList.add('oculto');
+  }
+
   // Opciones
   const grid = document.getElementById('opciones-grid');
   grid.innerHTML = '';
