@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reactor del Saber ⚗️</title>
+  <link rel="stylesheet" href="/src/estilos/main.css" />
+</head>
+<body>
+
+  <!-- PANTALLA 1: PORTADA -->
+  <section id="pantalla-portada" class="pantalla activa">
+    <div class="reactor-fondo">
+      <div class="burbuja"></div>
+      <div class="burbuja"></div>
+      <div class="burbuja"></div>
+      <div class="burbuja"></div>
+      <div class="burbuja"></div>
+    </div>
+    <div class="portada-contenido">
+      <div class="logo-reactor">⚗️</div>
+      <h1 class="titulo-juego">REACTOR<br><span class="titulo-sub">DEL SABER</span></h1>
+      <p class="subtitulo">Química &amp; Física · Grados 8°, 9° y 10°</p>
+      <button id="btn-entrar" class="btn-principal">⚡ Entrar al Laboratorio</button>
+    </div>
+  </section>
+
+  <!-- PANTALLA 2: REGISTRO -->
+  <section id="pantalla-registro" class="pantalla">
+    <div class="registro-contenido">
+      <h2>🔬 Identifica tu elemento</h2>
+      <p class="instruccion">Regístrate antes de iniciar el experimento</p>
+      <form id="form-registro">
+        <div class="campo">
+          <label for="inp-nombre">Tu nombre</label>
+          <input type="text" id="inp-nombre" placeholder="Ej: Ana García" maxlength="40" required />
+        </div>
+        <div class="campo">
+          <label for="inp-grado">Grado</label>
+          <select id="inp-grado" required>
+            <option value="">-- Selecciona --</option>
+            <option value="8">8°</option>
+            <option value="9">9°</option>
+            <option value="10">10°</option>
+          </select>
+        </div>
+        <div class="campo">
+          <label for="inp-curso">Curso</label>
+          <input type="text" id="inp-curso" placeholder="Ej: A, B, 01..." maxlength="10" required />
+        </div>
+        <div class="campo">
+          <label>Elige tu elemento avatar</label>
+          <div class="avatares-grid">
+            <button type="button" class="avatar-btn" data-elemento="Na">Na<span>Sodio</span></button>
+            <button type="button" class="avatar-btn" data-elemento="Fe">Fe<span>Hierro</span></button>
+            <button type="button" class="avatar-btn" data-elemento="O">O<span>Oxígeno</span></button>
+            <button type="button" class="avatar-btn" data-elemento="C">C<span>Carbono</span></button>
+            <button type="button" class="avatar-btn" data-elemento="H">H<span>Hidrógeno</span></button>
+            <button type="button" class="avatar-btn" data-elemento="Au">Au<span>Oro</span></button>
+          </div>
+          <input type="hidden" id="inp-avatar" value="" />
+        </div>
+        <button type="submit" class="btn-principal">🚀 ¡Iniciar experimento!</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- PANTALLA 3: EXAMEN -->
+  <section id="pantalla-examen" class="pantalla">
+    <header class="examen-header">
+      <div class="contador-pregunta">Pregunta <span id="num-pregunta">1</span>/29</div>
+      <div class="reloj-container">
+        <span>⏱</span>
+        <span id="reloj">30</span>s
+      </div>
+      <div class="poderes-container">
+        <button class="btn-poder" id="poder-catalizador" title="Catalizador: elimina 2 opciones incorrectas">🧪</button>
+        <button class="btn-poder" id="poder-reposo" title="Estado de reposo: congela el reloj 15s">⏸️</button>
+        <button class="btn-poder" id="poder-isotopo" title="Isótopo: cambia la pregunta">🔁</button>
+      </div>
+      <button id="btn-silencio" class="btn-silencio" title="Silenciar">🔊</button>
+    </header>
+
+    <div class="reactor-bar-container">
+      <div class="reactor-bar-label">⚡ Energía del reactor</div>
+      <div class="reactor-bar-track">
+        <div id="reactor-bar" class="reactor-bar-fill"></div>
+      </div>
+      <div class="racha-display" id="racha-display"></div>
+    </div>
+
+    <main class="pregunta-container">
+      <div class="tipo-pregunta" id="tipo-pregunta">Química</div>
+      <p class="enunciado" id="enunciado">Cargando pregunta...</p>
+      <div class="opciones-grid" id="opciones-grid"></div>
+    </main>
+  </section>
+
+  <!-- PANTALLA 4: RETROALIMENTACIÓN -->
+  <section id="pantalla-retro" class="pantalla">
+    <div class="retro-contenido">
+      <div class="retro-icono" id="retro-icono">✔</div>
+      <h2 class="retro-titulo" id="retro-titulo">¡Correcto!</h2>
+      <p class="retro-explicacion" id="retro-explicacion"></p>
+      <div class="retro-puntos" id="retro-puntos"></div>
+      <button class="btn-principal" id="btn-siguiente-pregunta">Siguiente pregunta →</button>
+    </div>
+  </section>
+
+  <!-- PANTALLA 5: RESULTADOS -->
+  <section id="pantalla-resultados" class="pantalla">
+    <div class="resultados-contenido">
+      <h2>📊 Resultados del experimento</h2>
+      <div class="estudiante-info" id="res-estudiante"></div>
+      <div class="puntaje-grande">
+        <span id="res-puntaje">0</span>
+        <small>puntos</small>
+      </div>
+      <div class="nota-real">
+        <span class="nota-label">Nota final</span>
+        <span class="nota-valor" id="res-nota">0.0</span>
+        <span class="nota-escala">/ 5.0</span>
+      </div>
+      <div class="detalle-bloques">
+        <div class="bloque-item">
+          <span>Química &amp; Física (80%)</span>
+          <div class="barra-resultado">
+            <div class="barra-fill" id="barra-ciencias"></div>
+          </div>
+          <span id="txt-ciencias">0/19</span>
+        </div>
+        <div class="bloque-item">
+          <span>Razonamiento (20%)</span>
+          <div class="barra-resultado">
+            <div class="barra-fill barra-razonamiento" id="barra-razon"></div>
+          </div>
+          <span id="txt-razon">0/10</span>
+        </div>
+      </div>
+      <div class="botones-resultado">
+        <button class="btn-principal" id="btn-ver-podio">🏆 Ver podio</button>
+        <button class="btn-secundario" id="btn-nuevo-intento">🔄 Nuevo intento</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- PANTALLA 6: PODIO / RANKING -->
+  <section id="pantalla-podio" class="pantalla">
+    <div class="podio-contenido">
+      <h2>🏆 Podio de los Elementos</h2>
+      <div class="podio-top3" id="podio-top3"></div>
+      <div class="ranking-filtros">
+        <button class="btn-filtro activo" data-filtro="todos">Todos</button>
+        <button class="btn-filtro" data-filtro="8">Grado 8°</button>
+        <button class="btn-filtro" data-filtro="9">Grado 9°</button>
+        <button class="btn-filtro" data-filtro="10">Grado 10°</button>
+      </div>
+      <div class="ranking-tabla-wrapper">
+        <table class="ranking-tabla">
+          <thead>
+            <tr>
+              <th>#</th><th>Científico</th><th>Elemento</th>
+              <th>Grado</th><th>Curso</th><th>Pts</th><th>Nota</th>
+            </tr>
+          </thead>
+          <tbody id="ranking-tbody"></tbody>
+        </table>
+      </div>
+      <button class="btn-secundario" id="btn-volver-portada">← Volver al inicio</button>
+    </div>
+  </section>
+
+  <!-- PANTALLA 7: SUPER ADMIN (oculta, acceso: Ctrl+Shift+A) -->
+  <section id="pantalla-admin" class="pantalla">
+    <div class="admin-contenido">
+      <h2>🔐 Panel Super Admin</h2>
+      <div id="admin-login">
+        <p>Acceso restringido al laboratorio</p>
+        <input type="password" id="inp-admin-pass" placeholder="Contraseña" />
+        <button class="btn-principal" id="btn-admin-entrar">Entrar</button>
+        <p class="admin-error oculto" id="admin-error">Contraseña incorrecta</p>
+      </div>
+      <div id="admin-panel" class="oculto">
+        <p class="aviso-fase">Panel completo disponible en Fase 7</p>
+        <button class="btn-secundario" id="btn-admin-salir">Cerrar sesión</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Widget de volumen (visible durante el examen) -->
+  <div class="volumen-widget oculto" id="volumen-widget">
+    <input type="range" id="ctrl-volumen" min="0" max="1" step="0.05" value="0.7" />
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
