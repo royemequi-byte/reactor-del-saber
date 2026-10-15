@@ -75,6 +75,25 @@
     <button id="btn-ir-admin" class="btn-admin-portada">🔐 Admin</button>
   </section>
 
+  <!-- PANTALLA: LOGIN PROFESOR -->
+  <section id="pantalla-login-profesor" class="pantalla">
+    <div class="registro-contenido" style="max-width:420px">
+      <h2>👨‍🏫 Acceso Profesor</h2>
+      <p class="instruccion">Ingresa tus credenciales para crear la sala</p>
+      <div class="campo">
+        <label for="inp-prof-user">Usuario</label>
+        <input type="text" id="inp-prof-user" placeholder="admin" autocomplete="off" />
+      </div>
+      <div class="campo">
+        <label for="inp-prof-pass">Contraseña</label>
+        <input type="password" id="inp-prof-pass" placeholder="••••••••" autocomplete="off" />
+      </div>
+      <p class="admin-error oculto" id="prof-login-error">Usuario o contraseña incorrectos</p>
+      <button class="btn-principal" id="btn-prof-entrar">🔐 Entrar como Profesor</button>
+      <button class="btn-secundario" id="btn-volver-rol-login">← Volver</button>
+    </div>
+  </section>
+
   <!-- PANTALLA: ELEGIR ROL EN SALA -->
   <section id="pantalla-sala-rol" class="pantalla">
     <div class="sala-rol-contenido">

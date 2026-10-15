@@ -82,7 +82,29 @@ document.getElementById('btn-volver-portada-sala').addEventListener('click', () 
 document.getElementById('btn-rol-profesor').addEventListener('click', () => {
   sala.modo = 'sala';
   sala.rol  = 'profesor';
-  irA('pantalla-elegir-grado');
+  document.getElementById('inp-prof-user').value = '';
+  document.getElementById('inp-prof-pass').value = '';
+  document.getElementById('prof-login-error').classList.add('oculto');
+  irA('pantalla-login-profesor');
+});
+
+document.getElementById('btn-volver-rol-login').addEventListener('click', () => irA('pantalla-sala-rol'));
+
+document.getElementById('btn-prof-entrar').addEventListener('click', async () => {
+  const user = document.getElementById('inp-prof-user').value.trim();
+  const pass = document.getElementById('inp-prof-pass').value;
+  const errEl = document.getElementById('prof-login-error');
+  if (await verificarAdmin(user, pass)) {
+    errEl.classList.add('oculto');
+    irA('pantalla-elegir-grado');
+  } else {
+    errEl.classList.remove('oculto');
+  }
+});
+
+// Permitir Enter en la pantalla de login profesor
+document.getElementById('inp-prof-pass').addEventListener('keydown', e => {
+  if (e.key === 'Enter') document.getElementById('btn-prof-entrar').click();
 });
 
 document.getElementById('btn-volver-a-rol').addEventListener('click', () => irA('pantalla-sala-rol'));
