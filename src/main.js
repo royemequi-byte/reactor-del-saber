@@ -5,6 +5,11 @@ import { iniciarAudio, setVolumen, toggleSilencio, setMateria, setRacha, setProg
 import { tocarAcierto, tocarError, tocarRacha, tocarPoder, tocarFanfarra, tocarIntro } from './audio/efectos.js';
 import confetti from 'canvas-confetti';
 import { adminInicializar } from './admin.js';
+import {
+  crearSala, unirseASala, iniciarJuego,
+  reportarResultado, escucharEstudiantes,
+  escucharEstadoSala, cerrarSala
+} from './sala.js';
 
 // ─── NAVEGACIÓN ────────────────────────────────────────────────────────────
 export function irA(id) {
@@ -14,6 +19,20 @@ export function irA(id) {
 
   const widget = document.getElementById('volumen-widget');
   if (widget) widget.classList.toggle('oculto', id !== 'pantalla-examen');
+}
+
+// ─── ESTADO DE SALA ───────────────────────────────────────────────────────
+const sala = {
+  modo:      'solo',   // 'solo' | 'sala'
+  rol:       null,     // 'profesor' | 'estudiante'
+  codigo:    null,
+  uid:       null,     // Firebase key del estudiante
+  unsub:     [],       // funciones de cleanup de listeners
+};
+
+function salaLimpiar() {
+  sala.unsub.forEach(fn => { try { fn(); } catch {} });
+  sala.unsub = [];
 }
 
 // ─── PARTÍCULAS DE FONDO ───────────────────────────────────────────────────
@@ -40,7 +59,106 @@ export function irA(id) {
 // ─── PORTADA ───────────────────────────────────────────────────────────────
 document.getElementById('btn-entrar').addEventListener('click', () => {
   iniciarAudio();
-  setTimeout(() => tocarIntro(), 120); // pequeño delay para que el contexto arranque
+  setTimeout(() => tocarIntro(), 120);
+  sala.modo = 'solo';
+  irA('pantalla-registro');
+});
+
+document.getElementById('btn-sala').addEventListener('click', () => {
+  iniciarAudio();
+  irA('pantalla-sala-rol');
+});
+
+// ─── ELEGIR ROL ────────────────────────────────────────────────────────────
+document.getElementById('btn-volver-portada-sala').addEventListener('click', () => irA('pantalla-portada'));
+
+document.getElementById('btn-rol-profesor').addEventListener('click', async () => {
+  sala.modo = 'sala';
+  sala.rol  = 'profesor';
+  try {
+    const codigo = await crearSala();
+    sala.codigo  = codigo;
+    document.getElementById('sala-codigo-display').textContent = codigo;
+    document.getElementById('sala-contador').textContent = '0 estudiantes conectados';
+    document.getElementById('sala-lista-profesor').innerHTML = '<p style="color:#8ab;padding:20px">Esperando que se conecten…</p>';
+    document.getElementById('btn-sala-iniciar').disabled = true;
+    irA('pantalla-crear-sala');
+    // Escuchar estudiantes en tiempo real
+    const unsub = escucharEstudiantes(codigo, actualizarLobbyProfesor);
+    sala.unsub.push(unsub);
+  } catch (err) {
+    alert('Error al crear sala. Verifica la configuración de Firebase.\n' + err.message);
+  }
+});
+
+document.getElementById('btn-rol-estudiante').addEventListener('click', () => {
+  sala.modo = 'sala';
+  sala.rol  = 'estudiante';
+  document.getElementById('inp-codigo-sala').value = '';
+  document.getElementById('sala-error-codigo').classList.add('oculto');
+  irA('pantalla-unirse');
+});
+
+// ─── LOBBY PROFESOR ────────────────────────────────────────────────────────
+function actualizarLobbyProfesor(lista) {
+  const cont = document.getElementById('sala-contador');
+  const listEl = document.getElementById('sala-lista-profesor');
+  const btnStart = document.getElementById('btn-sala-iniciar');
+
+  cont.textContent = `${lista.length} estudiante${lista.length !== 1 ? 's' : ''} conectado${lista.length !== 1 ? 's' : ''}`;
+  btnStart.disabled = lista.length === 0;
+
+  if (!lista.length) {
+    listEl.innerHTML = '<p style="color:#8ab;padding:20px">Esperando que se conecten…</p>';
+    return;
+  }
+  listEl.innerHTML = lista.map(e => `
+    <div class="sala-card-estudiante">
+      <div class="sala-card-avatar">${e.avatar || '⚗️'}</div>
+      <div class="sala-card-info">
+        <div class="sala-card-nombre">${e.nombre}</div>
+        <div class="sala-card-grado">Grado ${e.grado}° · ${e.curso}</div>
+        <div class="sala-card-estado ${e.estado}">${estadoLabel(e.estado)}</div>
+      </div>
+    </div>`).join('');
+}
+
+function estadoLabel(s) {
+  return s === 'esperando' ? '⏳ En sala' : s === 'jugando' ? '🎯 En examen' : '✅ Terminó';
+}
+
+document.getElementById('btn-sala-iniciar').addEventListener('click', async () => {
+  try {
+    await iniciarJuego(sala.codigo);
+    document.getElementById('btn-sala-iniciar').disabled = true;
+    document.getElementById('btn-sala-iniciar').textContent = '✅ Examen en curso…';
+  } catch (err) {
+    alert('Error al iniciar. ' + err.message);
+  }
+});
+
+document.getElementById('btn-cancelar-sala').addEventListener('click', async () => {
+  if (!confirm('¿Cancelar la sala? Se desconectarán todos los estudiantes.')) return;
+  salaLimpiar();
+  if (sala.codigo) { try { await cerrarSala(sala.codigo); } catch {} }
+  sala.codigo = null;
+  irA('pantalla-portada');
+});
+
+// ─── UNIRSE A SALA (ESTUDIANTE) ────────────────────────────────────────────
+document.getElementById('inp-codigo-sala').addEventListener('input', (e) => {
+  e.target.value = e.target.value.toUpperCase();
+});
+
+document.getElementById('btn-volver-rol').addEventListener('click', () => irA('pantalla-sala-rol'));
+
+document.getElementById('btn-validar-codigo').addEventListener('click', async () => {
+  const codigo = document.getElementById('inp-codigo-sala').value.trim().toUpperCase();
+  if (codigo.length < 4) return;
+  const errEl = document.getElementById('sala-error-codigo');
+  errEl.classList.add('oculto');
+  sala.codigo = codigo;
+  // Ir al registro normal y dejar que al submit vaya a espera
   irA('pantalla-registro');
 });
 
@@ -53,7 +171,7 @@ inpAvatar.addEventListener('input', () => {
   avatarPreview.textContent = inpAvatar.value.slice(0, 3) || '⚗️';
 });
 
-document.getElementById('form-registro').addEventListener('submit', (e) => {
+document.getElementById('form-registro').addEventListener('submit', async (e) => {
   e.preventDefault();
 
   const nombre = document.getElementById('inp-nombre').value.trim();
@@ -64,7 +182,34 @@ document.getElementById('form-registro').addEventListener('submit', (e) => {
   if (!avatar) { alert('Por favor escribe tu apodo de científico ⚗️'); return; }
 
   estado.estudiante = { nombre, grado, curso, avatar };
-  iniciarExamen();
+
+  if (sala.modo === 'sala') {
+    // Unirse a Firebase y esperar al profesor
+    try {
+      const res = await unirseASala(sala.codigo, estado.estudiante);
+      if (res.error) { alert(res.error); return; }
+      sala.uid = res.uid;
+      // Mostrar sala de espera
+      document.getElementById('espera-codigo-display').textContent = sala.codigo;
+      document.getElementById('espera-mi-avatar').textContent = avatar.slice(0, 3);
+      irA('pantalla-espera');
+      // Escuchar compañeros
+      const unsubE = escucharEstudiantes(sala.codigo, actualizarListaEspera);
+      sala.unsub.push(unsubE);
+      // Escuchar estado → arrancar cuando el profe diga
+      const unsubS = escucharEstadoSala(sala.codigo, (estado_) => {
+        if (estado_ === 'jugando') {
+          salaLimpiar();
+          iniciarExamen();
+        }
+      });
+      sala.unsub.push(unsubS);
+    } catch (err) {
+      alert('Error al conectar: ' + err.message);
+    }
+  } else {
+    iniciarExamen();
+  }
 });
 
 // ─── INICIO DEL EXAMEN ─────────────────────────────────────────────────────
@@ -300,6 +445,12 @@ function finalizarExamen() {
     r.nombre === estado.estudiante.nombre && String(r.puntaje) === String(estado.puntaje)
   ) + 1;
   tocarFanfarra(puesto >= 1 && puesto <= 3 ? puesto : 0);
+
+  // En modo sala, reportar resultado a Firebase
+  if (sala.modo === 'sala' && sala.codigo && sala.uid) {
+    reportarResultado(sala.codigo, sala.uid, estado.puntaje, nota.toFixed(1)).catch(() => {});
+  }
+
   irA('pantalla-resultados');
 }
 
@@ -446,6 +597,19 @@ function renderizarTablaRanking(filtro) {
   if (!filtrados.length) {
     tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:#8ab">Sin resultados aún</td></tr>';
   }
+}
+
+// ─── SALA DE ESPERA (estudiante) ───────────────────────────────────────────
+function actualizarListaEspera(lista) {
+  const listEl = document.getElementById('sala-lista-estudiante');
+  listEl.innerHTML = lista.map(e => `
+    <div class="sala-card-estudiante">
+      <div class="sala-card-avatar">${e.avatar || '⚗️'}</div>
+      <div class="sala-card-info">
+        <div class="sala-card-nombre">${e.nombre}</div>
+        <div class="sala-card-grado">Grado ${e.grado}°</div>
+      </div>
+    </div>`).join('');
 }
 
 // ─── CONFETTI ──────────────────────────────────────────────────────────────

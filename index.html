@@ -49,12 +49,18 @@
         <p class="subtitulo-grados">Grados 8°, 9° y 10° &nbsp;·&nbsp; Edición 2026</p>
       </div>
 
-      <!-- Botón de entrada -->
-      <button id="btn-entrar" class="btn-entrar-olimpiadas">
-        <span class="btn-icono">🚀</span>
-        <span class="btn-texto">¡Iniciar el Desafío!</span>
-        <span class="btn-brillo"></span>
-      </button>
+      <!-- Botones de entrada -->
+      <div class="portada-botones">
+        <button id="btn-entrar" class="btn-entrar-olimpiadas">
+          <span class="btn-icono">🚀</span>
+          <span class="btn-texto">Modo individual</span>
+          <span class="btn-brillo"></span>
+        </button>
+        <button id="btn-sala" class="btn-sala-olimpiadas">
+          <span class="btn-icono">🏫</span>
+          <span class="btn-texto">Sala de clase</span>
+        </button>
+      </div>
 
       <!-- Estadísticas animadas -->
       <div class="stats-portada">
@@ -67,6 +73,78 @@
         <div class="stat-item"><span class="stat-num">2026</span><span class="stat-label">Edición</span></div>
       </div>
     <button id="btn-ir-admin" class="btn-admin-portada">🔐 Admin</button>
+  </section>
+
+  <!-- PANTALLA: ELEGIR ROL EN SALA -->
+  <section id="pantalla-sala-rol" class="pantalla">
+    <div class="sala-rol-contenido">
+      <h2>🏫 Sala de clase</h2>
+      <p class="instruccion">¿Cuál es tu rol hoy?</p>
+      <div class="sala-rol-botones">
+        <button id="btn-rol-profesor" class="btn-rol">
+          <span class="rol-icono">👨‍🏫</span>
+          <span class="rol-titulo">Soy el Profesor</span>
+          <span class="rol-desc">Crea la sala y controla cuándo empieza</span>
+        </button>
+        <button id="btn-rol-estudiante" class="btn-rol">
+          <span class="rol-icono">👨‍🎓</span>
+          <span class="rol-titulo">Soy Estudiante</span>
+          <span class="rol-desc">Ingresa con el código de tu profesor</span>
+        </button>
+      </div>
+      <button class="btn-secundario" id="btn-volver-portada-sala">← Volver</button>
+    </div>
+  </section>
+
+  <!-- PANTALLA: LOBBY DEL PROFESOR -->
+  <section id="pantalla-crear-sala" class="pantalla">
+    <div class="sala-profesor-contenido">
+      <div class="sala-codigo-box">
+        <p class="sala-codigo-label">Código de sala — muéstralo en el proyector</p>
+        <div class="sala-codigo" id="sala-codigo-display">------</div>
+        <p class="sala-codigo-hint">Los estudiantes ingresan este código desde sus celulares</p>
+      </div>
+      <div class="sala-stats-bar">
+        <span id="sala-contador">0 estudiantes conectados</span>
+        <button id="btn-sala-iniciar" class="btn-sala-start" disabled>🚀 ¡Empezar el desafío!</button>
+      </div>
+      <div id="sala-lista-profesor" class="sala-lista-espera"></div>
+      <button class="btn-secundario" id="btn-cancelar-sala">✕ Cancelar sala</button>
+    </div>
+  </section>
+
+  <!-- PANTALLA: ESTUDIANTE INGRESA CÓDIGO -->
+  <section id="pantalla-unirse" class="pantalla">
+    <div class="registro-contenido">
+      <h2>🏫 Unirse a la sala</h2>
+      <p class="instruccion">Escribe el código que muestra tu profesor</p>
+      <div class="campo">
+        <input type="text" id="inp-codigo-sala" placeholder="Ej: ABC123"
+               maxlength="6" autocomplete="off"
+               style="text-transform:uppercase;font-size:2rem;letter-spacing:0.3em;text-align:center;" />
+      </div>
+      <button class="btn-principal" id="btn-validar-codigo">Verificar código →</button>
+      <p class="admin-error oculto" id="sala-error-codigo">Código inválido o sala no encontrada</p>
+      <button class="btn-secundario" id="btn-volver-rol">← Volver</button>
+    </div>
+  </section>
+
+  <!-- PANTALLA: SALA DE ESPERA (estudiante) -->
+  <section id="pantalla-espera" class="pantalla">
+    <div class="sala-espera-contenido">
+      <div class="espera-header">
+        <div class="espera-codigo">🏫 Sala: <strong id="espera-codigo-display">------</strong></div>
+        <div class="espera-estado" id="espera-estado-txt">Esperando al profesor…</div>
+      </div>
+      <div class="espera-avatar-propio" id="espera-mi-avatar"></div>
+      <div class="espera-lista-titulo">Científicos en la sala</div>
+      <div id="sala-lista-estudiante" class="sala-lista-espera"></div>
+      <div class="espera-animacion">
+        <div class="espera-dot"></div>
+        <div class="espera-dot"></div>
+        <div class="espera-dot"></div>
+      </div>
+    </div>
   </section>
 
   <!-- PANTALLA 2: REGISTRO -->

@@ -285,6 +285,152 @@ body {
 }
 .btn-entrar-olimpiadas:active { transform: scale(0.97); }
 
+/* Contenedor de los dos botones de la portada */
+.portada-botones {
+  display: flex; flex-direction: column; align-items: center; gap: 14px;
+  margin-top: 8px;
+}
+
+/* Botón secundario de sala */
+.btn-sala-olimpiadas {
+  display: flex; align-items: center; gap: 10px;
+  background: transparent;
+  border: 2px solid var(--cian);
+  border-radius: 50px;
+  color: var(--cian);
+  padding: 12px 36px;
+  font-size: 1.05rem; font-weight: 700;
+  cursor: pointer; letter-spacing: 0.04em;
+  transition: background 0.2s, box-shadow 0.2s;
+}
+.btn-sala-olimpiadas:hover {
+  background: rgba(0,229,255,0.1);
+  box-shadow: 0 0 20px #00e5ff55;
+}
+
+/* =============================================
+   PANTALLAS DE SALA
+   ============================================= */
+
+/* Elegir rol */
+.sala-rol-contenido {
+  display: flex; flex-direction: column; align-items: center; gap: 24px;
+  width: min(600px, 100%); padding: 30px 20px;
+}
+.sala-rol-contenido h2 { font-size: 2rem; color: var(--cian); }
+.sala-rol-botones { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; width: 100%; }
+
+.btn-rol {
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  background: var(--fondo2); border: 2px solid var(--gris);
+  border-radius: 20px; padding: 28px 32px;
+  cursor: pointer; width: 220px;
+  transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
+}
+.btn-rol:hover {
+  border-color: var(--cian);
+  box-shadow: var(--sombra-cian);
+  transform: translateY(-4px);
+}
+.rol-icono  { font-size: 3rem; }
+.rol-titulo { font-size: 1.1rem; font-weight: 700; color: var(--blanco); }
+.rol-desc   { font-size: 0.8rem; color: #8ab; text-align: center; }
+
+/* Lobby del profesor */
+.sala-profesor-contenido {
+  display: flex; flex-direction: column; align-items: center; gap: 20px;
+  width: min(860px, 100%); padding: 20px;
+}
+
+.sala-codigo-box {
+  background: var(--fondo2); border: 2px solid var(--amarillo);
+  border-radius: 20px; padding: 24px 40px;
+  text-align: center; box-shadow: var(--sombra-dorado);
+}
+.sala-codigo-label { font-size: 0.85rem; color: #8ab; margin-bottom: 8px; }
+.sala-codigo {
+  font-size: clamp(3rem, 8vw, 5rem);
+  font-weight: 900; letter-spacing: 0.25em;
+  color: var(--amarillo); font-family: monospace;
+  text-shadow: 0 0 30px #ffd60088;
+}
+.sala-codigo-hint { font-size: 0.8rem; color: #8ab; margin-top: 8px; }
+
+.sala-stats-bar {
+  display: flex; align-items: center; justify-content: space-between;
+  width: 100%; flex-wrap: wrap; gap: 12px;
+}
+#sala-contador { font-size: 1.1rem; color: var(--cian); font-weight: 600; }
+
+.btn-sala-start {
+  background: var(--verde); color: #000;
+  border: none; border-radius: 30px;
+  padding: 12px 32px; font-size: 1rem; font-weight: 700;
+  cursor: pointer; transition: opacity 0.2s, transform 0.15s;
+}
+.btn-sala-start:disabled { opacity: 0.35; cursor: not-allowed; }
+.btn-sala-start:not(:disabled):hover { transform: scale(1.05); }
+
+/* Lista de espera (profesor y estudiante) */
+.sala-lista-espera {
+  width: 100%; display: flex; flex-wrap: wrap; gap: 10px;
+  max-height: 50vh; overflow-y: auto;
+}
+
+.sala-card-estudiante {
+  background: var(--fondo2); border: 1px solid #2a4060;
+  border-radius: 14px; padding: 12px 16px;
+  display: flex; align-items: center; gap: 12px;
+  min-width: 200px; flex: 1;
+  animation: aparecer 0.3s ease;
+}
+.sala-card-avatar {
+  font-size: 1.6rem; font-weight: 900; color: var(--verde);
+  min-width: 40px; text-align: center;
+}
+.sala-card-info { display: flex; flex-direction: column; gap: 2px; }
+.sala-card-nombre { font-size: 0.95rem; font-weight: 600; }
+.sala-card-grado  { font-size: 0.75rem; color: #8ab; }
+.sala-card-estado { font-size: 0.72rem; font-weight: 600; }
+.sala-card-estado.esperando  { color: var(--amarillo); }
+.sala-card-estado.jugando    { color: var(--cian); }
+.sala-card-estado.terminado  { color: var(--verde); }
+
+/* Sala de espera del estudiante */
+.sala-espera-contenido {
+  display: flex; flex-direction: column; align-items: center; gap: 20px;
+  width: min(700px, 100%); padding: 20px;
+}
+.espera-header {
+  text-align: center; display: flex; flex-direction: column; gap: 6px;
+}
+.espera-codigo { font-size: 1.1rem; color: #8ab; }
+.espera-codigo strong { color: var(--amarillo); font-size: 1.4rem; letter-spacing: 0.2em; }
+.espera-estado { font-size: 1rem; color: var(--cian); }
+
+.espera-avatar-propio {
+  font-size: 3.5rem; font-weight: 900; color: var(--verde);
+  background: var(--fondo2); border: 2px solid var(--verde);
+  border-radius: 50%; width: 80px; height: 80px;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: var(--sombra-verde);
+}
+.espera-lista-titulo { font-size: 0.9rem; color: #8ab; align-self: flex-start; }
+
+/* Animación de puntos pulsantes */
+.espera-animacion { display: flex; gap: 10px; margin-top: 8px; }
+.espera-dot {
+  width: 12px; height: 12px; border-radius: 50%;
+  background: var(--cian); opacity: 0.3;
+  animation: pulsar-dot 1.2s infinite ease-in-out;
+}
+.espera-dot:nth-child(2) { animation-delay: 0.2s; }
+.espera-dot:nth-child(3) { animation-delay: 0.4s; }
+@keyframes pulsar-dot {
+  0%, 80%, 100% { opacity: 0.3; transform: scale(0.8); }
+  40%           { opacity: 1;   transform: scale(1.2); }
+}
+
 .btn-admin-portada {
   position: absolute; bottom: 20px; right: 20px;
   background: #0d1f3c; border: 1px solid var(--magenta);
