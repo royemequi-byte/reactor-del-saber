@@ -1,23 +1,27 @@
 /* =============================================
-   REACTOR DEL SABER — Estilos principales
-   Estilo: laboratorio neón
+   ITI-OLIMPIADAS & DESAFÍO CIENTÍFICO
+   Estilo: laboratorio neón olímpico
    ============================================= */
 
 /* --- Variables de color --- */
 :root {
-  --fondo:       #0a1628;      /* azul petróleo oscuro */
-  --fondo2:      #0d1f3c;
-  --verde:       #39ff14;      /* verde ácido */
-  --cian:        #00e5ff;
-  --magenta:     #ff00c8;
-  --amarillo:    #ffd600;
-  --blanco:      #e8f4f8;
-  --gris:        #2a3a55;
-  --error:       #ff4444;
-  --correcto:    #39ff14;
-  --radio:       12px;
-  --sombra-verde: 0 0 16px #39ff1480;
-  --sombra-cian:  0 0 16px #00e5ff80;
+  --fondo:        #060e1f;
+  --fondo2:       #0d1f3c;
+  --verde:        #39ff14;
+  --cian:         #00e5ff;
+  --magenta:      #ff00c8;
+  --amarillo:     #ffd600;
+  --rojo-iti:     #c0392b;
+  --teal-iti:     #5dade2;
+  --blanco:       #e8f4f8;
+  --gris:         #2a3a55;
+  --error:        #ff4444;
+  --correcto:     #39ff14;
+  --radio:        12px;
+  --sombra-verde:  0 0 16px #39ff1480;
+  --sombra-cian:   0 0 16px #00e5ff80;
+  --sombra-rojo:   0 0 24px #c0392b99;
+  --sombra-dorado: 0 0 24px #ffd60099;
 }
 
 /* --- Reset básico --- */
@@ -49,66 +53,274 @@ body {
 .oculto { display: none !important; }
 
 /* =============================================
-   PANTALLA 1 — PORTADA
+   PANTALLA 1 — PORTADA ITI-OLIMPIADAS
    ============================================= */
-#pantalla-portada { position: relative; overflow: hidden; }
-
-/* Burbujas animadas de fondo */
-.reactor-fondo {
-  position: absolute; inset: 0; pointer-events: none;
+#pantalla-portada {
+  position: relative; overflow: hidden;
+  background: radial-gradient(ellipse at 50% 0%, #1a2a4a 0%, #060e1f 70%);
 }
+
+/* Líneas de cuadrícula de fondo */
+#pantalla-portada::before {
+  content: '';
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(0,229,255,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,229,255,0.04) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+}
+
+/* Partículas */
+.particulas-fondo {
+  position: absolute; inset: 0; pointer-events: none; overflow: hidden;
+}
+.particula {
+  position: absolute;
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  background: var(--cian);
+  opacity: 0;
+  animation: flotar-particula var(--dur, 8s) var(--delay, 0s) infinite ease-in-out;
+}
+@keyframes flotar-particula {
+  0%   { transform: translateY(100vh) scale(0); opacity: 0; }
+  10%  { opacity: 0.8; }
+  90%  { opacity: 0.3; }
+  100% { transform: translateY(-10vh) scale(1.5); opacity: 0; }
+}
+
+/* Burbujas */
+.reactor-fondo { position: absolute; inset: 0; pointer-events: none; }
 .burbuja {
   position: absolute;
   border-radius: 50%;
-  background: radial-gradient(circle, #39ff1440, transparent 70%);
-  animation: subir 8s infinite ease-in-out;
+  border: 1px solid rgba(0,229,255,0.2);
+  background: radial-gradient(circle, rgba(0,229,255,0.06), transparent 70%);
+  animation: subir var(--dur, 9s) var(--delay, 0s) infinite ease-in-out;
 }
-.burbuja:nth-child(1) { width:80px; height:80px;  left:10%; animation-delay:0s;   animation-duration:7s; }
-.burbuja:nth-child(2) { width:50px; height:50px;  left:30%; animation-delay:1.5s; animation-duration:9s; }
-.burbuja:nth-child(3) { width:100px;height:100px; left:55%; animation-delay:3s;   animation-duration:11s;}
-.burbuja:nth-child(4) { width:60px; height:60px;  left:75%; animation-delay:0.8s; animation-duration:8s; }
-.burbuja:nth-child(5) { width:40px; height:40px;  left:88%; animation-delay:2s;   animation-duration:6s; }
+.burbuja:nth-child(1) { width:90px;  height:90px;  left:8%;  --delay:0s;   --dur:8s; }
+.burbuja:nth-child(2) { width:55px;  height:55px;  left:25%; --delay:1.5s; --dur:10s; }
+.burbuja:nth-child(3) { width:120px; height:120px; left:50%; --delay:3s;   --dur:12s; background: radial-gradient(circle, rgba(192,57,43,0.08), transparent 70%); border-color: rgba(192,57,43,0.2); }
+.burbuja:nth-child(4) { width:70px;  height:70px;  left:72%; --delay:0.8s; --dur:9s; }
+.burbuja:nth-child(5) { width:45px;  height:45px;  left:88%; --delay:2s;   --dur:7s; }
+.burbuja:nth-child(6) { width:60px;  height:60px;  left:40%; --delay:4s;   --dur:11s; background: radial-gradient(circle, rgba(255,214,0,0.06), transparent 70%); border-color: rgba(255,214,0,0.15); }
+.burbuja:nth-child(7) { width:35px;  height:35px;  left:62%; --delay:5s;   --dur:8s; }
 
 @keyframes subir {
-  0%   { bottom:-120px; opacity:0; }
-  20%  { opacity:0.6; }
-  80%  { opacity:0.3; }
-  100% { bottom:110%; opacity:0; }
+  0%   { bottom: -140px; opacity: 0; }
+  15%  { opacity: 1; }
+  85%  { opacity: 0.4; }
+  100% { bottom: 110%; opacity: 0; }
 }
 
+/* Contenido central de portada */
 .portada-contenido {
-  position: relative; z-index: 1;
-  display: flex; flex-direction: column; align-items: center; gap: 16px;
-  text-align: center;
+  position: relative; z-index: 2;
+  display: flex; flex-direction: column; align-items: center;
+  gap: 20px; text-align: center; padding: 20px;
+  max-width: 700px; width: 100%;
 }
 
-.logo-reactor {
-  font-size: 6rem;
-  filter: drop-shadow(0 0 24px var(--verde));
-  animation: pulso 2s infinite alternate;
-}
-@keyframes pulso {
-  from { filter: drop-shadow(0 0 16px var(--verde)); }
-  to   { filter: drop-shadow(0 0 36px var(--cian)); }
+/* Logo con órbitas */
+.logo-wrapper {
+  position: relative;
+  width: 220px; height: 220px;
+  display: flex; align-items: center; justify-content: center;
 }
 
-.titulo-juego {
-  font-size: clamp(2.5rem, 8vw, 5rem);
+.logo-imagen {
+  width: 180px; height: 180px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid var(--rojo-iti);
+  box-shadow:
+    0 0 0 8px rgba(192,57,43,0.15),
+    0 0 40px rgba(192,57,43,0.4),
+    0 0 80px rgba(0,229,255,0.2);
+  position: relative; z-index: 2;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  animation: logo-pulso 3s infinite alternate;
+}
+.logo-imagen:hover {
+  transform: scale(1.08);
+  box-shadow:
+    0 0 0 10px rgba(192,57,43,0.25),
+    0 0 60px rgba(192,57,43,0.6),
+    0 0 100px rgba(0,229,255,0.3);
+}
+@keyframes logo-pulso {
+  from { box-shadow: 0 0 0 8px rgba(192,57,43,0.15), 0 0 40px rgba(192,57,43,0.4), 0 0 80px rgba(0,229,255,0.2); }
+  to   { box-shadow: 0 0 0 12px rgba(192,57,43,0.25), 0 0 60px rgba(192,57,43,0.55), 0 0 120px rgba(0,229,255,0.35); }
+}
+
+/* Órbitas de átomos alrededor del logo */
+.orbita {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px dashed rgba(0,229,255,0.35);
+  animation: girar linear infinite;
+  display: flex; align-items: flex-start; justify-content: center;
+}
+.orbita-1 { width: 210px; height: 210px; top: 5px; left: 5px; animation-duration: 6s; }
+.orbita-2 { width: 230px; height: 230px; top: -5px; left: -5px; animation-duration: 9s; animation-direction: reverse; border-color: rgba(255,214,0,0.25); }
+.orbita-3 { width: 250px; height: 250px; top: -15px; left: -15px; animation-duration: 14s; border-color: rgba(192,57,43,0.25); }
+
+@keyframes girar { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+.atomo {
+  width: 10px; height: 10px; border-radius: 50%;
+  background: var(--cian);
+  box-shadow: 0 0 8px var(--cian);
+  margin-top: -5px;
+  animation: girar linear infinite reverse;
+}
+.orbita-1 .atomo { animation-duration: 6s; background: var(--cian); box-shadow: 0 0 10px var(--cian); }
+.orbita-2 .atomo { animation-duration: 9s; background: var(--amarillo); box-shadow: 0 0 10px var(--amarillo); }
+.orbita-3 .atomo { animation-duration: 14s; background: var(--rojo-iti); box-shadow: 0 0 10px var(--rojo-iti); }
+
+/* Nombre del evento */
+.nombre-evento {
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+}
+
+.titulo-iti {
+  font-size: clamp(2rem, 7vw, 3.8rem);
   font-weight: 900;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
+  line-height: 1;
   color: var(--blanco);
-  text-shadow: 0 0 20px var(--cian), 0 0 40px var(--cian);
-  line-height: 1.1;
 }
-.titulo-sub {
-  color: var(--verde);
-  text-shadow: var(--sombra-verde);
+
+.letra-iti {
+  display: inline-block;
+  animation: caer-letra 0.5s ease both;
+  animation-delay: calc(var(--i) * 0.06s);
+  text-shadow: 0 0 20px var(--cian), 0 0 40px rgba(0,229,255,0.4);
+  transition: color 0.2s, text-shadow 0.2s;
+  cursor: default;
 }
-.subtitulo {
-  color: var(--cian);
-  font-size: 1.1rem;
-  letter-spacing: 0.12em;
+.letra-iti:hover {
+  color: var(--amarillo);
+  text-shadow: 0 0 20px var(--amarillo), 0 0 40px rgba(255,214,0,0.5);
+  transform: translateY(-4px);
 }
+@keyframes caer-letra {
+  from { opacity: 0; transform: translateY(-30px) scale(0.5); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.guion-iti {
+  color: var(--rojo-iti);
+  text-shadow: var(--sombra-rojo);
+  font-size: clamp(2rem, 7vw, 3.8rem);
+  font-weight: 900;
+}
+
+.ampersand-deco {
+  font-size: clamp(1.8rem, 5vw, 3rem);
+  font-weight: 900;
+  color: var(--rojo-iti);
+  text-shadow: var(--sombra-rojo);
+  animation: pulso-amper 2s infinite alternate;
+  line-height: 1;
+}
+@keyframes pulso-amper {
+  from { text-shadow: 0 0 10px var(--rojo-iti); transform: scale(1); }
+  to   { text-shadow: 0 0 30px var(--rojo-iti), 0 0 60px rgba(192,57,43,0.4); transform: scale(1.1); }
+}
+
+.titulo-desafio {
+  font-size: clamp(1.2rem, 4vw, 2rem);
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  background: linear-gradient(90deg, var(--amarillo), var(--verde), var(--cian));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradiente-move 4s linear infinite;
+  background-size: 200% auto;
+}
+@keyframes gradiente-move {
+  from { background-position: 0% center; }
+  to   { background-position: 200% center; }
+}
+
+.subtitulo-evento {
+  font-size: 1rem;
+  color: var(--teal-iti);
+  letter-spacing: 0.15em;
+  opacity: 0.85;
+  margin-top: 4px;
+}
+
+/* Botón de entrada olímpico */
+.btn-entrar-olimpiadas {
+  position: relative; overflow: hidden;
+  background: linear-gradient(135deg, var(--rojo-iti) 0%, #8b0000 50%, var(--rojo-iti) 100%);
+  color: var(--blanco);
+  border: 2px solid rgba(255,255,255,0.2);
+  border-radius: 50px;
+  padding: 18px 48px;
+  font-size: 1.25rem;
+  font-weight: 800;
+  cursor: pointer;
+  letter-spacing: 0.06em;
+  box-shadow: 0 0 30px rgba(192,57,43,0.5), 0 8px 32px rgba(0,0,0,0.4);
+  transition: transform 0.2s, box-shadow 0.2s;
+  display: flex; align-items: center; gap: 10px;
+  margin-top: 8px;
+}
+.btn-entrar-olimpiadas:hover {
+  transform: translateY(-3px) scale(1.04);
+  box-shadow: 0 0 50px rgba(192,57,43,0.7), 0 12px 40px rgba(0,0,0,0.5);
+}
+.btn-entrar-olimpiadas:active { transform: scale(0.97); }
+
+.btn-icono { font-size: 1.4rem; animation: cohete 1.5s infinite alternate; }
+@keyframes cohete {
+  from { transform: translateY(0) rotate(-45deg); }
+  to   { transform: translateY(-4px) rotate(-45deg); }
+}
+
+/* Brillo que recorre el botón */
+.btn-brillo {
+  position: absolute;
+  top: 0; left: -100%;
+  width: 60%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+  animation: brillo-btn 2.5s infinite;
+}
+@keyframes brillo-btn {
+  0%   { left: -100%; }
+  40%  { left: 150%; }
+  100% { left: 150%; }
+}
+
+/* Stats de portada */
+.stats-portada {
+  display: flex; align-items: center; gap: 16px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(0,229,255,0.15);
+  border-radius: 40px;
+  padding: 10px 28px;
+  margin-top: 4px;
+}
+.stat-item { display: flex; flex-direction: column; align-items: center; gap: 1px; }
+.stat-num {
+  font-size: 1.6rem; font-weight: 900;
+  color: var(--amarillo);
+  text-shadow: var(--sombra-dorado);
+  line-height: 1;
+}
+.stat-label { font-size: 0.72rem; color: #8ab; letter-spacing: 0.08em; }
+.stat-sep { color: rgba(255,255,255,0.2); font-size: 1.5rem; }
+
+/* Mantener el antiguo .titulo-juego/.subtitulo para compatibilidad */
+.titulo-juego { display: none; }
+.subtitulo    { display: none; }
+.logo-reactor { display: none; }
 
 /* =============================================
    BOTONES

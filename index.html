@@ -3,25 +3,66 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Reactor del Saber ⚗️</title>
+  <title>ITI-Olimpiadas & Desafío Científico</title>
   <link rel="stylesheet" href="/src/estilos/main.css" />
 </head>
 <body>
 
   <!-- PANTALLA 1: PORTADA -->
   <section id="pantalla-portada" class="pantalla activa">
+
+    <!-- Partículas de fondo animadas -->
+    <div class="particulas-fondo" id="particulas-fondo"></div>
+
+    <!-- Burbujas flotantes -->
     <div class="reactor-fondo">
       <div class="burbuja"></div>
       <div class="burbuja"></div>
       <div class="burbuja"></div>
       <div class="burbuja"></div>
       <div class="burbuja"></div>
+      <div class="burbuja"></div>
+      <div class="burbuja"></div>
     </div>
+
+    <!-- Contenido central -->
     <div class="portada-contenido">
-      <div class="logo-reactor">⚗️</div>
-      <h1 class="titulo-juego">REACTOR<br><span class="titulo-sub">DEL SABER</span></h1>
-      <p class="subtitulo">Química &amp; Física · Grados 8°, 9° y 10°</p>
-      <button id="btn-entrar" class="btn-principal">⚡ Entrar al Laboratorio</button>
+
+      <!-- Logo con animación orbital -->
+      <div class="logo-wrapper">
+        <div class="orbita orbita-1"><div class="atomo"></div></div>
+        <div class="orbita orbita-2"><div class="atomo"></div></div>
+        <div class="orbita orbita-3"><div class="atomo"></div></div>
+        <img src="/assets/logo.jpg" alt="ITI-Olimpiadas Logo" class="logo-imagen" id="logo-img" />
+      </div>
+
+      <!-- Nombre del evento -->
+      <div class="nombre-evento">
+        <h1 class="titulo-iti">
+          <span class="letra-iti" style="--i:0">I</span><span class="letra-iti" style="--i:1">T</span><span class="letra-iti" style="--i:2">I</span>
+          <span class="guion-iti">-</span>
+          <span class="letra-iti" style="--i:3">O</span><span class="letra-iti" style="--i:4">L</span><span class="letra-iti" style="--i:5">I</span><span class="letra-iti" style="--i:6">M</span><span class="letra-iti" style="--i:7">P</span><span class="letra-iti" style="--i:8">I</span><span class="letra-iti" style="--i:9">A</span><span class="letra-iti" style="--i:10">D</span><span class="letra-iti" style="--i:11">A</span><span class="letra-iti" style="--i:12">S</span>
+        </h1>
+        <div class="ampersand-deco">&amp;</div>
+        <h2 class="titulo-desafio">DESAFÍO CIENTÍFICO</h2>
+        <p class="subtitulo-evento">Química &amp; Física · Grados 8°, 9° y 10°</p>
+      </div>
+
+      <!-- Botón de entrada -->
+      <button id="btn-entrar" class="btn-entrar-olimpiadas">
+        <span class="btn-icono">🚀</span>
+        <span class="btn-texto">¡Iniciar el Desafío!</span>
+        <span class="btn-brillo"></span>
+      </button>
+
+      <!-- Estadísticas animadas -->
+      <div class="stats-portada">
+        <div class="stat-item"><span class="stat-num">29</span><span class="stat-label">Preguntas</span></div>
+        <div class="stat-sep">·</div>
+        <div class="stat-item"><span class="stat-num">3</span><span class="stat-label">Grados</span></div>
+        <div class="stat-sep">·</div>
+        <div class="stat-item"><span class="stat-num">3</span><span class="stat-label">Podios</span></div>
+      </div>
     </div>
   </section>
 

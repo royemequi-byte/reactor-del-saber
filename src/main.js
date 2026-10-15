@@ -14,6 +14,27 @@ export function irA(id) {
   }
 }
 
+// --- Generar partículas flotantes en la portada ---
+(function generarParticulas() {
+  const cont = document.getElementById('particulas-fondo');
+  if (!cont) return;
+  const colores = ['#00e5ff', '#ffd600', '#39ff14', '#ff00c8', '#c0392b'];
+  for (let i = 0; i < 40; i++) {
+    const p = document.createElement('div');
+    p.className = 'particula';
+    p.style.cssText = `
+      left: ${Math.random() * 100}%;
+      --dur: ${6 + Math.random() * 10}s;
+      --delay: ${Math.random() * 10}s;
+      background: ${colores[Math.floor(Math.random() * colores.length)]};
+      width: ${2 + Math.random() * 5}px;
+      height: ${2 + Math.random() * 5}px;
+      box-shadow: 0 0 6px currentColor;
+    `;
+    cont.appendChild(p);
+  }
+})();
+
 // --- PORTADA ---
 document.getElementById('btn-entrar').addEventListener('click', () => {
   irA('pantalla-registro');
