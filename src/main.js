@@ -845,6 +845,21 @@ document.getElementById('btn-preview-retry').addEventListener('click', () => {
   if (_preguntaPreview) iniciarPreview(_preguntaPreview);
 });
 
+function autoRellenarCrucigrama(p, area) {
+  if (!p.palabras) return;
+  p.palabras.forEach(palabra => {
+    for (let k = 0; k < palabra.texto.length; k++) {
+      const f = palabra.dir === 'H' ? palabra.fila : palabra.fila + k;
+      const c = palabra.dir === 'H' ? palabra.col + k : palabra.col;
+      const inp = area.querySelector(`input[data-f="${f}"][data-c="${c}"]`);
+      if (inp && !inp.disabled) {
+        inp.value = palabra.texto[k];
+        inp.dispatchEvent(new Event('input', { bubbles: true }));
+      }
+    }
+  });
+}
+
 function iniciarPreview(p) {
   _preguntaPreview = p;
 
@@ -877,6 +892,11 @@ function iniciarPreview(p) {
 
   const tipo = p.tipo || 'seleccion';
 
+  // Botón de autorellenar (solo crucigrama)
+  const btnResolver = document.getElementById('btn-preview-resolver');
+  btnResolver.classList.toggle('oculto', tipo !== 'crucigrama');
+  btnResolver.onclick = null; // limpiar listener previo
+
   const onRespuesta = (esCorrecta) => mostrarPreviewFeedback(p, esCorrecta);
 
   if (tipo === 'seleccion') {
@@ -900,6 +920,11 @@ function iniciarPreview(p) {
     const renderFn = { relacionar: renderRelacionar, ordenar: renderOrdenar,
                        crucigrama: renderCrucigrama, clasifica: renderClasifica }[tipo];
     if (renderFn) renderFn(p, area, onRespuesta);
+  }
+
+  // Conectar autorellenar DESPUÉS de que el renderer haya creado los inputs
+  if (tipo === 'crucigrama') {
+    btnResolver.onclick = () => autoRellenarCrucigrama(p, area);
   }
 
   irA('pantalla-preview');
