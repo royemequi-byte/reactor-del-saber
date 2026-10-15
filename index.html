@@ -90,16 +90,12 @@
           <input type="text" id="inp-curso" placeholder="Ej: A, B, 01..." maxlength="10" required />
         </div>
         <div class="campo">
-          <label>Elige tu elemento avatar</label>
-          <div class="avatares-grid">
-            <button type="button" class="avatar-btn" data-elemento="Na">Na<span>Sodio</span></button>
-            <button type="button" class="avatar-btn" data-elemento="Fe">Fe<span>Hierro</span></button>
-            <button type="button" class="avatar-btn" data-elemento="O">O<span>Oxígeno</span></button>
-            <button type="button" class="avatar-btn" data-elemento="C">C<span>Carbono</span></button>
-            <button type="button" class="avatar-btn" data-elemento="H">H<span>Hidrógeno</span></button>
-            <button type="button" class="avatar-btn" data-elemento="Au">Au<span>Oro</span></button>
+          <label for="inp-avatar">Tu apodo de científico</label>
+          <div class="avatar-input-wrapper">
+            <span class="avatar-preview" id="avatar-preview">⚗️</span>
+            <input type="text" id="inp-avatar" placeholder="Ej: Na, Átomo, Rocket..." maxlength="12" required autocomplete="off" />
           </div>
-          <input type="hidden" id="inp-avatar" value="" />
+          <small class="campo-hint">Escríbelo como quieras, se guardará en MAYÚSCULAS</small>
         </div>
         <button type="submit" class="btn-principal">🚀 ¡Iniciar experimento!</button>
       </form>

@@ -42,14 +42,13 @@ document.getElementById('btn-entrar').addEventListener('click', () => {
 
 // --- REGISTRO ---
 const formRegistro = document.getElementById('form-registro');
+const inpAvatar    = document.getElementById('inp-avatar');
+const avatarPreview = document.getElementById('avatar-preview');
 
-// Selección de avatar
-document.querySelectorAll('.avatar-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.avatar-btn').forEach(b => b.classList.remove('seleccionado'));
-    btn.classList.add('seleccionado');
-    document.getElementById('inp-avatar').value = btn.dataset.elemento;
-  });
+// Convertir a mayúsculas en tiempo real y actualizar preview
+inpAvatar.addEventListener('input', () => {
+  inpAvatar.value = inpAvatar.value.toUpperCase();
+  avatarPreview.textContent = inpAvatar.value.slice(0, 3) || '⚗️';
 });
 
 formRegistro.addEventListener('submit', (e) => {
@@ -58,10 +57,10 @@ formRegistro.addEventListener('submit', (e) => {
   const nombre = document.getElementById('inp-nombre').value.trim();
   const grado  = parseInt(document.getElementById('inp-grado').value);
   const curso  = document.getElementById('inp-curso').value.trim();
-  const avatar = document.getElementById('inp-avatar').value;
+  const avatar = inpAvatar.value.trim().toUpperCase();
 
   if (!avatar) {
-    alert('Por favor elige tu elemento avatar ⚗️');
+    alert('Por favor escribe tu apodo de científico ⚗️');
     return;
   }
 

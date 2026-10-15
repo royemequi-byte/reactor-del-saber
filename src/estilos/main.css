@@ -383,31 +383,40 @@ body {
 .campo input:focus, .campo select:focus { border-color: var(--cian); box-shadow: 0 0 8px #00e5ff44; }
 .campo select option { background: var(--fondo2); }
 
-/* Avatares */
-.avatares-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-  margin-top: 6px;
+/* Avatar libre */
+.avatar-input-wrapper {
+  display: flex; align-items: center; gap: 10px;
 }
-.avatar-btn {
+.avatar-preview {
+  width: 52px; height: 52px;
   background: var(--gris);
-  border: 2px solid #3a5070;
-  border-radius: 10px;
-  color: var(--blanco);
-  padding: 10px 6px;
-  font-size: 1.4rem;
+  border: 2px solid var(--cian);
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem; font-weight: 900;
+  color: var(--verde);
+  text-shadow: var(--sombra-verde);
+  letter-spacing: -1px;
+  flex-shrink: 0;
+  transition: all 0.2s;
+  box-shadow: var(--sombra-cian);
+}
+.avatar-input-wrapper input {
+  flex: 1;
+  background: var(--gris);
+  border: 1px solid #3a5070;
+  border-radius: 8px;
+  color: var(--verde);
+  padding: 12px 14px;
+  font-size: 1.1rem;
   font-weight: 700;
-  cursor: pointer;
-  display: flex; flex-direction: column; align-items: center; gap: 2px;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  letter-spacing: 0.08em;
+  outline: none;
+  transition: border-color 0.2s;
+  text-transform: uppercase;
 }
-.avatar-btn span { font-size: 0.65rem; font-weight: 400; color: #8ab; }
-.avatar-btn:hover, .avatar-btn.seleccionado {
-  border-color: var(--verde);
-  box-shadow: var(--sombra-verde);
-  background: #1a3a20;
-}
+.avatar-input-wrapper input:focus { border-color: var(--cian); box-shadow: 0 0 8px #00e5ff44; }
+.campo-hint { font-size: 0.78rem; color: #6a8aaa; margin-top: 2px; }
 
 /* =============================================
    PANTALLA 3 — EXAMEN
@@ -699,13 +708,83 @@ body {
 #ctrl-volumen { width: 80px; accent-color: var(--verde); }
 
 /* =============================================
-   RESPONSIVE
+   RESPONSIVE — CELULAR (hasta 600px)
    ============================================= */
 @media (max-width: 600px) {
-  .opciones-grid { grid-template-columns: 1fr; }
-  .podio-top3 { flex-direction: row; align-items: flex-end; }
-  .podio-lugar { min-width: 80px; padding: 10px 8px; }
-  .registro-contenido { padding: 24px 16px; }
+
+  body { font-size: 16px; }
+
+  /* Portada */
+  .logo-wrapper { width: 160px; height: 160px; }
+  .logo-imagen  { width: 130px; height: 130px; }
+  .orbita-1 { width: 155px; height: 155px; top: 3px; left: 3px; }
+  .orbita-2 { width: 170px; height: 170px; top: -5px; left: -5px; }
+  .orbita-3 { width: 185px; height: 185px; top: -13px; left: -13px; }
+  .titulo-iti   { font-size: 1.8rem; }
+  .titulo-desafio { font-size: 1rem; letter-spacing: 0.1em; }
+  .subtitulo-evento { font-size: 0.85rem; }
+  .btn-entrar-olimpiadas { padding: 14px 32px; font-size: 1rem; }
+  .stats-portada { padding: 8px 18px; gap: 10px; }
+  .stat-num { font-size: 1.3rem; }
+
+  /* Registro */
+  .registro-contenido { padding: 20px 14px; border-radius: 14px; }
+  .registro-contenido h2 { font-size: 1.3rem; }
+
+  /* Examen */
+  .examen-header {
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 10px 12px;
+  }
+  .contador-pregunta { font-size: 0.9rem; }
+  .reloj-container   { font-size: 1.1rem; }
+  .btn-poder         { font-size: 1.1rem; padding: 5px 8px; }
+  .poderes-container { gap: 5px; }
+
+  .pregunta-container { padding: 16px 12px; }
+  .enunciado          { font-size: 1rem; }
+  .opciones-grid      { grid-template-columns: 1fr; gap: 10px; }
+  .opcion-btn         { padding: 14px 12px; font-size: 0.95rem; }
+
+  /* Retroalimentación */
+  .retro-icono  { font-size: 3rem; }
+  .retro-titulo { font-size: 1.6rem; }
+
+  /* Resultados */
+  .puntaje-grande { font-size: 3rem; }
+  .nota-real      { padding: 12px 20px; }
+  .nota-valor     { font-size: 2rem; }
+  .bloque-item    { grid-template-columns: 1fr auto; gap: 6px; font-size: 0.82rem; }
+  .barra-resultado { width: 80px; }
+  .botones-resultado { flex-direction: column; width: 100%; }
+  .botones-resultado .btn-principal,
+  .botones-resultado .btn-secundario { width: 100%; text-align: center; }
+
+  /* Podio */
+  .podio-top3   { gap: 8px; }
+  .podio-lugar  { min-width: 85px; padding: 10px 6px; }
+  .podio-medalla { font-size: 1.8rem; }
+  .podio-elemento { font-size: 1.4rem; }
+  .podio-nombre  { font-size: 0.75rem; }
+  .podio-nota    { font-size: 0.85rem; }
+  .ranking-tabla { font-size: 0.82rem; }
+  .ranking-tabla th, .ranking-tabla td { padding: 8px 8px; }
+
+  /* Admin */
+  .admin-contenido { padding: 24px 16px; }
+
+  /* Widget volumen más pequeño en móvil */
+  .volumen-widget { bottom: 10px; right: 10px; padding: 6px 10px; }
+  #ctrl-volumen   { width: 60px; }
+}
+
+/* Tablet (601px – 900px) */
+@media (min-width: 601px) and (max-width: 900px) {
+  .logo-wrapper { width: 190px; height: 190px; }
+  .logo-imagen  { width: 155px; height: 155px; }
+  .opciones-grid { grid-template-columns: 1fr 1fr; }
+  .podio-lugar { min-width: 90px; }
 }
 
 /* Respeta preferencia de movimiento reducido */
