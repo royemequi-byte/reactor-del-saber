@@ -82,7 +82,7 @@ function mostrarPregunta() {
   document.getElementById('num-pregunta').textContent = estado.preguntaActual + 1;
 
   // Etiqueta de tipo
-  const etiquetas = { quimica: '⚗️ Química', fisica: '⚡ Física', razonamiento: '🧠 Razonamiento' };
+  const etiquetas = { quimica: '⚗️ Química', fisica: '⚡ Física', biologia: '🌿 Biología', razonamiento: '🧠 Razonamiento' };
   document.getElementById('tipo-pregunta').textContent = etiquetas[p.materia] || p.materia;
 
   // Enunciado
@@ -140,7 +140,7 @@ function responder(indiceElegido) {
 
     // Contar aciertos por bloque
     if (p.materia === 'razonamiento') estado.aciertos.razonamiento++;
-    else                              estado.aciertos.ciencias++;
+    else estado.aciertos.ciencias++; // química + física + biología
   } else {
     estado.racha = 0;
     estado.multiplicador = 1;

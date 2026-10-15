@@ -21,10 +21,14 @@ export function armarExamen(estudiante) {
   const historial = JSON.parse(localStorage.getItem(claveHistorial) || '[]');
 
   // Banco disponible: preferir preguntas no vistas recientemente
-  const disponibles = banco.filter(p => !historial.includes(p.id));
-  const bancoPrioritario = disponibles.length >= 19 ? disponibles : banco;
+  const disponibles = banco.filter(p =>
+    !historial.includes(p.id) &&
+    ['quimica','fisica','biologia'].includes(p.materia)
+  );
+  const bancoCiencias = banco.filter(p => ['quimica','fisica','biologia'].includes(p.materia));
+  const bancoPrioritario = disponibles.length >= 19 ? disponibles : bancoCiencias;
 
-  // Elegir 19 preguntas de ciencias al azar
+  // Elegir 19 preguntas de ciencias al azar (química + física + biología)
   const ciencias = elegirN(bancoPrioritario, 19);
 
   // Las 10 de razonamiento (en Fase 3 se reemplaza por generadores reales)

@@ -37,7 +37,7 @@ export const estado = {
   // Nota final calculada (se llena al terminar)
   notaFinal: 0,
   aciertos: {
-    ciencias: 0,           // de 19
+    ciencias: 0,           // de 19 (química + física + biología)
     razonamiento: 0        // de 10
   }
 };
