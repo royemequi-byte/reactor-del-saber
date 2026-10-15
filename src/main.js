@@ -426,17 +426,35 @@ function procesarRespuesta(esCorrecta) {
   estado.puntaje += pts;
   estado.respuestas.push({ correcta: esCorrecta, puntaje: pts });
 
-  setTimeout(() => mostrarRetro(esCorrecta, pts, p?.explicacion || ''), 600);
+  // Texto de la respuesta correcta (solo para selección múltiple cuando falla)
+  let respCorrecta = null;
+  if (!esCorrecta && tipo === 'seleccion' && p?.opciones && p.correcta != null) {
+    respCorrecta = p.opciones[p.correcta];
+  }
+
+  // Más tiempo para ver la correcta resaltada antes de pasar a retro
+  const demora = esCorrecta ? 600 : 1400;
+  setTimeout(() => mostrarRetro(esCorrecta, pts, p?.explicacion || '', respCorrecta), demora);
 }
 
 // ─── RETROALIMENTACIÓN ─────────────────────────────────────────────────────
-function mostrarRetro(correcta, pts, explicacion) {
+function mostrarRetro(correcta, pts, explicacion, respCorrecta = null) {
   irA('pantalla-retro');
 
   document.getElementById('retro-icono').textContent  = correcta ? '✔' : '✖';
   const titulo = document.getElementById('retro-titulo');
   titulo.textContent = correcta ? '¡Correcto!' : 'Incorrecto';
   titulo.className = 'retro-titulo ' + (correcta ? 'correcto' : 'incorrecto');
+
+  // Mostrar la respuesta correcta cuando falló
+  const retroCorrecta = document.getElementById('retro-correcta');
+  if (!correcta && respCorrecta) {
+    retroCorrecta.innerHTML = `✅ La respuesta correcta era:<br><strong>${respCorrecta}</strong>`;
+    retroCorrecta.classList.remove('oculto');
+  } else {
+    retroCorrecta.classList.add('oculto');
+  }
+
   document.getElementById('retro-explicacion').textContent = explicacion;
   document.getElementById('retro-puntos').textContent = correcta
     ? `+${pts} pts ${estado.multiplicador > 1 ? '🔥 x' + estado.multiplicador : ''}`

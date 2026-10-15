@@ -737,6 +737,21 @@ body {
 .retro-titulo { font-size: 2rem; }
 .retro-titulo.correcto { color: var(--verde); text-shadow: var(--sombra-verde); }
 .retro-titulo.incorrecto { color: var(--error); }
+
+.retro-correcta {
+  background: rgba(57,255,20,0.08);
+  border: 1px solid var(--verde);
+  border-radius: 10px;
+  padding: 12px 20px;
+  font-size: 0.95rem;
+  color: #b0e8b0;
+  line-height: 1.6;
+  text-align: center;
+  max-width: 520px;
+  width: 100%;
+}
+.retro-correcta strong { color: var(--verde); display: block; margin-top: 4px; font-size: 1.05rem; }
+
 .retro-explicacion { color: #b0d0e8; line-height: 1.6; font-size: 1.05rem; }
 .retro-puntos { color: var(--amarillo); font-size: 1.3rem; font-weight: 700; }
 
