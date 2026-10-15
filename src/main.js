@@ -1,20 +1,18 @@
-// main.js — arranque y navegación entre pantallas
+// main.js — arranque, navegación y lógica de pantallas
 import { estado, resetearEstado } from './estado.js';
+import { armarExamen, guardarHistorial } from './examen.js';
 
-// --- Navegación: solo una pantalla visible a la vez ---
+// ─── NAVEGACIÓN ────────────────────────────────────────────────────────────
 export function irA(id) {
   document.querySelectorAll('.pantalla').forEach(p => p.classList.remove('activa'));
   const pantalla = document.getElementById(id);
   if (pantalla) pantalla.classList.add('activa');
 
-  // Mostrar widget de volumen solo durante el examen
   const widget = document.getElementById('volumen-widget');
-  if (widget) {
-    widget.classList.toggle('oculto', id !== 'pantalla-examen');
-  }
+  if (widget) widget.classList.toggle('oculto', id !== 'pantalla-examen');
 }
 
-// --- Generar partículas flotantes en la portada ---
+// ─── PARTÍCULAS DE FONDO ───────────────────────────────────────────────────
 (function generarParticulas() {
   const cont = document.getElementById('particulas-fondo');
   if (!cont) return;
@@ -23,35 +21,33 @@ export function irA(id) {
     const p = document.createElement('div');
     p.className = 'particula';
     p.style.cssText = `
-      left: ${Math.random() * 100}%;
-      --dur: ${6 + Math.random() * 10}s;
-      --delay: ${Math.random() * 10}s;
-      background: ${colores[Math.floor(Math.random() * colores.length)]};
-      width: ${2 + Math.random() * 5}px;
-      height: ${2 + Math.random() * 5}px;
-      box-shadow: 0 0 6px currentColor;
+      left:${Math.random() * 100}%;
+      --dur:${6 + Math.random() * 10}s;
+      --delay:${Math.random() * 10}s;
+      background:${colores[Math.floor(Math.random() * colores.length)]};
+      width:${2 + Math.random() * 5}px;
+      height:${2 + Math.random() * 5}px;
+      box-shadow:0 0 6px currentColor;
     `;
     cont.appendChild(p);
   }
 })();
 
-// --- PORTADA ---
+// ─── PORTADA ───────────────────────────────────────────────────────────────
 document.getElementById('btn-entrar').addEventListener('click', () => {
   irA('pantalla-registro');
 });
 
-// --- REGISTRO ---
-const formRegistro = document.getElementById('form-registro');
-const inpAvatar    = document.getElementById('inp-avatar');
+// ─── REGISTRO ──────────────────────────────────────────────────────────────
+const inpAvatar     = document.getElementById('inp-avatar');
 const avatarPreview = document.getElementById('avatar-preview');
 
-// Convertir a mayúsculas en tiempo real y actualizar preview
 inpAvatar.addEventListener('input', () => {
   inpAvatar.value = inpAvatar.value.toUpperCase();
   avatarPreview.textContent = inpAvatar.value.slice(0, 3) || '⚗️';
 });
 
-formRegistro.addEventListener('submit', (e) => {
+document.getElementById('form-registro').addEventListener('submit', (e) => {
   e.preventDefault();
 
   const nombre = document.getElementById('inp-nombre').value.trim();
@@ -59,50 +55,282 @@ formRegistro.addEventListener('submit', (e) => {
   const curso  = document.getElementById('inp-curso').value.trim();
   const avatar = inpAvatar.value.trim().toUpperCase();
 
-  if (!avatar) {
-    alert('Por favor escribe tu apodo de científico ⚗️');
-    return;
+  if (!avatar) { alert('Por favor escribe tu apodo de científico ⚗️'); return; }
+
+  estado.estudiante = { nombre, grado, curso, avatar };
+  iniciarExamen();
+});
+
+// ─── INICIO DEL EXAMEN ─────────────────────────────────────────────────────
+function iniciarExamen() {
+  resetearEstado();
+  estado.preguntas = armarExamen(estado.estudiante);
+  guardarHistorial(estado.estudiante, estado.preguntas);
+  estado.preguntaActual = 0;
+
+  irA('pantalla-examen');
+  mostrarPregunta();
+  iniciarReloj();
+}
+
+// ─── MOSTRAR PREGUNTA ──────────────────────────────────────────────────────
+function mostrarPregunta() {
+  const p = estado.preguntas[estado.preguntaActual];
+  if (!p) { finalizarExamen(); return; }
+
+  // Contador
+  document.getElementById('num-pregunta').textContent = estado.preguntaActual + 1;
+
+  // Etiqueta de tipo
+  const etiquetas = { quimica: '⚗️ Química', fisica: '⚡ Física', razonamiento: '🧠 Razonamiento' };
+  document.getElementById('tipo-pregunta').textContent = etiquetas[p.materia] || p.materia;
+
+  // Enunciado
+  document.getElementById('enunciado').textContent = p.enunciado;
+
+  // Opciones
+  const grid = document.getElementById('opciones-grid');
+  grid.innerHTML = '';
+  const letras = ['A', 'B', 'C', 'D'];
+  p.opciones.forEach((op, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'opcion-btn';
+    btn.innerHTML = `<strong>${letras[i]}.</strong> ${op}`;
+    btn.addEventListener('click', () => responder(i));
+    grid.appendChild(btn);
+  });
+
+  // Barra del reactor
+  const progreso = (estado.preguntaActual / 29) * 100;
+  document.getElementById('reactor-bar').style.width = progreso + '%';
+
+  // Racha
+  actualizarRacha();
+
+  // Reiniciar reloj
+  reiniciarReloj();
+}
+
+// ─── RESPONDER ─────────────────────────────────────────────────────────────
+function responder(indiceElegido) {
+  detenerReloj();
+  const p = estado.preguntas[estado.preguntaActual];
+  const correcta = indiceElegido === p.correcta;
+
+  // Deshabilitar todas las opciones
+  document.querySelectorAll('.opcion-btn').forEach((btn, i) => {
+    btn.disabled = true;
+    if (i === p.correcta)    btn.classList.add('correcta');
+    if (i === indiceElegido && !correcta) btn.classList.add('incorrecta');
+  });
+
+  // Calcular puntaje
+  let pts = 0;
+  if (correcta) {
+    pts = 100;
+    const bonusVelocidad = Math.round((estado.tiempoRestante / 30) * 50);
+    pts += bonusVelocidad;
+    pts = Math.round(pts * estado.multiplicador);
+
+    estado.racha++;
+    if      (estado.racha >= 8) estado.multiplicador = 3;
+    else if (estado.racha >= 5) estado.multiplicador = 2;
+    else if (estado.racha >= 3) estado.multiplicador = 1.5;
+    else                        estado.multiplicador = 1;
+
+    // Contar aciertos por bloque
+    if (p.materia === 'razonamiento') estado.aciertos.razonamiento++;
+    else                              estado.aciertos.ciencias++;
+  } else {
+    estado.racha = 0;
+    estado.multiplicador = 1;
   }
 
-  // Guardar datos del estudiante en el estado global
-  estado.estudiante = { nombre, grado, curso, avatar };
+  estado.puntaje += pts;
+  estado.respuestas.push({ correcta, puntaje: pts });
 
-  // Ir al examen
-  irA('pantalla-examen');
+  // Ir a retroalimentación después de 600ms (para ver el color)
+  setTimeout(() => mostrarRetro(correcta, pts, p.explicacion), 600);
+}
 
-  // Actualizar contador inicial
-  document.getElementById('num-pregunta').textContent = '1';
-  document.getElementById('reloj').textContent = '30';
-  document.getElementById('reactor-bar').style.width = '0%';
-  document.getElementById('racha-display').textContent = '';
-  document.getElementById('enunciado').textContent =
-    '⚗️ Las preguntas se cargan en la Fase 2. ¡El motor está listo!';
-  document.getElementById('opciones-grid').innerHTML =
-    '<p style="color:var(--cian);grid-column:1/-1;text-align:center">Banco de preguntas en construcción...</p>';
-  document.getElementById('tipo-pregunta').textContent = 'Química';
-});
+// ─── RETROALIMENTACIÓN ─────────────────────────────────────────────────────
+function mostrarRetro(correcta, pts, explicacion) {
+  irA('pantalla-retro');
 
-// --- RETROALIMENTACIÓN → siguiente pregunta ---
+  document.getElementById('retro-icono').textContent  = correcta ? '✔' : '✖';
+  const titulo = document.getElementById('retro-titulo');
+  titulo.textContent = correcta ? '¡Correcto!' : 'Incorrecto';
+  titulo.className = 'retro-titulo ' + (correcta ? 'correcto' : 'incorrecto');
+  document.getElementById('retro-explicacion').textContent = explicacion;
+  document.getElementById('retro-puntos').textContent = correcta
+    ? `+${pts} pts ${estado.multiplicador > 1 ? '🔥 x' + estado.multiplicador : ''}`
+    : '0 pts';
+}
+
 document.getElementById('btn-siguiente-pregunta').addEventListener('click', () => {
+  estado.preguntaActual++;
   irA('pantalla-examen');
+  mostrarPregunta();
 });
 
-// --- RESULTADOS ---
+// ─── RELOJ ─────────────────────────────────────────────────────────────────
+let intervaloReloj = null;
+
+function iniciarReloj() {
+  estado.tiempoRestante = 30;
+  actualizarDisplayReloj();
+}
+
+function reiniciarReloj() {
+  detenerReloj();
+  estado.tiempoRestante = 30;
+  actualizarDisplayReloj();
+  intervaloReloj = setInterval(() => {
+    estado.tiempoRestante--;
+    estado.tiempoTotal++;
+    actualizarDisplayReloj();
+    if (estado.tiempoRestante <= 0) {
+      detenerReloj();
+      responder(-1); // -1 = tiempo agotado (ninguna opción)
+    }
+  }, 1000);
+}
+
+function detenerReloj() {
+  clearInterval(intervaloReloj);
+}
+
+function actualizarDisplayReloj() {
+  const el = document.getElementById('reloj');
+  el.textContent = estado.tiempoRestante;
+  el.parentElement.classList.toggle('reloj-urgente', estado.tiempoRestante <= 10);
+}
+
+// ─── PODERES ───────────────────────────────────────────────────────────────
+document.getElementById('poder-catalizador').addEventListener('click', () => {
+  if (!estado.poderes.catalizador) return;
+  estado.poderes.catalizador = false;
+  document.getElementById('poder-catalizador').disabled = true;
+
+  const p = estado.preguntas[estado.preguntaActual];
+  const botones = document.querySelectorAll('.opcion-btn:not(:disabled)');
+  let eliminados = 0;
+  botones.forEach((btn, i) => {
+    if (eliminados < 2 && i !== p.correcta) {
+      btn.disabled = true;
+      btn.style.opacity = '0.2';
+      eliminados++;
+    }
+  });
+});
+
+document.getElementById('poder-reposo').addEventListener('click', () => {
+  if (!estado.poderes.reposo) return;
+  estado.poderes.reposo = false;
+  document.getElementById('poder-reposo').disabled = true;
+  detenerReloj();
+  setTimeout(() => reiniciarReloj(), 15000);
+});
+
+document.getElementById('poder-isotopo').addEventListener('click', () => {
+  if (!estado.poderes.isotopo) return;
+  estado.poderes.isotopo = false;
+  document.getElementById('poder-isotopo').disabled = true;
+  // Cambiar por otra pregunta del mismo tema (si existe)
+  const actual = estado.preguntas[estado.preguntaActual];
+  const candidatos = estado.preguntas.filter(
+    (p, i) => i !== estado.preguntaActual && p.tema === actual.tema && i > estado.preguntaActual
+  );
+  if (candidatos.length) {
+    const idx = estado.preguntas.indexOf(candidatos[0]);
+    [estado.preguntas[estado.preguntaActual], estado.preguntas[idx]] =
+    [estado.preguntas[idx], estado.preguntas[estado.preguntaActual]];
+  }
+  reiniciarReloj();
+  mostrarPregunta();
+});
+
+// ─── SILENCIO / VOLUMEN ────────────────────────────────────────────────────
+document.getElementById('btn-silencio').addEventListener('click', () => {
+  estado.silencio = !estado.silencio;
+  document.getElementById('btn-silencio').textContent = estado.silencio ? '🔇' : '🔊';
+});
+
+document.getElementById('ctrl-volumen').addEventListener('input', (e) => {
+  estado.volumen = parseFloat(e.target.value);
+});
+
+// ─── FINALIZAR EXAMEN ──────────────────────────────────────────────────────
+function finalizarExamen() {
+  detenerReloj();
+  const nota = calcularNota();
+  mostrarResultados(nota);
+  guardarEnRanking(nota);
+  irA('pantalla-resultados');
+}
+
+function calcularNota() {
+  const pctC = estado.aciertos.ciencias / 19;
+  const pctR = estado.aciertos.razonamiento / 10;
+  const nota = (pctC * 0.8 + pctR * 0.2) * 5;
+  estado.notaFinal = Math.round(nota * 10) / 10;
+  return estado.notaFinal;
+}
+
+function mostrarResultados(nota) {
+  const e = estado.estudiante;
+  document.getElementById('res-estudiante').textContent =
+    `${e.nombre} · ${e.avatar} · Grado ${e.grado}° · Curso ${e.curso}`;
+
+  document.getElementById('res-puntaje').textContent = estado.puntaje.toLocaleString('es-CO');
+  document.getElementById('res-nota').textContent = nota.toFixed(1);
+
+  const pctC = (estado.aciertos.ciencias / 19) * 100;
+  const pctR = (estado.aciertos.razonamiento / 10) * 100;
+  document.getElementById('barra-ciencias').style.width = pctC + '%';
+  document.getElementById('barra-razon').style.width    = pctR + '%';
+  document.getElementById('txt-ciencias').textContent   = `${estado.aciertos.ciencias}/19`;
+  document.getElementById('txt-razon').textContent      = `${estado.aciertos.razonamiento}/10`;
+}
+
+function guardarEnRanking(nota) {
+  const ranking = JSON.parse(localStorage.getItem('ranking') || '[]');
+  const entrada = {
+    nombre:  estado.estudiante.nombre,
+    avatar:  estado.estudiante.avatar,
+    grado:   estado.estudiante.grado,
+    curso:   estado.estudiante.curso,
+    puntaje: estado.puntaje,
+    nota:    nota.toFixed(1),
+    tiempo:  estado.tiempoTotal,
+    fecha:   new Date().toLocaleDateString('es-CO')
+  };
+  ranking.push(entrada);
+  // Ordenar: 1° puntaje desc, 2° aciertos desc (sumados), 3° tiempo asc
+  ranking.sort((a, b) =>
+    b.puntaje - a.puntaje ||
+    parseFloat(b.nota) - parseFloat(a.nota) ||
+    a.tiempo - b.tiempo
+  );
+  localStorage.setItem('ranking', JSON.stringify(ranking));
+}
+
+// ─── RESULTADOS → PODIO ────────────────────────────────────────────────────
 document.getElementById('btn-ver-podio').addEventListener('click', () => {
   irA('pantalla-podio');
   renderizarPodio();
 });
+
 document.getElementById('btn-nuevo-intento').addEventListener('click', () => {
   resetearEstado();
   irA('pantalla-registro');
 });
 
-// --- PODIO / RANKING ---
+// ─── PODIO / RANKING ───────────────────────────────────────────────────────
 document.getElementById('btn-volver-portada').addEventListener('click', () => {
   irA('pantalla-portada');
 });
 
-// Filtros del ranking
 document.querySelectorAll('.btn-filtro').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.btn-filtro').forEach(b => b.classList.remove('activo'));
@@ -111,7 +339,63 @@ document.querySelectorAll('.btn-filtro').forEach(btn => {
   });
 });
 
-// --- ADMIN: acceso por Ctrl+Shift+A ---
+function renderizarPodio() {
+  const datos = JSON.parse(localStorage.getItem('ranking') || '[]');
+  const top3 = datos.slice(0, 3);
+  const medallas = ['🥇', '🥈', '🥉'];
+  const clases   = ['primer', 'segundo', 'tercero'];
+  const contenedor = document.getElementById('podio-top3');
+
+  const orden = top3.length >= 3 ? [1, 0, 2] : top3.map((_, i) => i);
+  contenedor.innerHTML = orden.map(i => {
+    const p = top3[i];
+    if (!p) return '';
+    return `
+      <div class="podio-lugar ${clases[i]}">
+        <div class="podio-medalla">${medallas[i]}</div>
+        <div class="podio-elemento">${p.avatar}</div>
+        <div class="podio-nombre">${p.nombre}</div>
+        <div class="podio-pts">${Number(p.puntaje).toLocaleString('es-CO')} pts</div>
+        <div class="podio-nota">${p.nota}/5.0</div>
+      </div>`;
+  }).join('');
+
+  renderizarTablaRanking('todos');
+}
+
+function renderizarTablaRanking(filtro) {
+  const datos = JSON.parse(localStorage.getItem('ranking') || '[]');
+  const filtrados = filtro === 'todos' ? datos : datos.filter(p => String(p.grado) === String(filtro));
+  const topClases = ['top1', 'top2', 'top3'];
+  const tbody = document.getElementById('ranking-tbody');
+  tbody.innerHTML = filtrados.map((p, i) => `
+    <tr class="${topClases[i] || ''}">
+      <td>${i + 1}</td>
+      <td>${p.nombre}</td>
+      <td>${p.avatar}</td>
+      <td>${p.grado}°</td>
+      <td>${p.curso}</td>
+      <td>${Number(p.puntaje).toLocaleString('es-CO')}</td>
+      <td>${p.nota}</td>
+    </tr>`).join('');
+
+  if (!filtrados.length) {
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:#8ab">Sin resultados aún</td></tr>';
+  }
+}
+
+// ─── RACHA DISPLAY ─────────────────────────────────────────────────────────
+function actualizarRacha() {
+  const el = document.getElementById('racha-display');
+  if (estado.racha >= 3) {
+    const emojis = { 1.5: '🔥', 2: '🔥🔥', 3: '🔥🔥🔥' };
+    el.textContent = `Racha x${estado.multiplicador} ${emojis[estado.multiplicador] || ''}  — ${estado.racha} aciertos seguidos`;
+  } else {
+    el.textContent = '';
+  }
+}
+
+// ─── ADMIN (Ctrl+Shift+A) ──────────────────────────────────────────────────
 document.addEventListener('keydown', (e) => {
   if (e.ctrlKey && e.shiftKey && e.key === 'A') {
     e.preventDefault();
@@ -125,8 +409,7 @@ document.addEventListener('keydown', (e) => {
 
 document.getElementById('btn-admin-entrar').addEventListener('click', async () => {
   const pass = document.getElementById('inp-admin-pass').value;
-  const correcto = await verificarAdmin(pass);
-  if (correcto) {
+  if (await verificarAdmin(pass)) {
     document.getElementById('admin-login').style.display = 'none';
     document.getElementById('admin-panel').classList.remove('oculto');
   } else {
@@ -134,84 +417,22 @@ document.getElementById('btn-admin-entrar').addEventListener('click', async () =
   }
 });
 
-document.getElementById('btn-admin-salir').addEventListener('click', () => {
-  irA('pantalla-portada');
-});
+document.getElementById('btn-admin-salir').addEventListener('click', () => irA('pantalla-portada'));
 
-// Control de volumen
-document.getElementById('ctrl-volumen').addEventListener('input', (e) => {
-  estado.volumen = parseFloat(e.target.value);
-  // En Fase 5 esto controlará el motor de audio
-});
-
-// --- Funciones de soporte ---
-
-// Verifica contraseña admin comparando hash SHA-256
 async function verificarAdmin(pass) {
   const hashGuardado = localStorage.getItem('adminHash');
-
   if (!hashGuardado) {
-    // Primera vez: crear contraseña
     const nueva = prompt('Primera vez: crea tu contraseña de super admin');
     if (!nueva || nueva.length < 4) return false;
     const hash = await sha256(nueva);
     localStorage.setItem('adminHash', hash);
     return (await sha256(pass)) === hash;
   }
-
   return (await sha256(pass)) === hashGuardado;
 }
 
 async function sha256(texto) {
-  const data = new TextEncoder().encode(texto);
+  const data   = new TextEncoder().encode(texto);
   const buffer = await crypto.subtle.digest('SHA-256', data);
-  return Array.from(new Uint8Array(buffer)).map(b => b.toString(16).padStart(2,'0')).join('');
-}
-
-// Renderiza el podio con los datos del ranking guardados
-function renderizarPodio() {
-  const datos = JSON.parse(localStorage.getItem('ranking') || '[]');
-  const top3 = datos.slice(0, 3);
-  const medallas = ['🥇', '🥈', '🥉'];
-  const clases   = ['primer', 'segundo', 'tercero'];
-  const contenedor = document.getElementById('podio-top3');
-
-  // Orden visual: 2° izquierda, 1° centro, 3° derecha
-  const orden = top3.length >= 3 ? [1, 0, 2] : top3.map((_, i) => i);
-  contenedor.innerHTML = orden.map(i => {
-    const p = top3[i];
-    if (!p) return '';
-    return `
-      <div class="podio-lugar ${clases[i]}">
-        <div class="podio-medalla">${medallas[i]}</div>
-        <div class="podio-elemento">${p.avatar}</div>
-        <div class="podio-nombre">${p.nombre}</div>
-        <div class="podio-pts">${p.puntaje} pts</div>
-        <div class="podio-nota">${p.nota}/5.0</div>
-      </div>`;
-  }).join('');
-
-  renderizarTablaRanking('todos');
-}
-
-function renderizarTablaRanking(filtro) {
-  const datos = JSON.parse(localStorage.getItem('ranking') || '[]');
-  const filtrados = filtro === 'todos' ? datos : datos.filter(p => String(p.grado) === String(filtro));
-
-  const topClases = ['top1', 'top2', 'top3'];
-  const tbody = document.getElementById('ranking-tbody');
-  tbody.innerHTML = filtrados.map((p, i) => `
-    <tr class="${topClases[i] || ''}">
-      <td>${i + 1}</td>
-      <td>${p.nombre}</td>
-      <td>${p.avatar}</td>
-      <td>${p.grado}°</td>
-      <td>${p.curso}</td>
-      <td>${p.puntaje}</td>
-      <td>${p.nota}</td>
-    </tr>`).join('');
-
-  if (!filtrados.length) {
-    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:#8ab">Sin resultados aún</td></tr>';
-  }
+  return Array.from(new Uint8Array(buffer)).map(b => b.toString(16).padStart(2, '0')).join('');
 }

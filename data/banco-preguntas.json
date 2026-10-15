@@ -1,170 +1,570 @@
 [
   {
-    "id": "QUI-8-001",
-    "materia": "quimica",
-    "tema": "tabla periodica",
-    "grado": 8,
-    "dificultad": 1,
+    "id": "QUI-8-001", "materia": "quimica", "tema": "tabla periodica", "grado": 8, "dificultad": 1,
     "enunciado": "¿Qué elemento tiene el símbolo Na?",
     "opciones": ["Nitrógeno", "Sodio", "Neón", "Níquel"],
     "correcta": 1,
-    "explicacion": "Na viene del latín 'Natrium'. El sodio es un metal alcalino muy reactivo.",
-    "imagen": null,
-    "autor": "ia",
-    "activa": true
+    "explicacion": "Na viene del latín 'Natrium'. El sodio es un metal alcalino del grupo 1.",
+    "imagen": null, "autor": "ia", "activa": true
   },
   {
-    "id": "QUI-8-002",
-    "materia": "quimica",
-    "tema": "propiedades de la materia",
-    "grado": 8,
-    "dificultad": 1,
+    "id": "QUI-8-002", "materia": "quimica", "tema": "propiedades de la materia", "grado": 8, "dificultad": 1,
     "enunciado": "¿Cuál de estas es una propiedad INTENSIVA de la materia?",
     "opciones": ["Masa", "Volumen", "Densidad", "Peso"],
     "correcta": 2,
-    "explicacion": "La densidad es intensiva: no cambia si divides la muestra. Masa y volumen son extensivas (dependen de la cantidad).",
-    "imagen": null,
-    "autor": "ia",
-    "activa": true
+    "explicacion": "La densidad no cambia si divides la muestra. Masa y volumen sí cambian (son extensivas).",
+    "imagen": null, "autor": "ia", "activa": true
   },
   {
-    "id": "QUI-8-003",
-    "materia": "quimica",
-    "tema": "tabla periodica",
-    "grado": 8,
-    "dificultad": 1,
+    "id": "QUI-8-003", "materia": "quimica", "tema": "tabla periodica", "grado": 8, "dificultad": 1,
     "enunciado": "¿Cuántos electrones tiene el átomo de oxígeno (O)?",
     "opciones": ["6", "8", "16", "2"],
     "correcta": 1,
-    "explicacion": "El número atómico del oxígeno es 8, lo que significa que tiene 8 protones y 8 electrones.",
-    "imagen": null,
-    "autor": "ia",
-    "activa": true
+    "explicacion": "El número atómico del oxígeno es 8: tiene 8 protones y 8 electrones en estado neutro.",
+    "imagen": null, "autor": "ia", "activa": true
   },
   {
-    "id": "QUI-9-001",
-    "materia": "quimica",
-    "tema": "reacciones quimicas",
-    "grado": 9,
-    "dificultad": 2,
+    "id": "QUI-8-004", "materia": "quimica", "tema": "tabla periodica", "grado": 8, "dificultad": 1,
+    "enunciado": "¿Cómo se llama el elemento con símbolo Fe?",
+    "opciones": ["Fósforo", "Fluoruro", "Hierro", "Francio"],
+    "correcta": 2,
+    "explicacion": "Fe viene del latín 'Ferrum'. El hierro es un metal de transición, número atómico 26.",
+    "imagen": null, "autor": "ia", "activa": true
+  },
+  {
+    "id": "QUI-8-005", "materia": "quimica", "tema": "tabla periodica", "grado": 8, "dificultad": 1,
+    "enunciado": "¿En qué grupo de la tabla periódica se encuentran los gases nobles?",
+    "opciones": ["Grupo 1", "Grupo 7", "Grupo 17", "Grupo 18"],
+    "correcta": 3,
+    "explicacion": "Los gases nobles (He, Ne, Ar, Kr, Xe, Rn) están en el grupo 18. Tienen capa de valencia completa.",
+    "imagen": null, "autor": "ia", "activa": true
+  },
+  {
+    "id": "QUI-8-006", "materia": "quimica", "tema": "tabla periodica", "grado": 8, "dificultad": 1,
+    "enunciado": "¿Qué nos indica el número atómico de un elemento?",
+    "opciones": ["La masa del átomo", "El número de neutrones", "El número de protones", "El número de electrones de valencia"],
+    "correcta": 2,
+    "explicacion": "El número atómico (Z) indica la cantidad de protones en el núcleo. Es único para cada elemento.",
+    "imagen": null, "autor": "ia", "activa": true
+  },
+  {
+    "id": "QUI-8-007", "materia": "quimica", "tema": "propiedades de la materia", "grado": 8, "dificultad": 1,
+    "enunciado": "¿Cuál de los siguientes es un cambio FÍSICO de la materia?",
+    "opciones": ["La leche se agria", "El hierro se oxida", "El agua se congela", "La madera se quema"],
+    "correcta": 2,
+    "explicacion": "Congelar el agua es un cambio físico: solo cambia de estado (líquido → sólido), no su composición química.",
+    "imagen": null, "autor": "ia", "activa": true
+  },
+  {
+    "id": "QUI-8-008", "materia": "quimica", "tema": "propiedades de la materia", "grado": 8, "dificultad": 2,
+    "enunciado": "Una sustancia tiene densidad de 2 g/cm³. Si tomas la mitad de esa sustancia, ¿cuál es su densidad?",
+    "opciones": ["1 g/cm³", "4 g/cm³", "2 g/cm³", "Depende del volumen"],
+    "correcta": 2,
+    "explicacion": "La densidad es una propiedad intensiva: no cambia con la cantidad de sustancia. Siempre será 2 g/cm³.",
+    "imagen": null, "autor": "ia", "activa": true
+  },
+  {
+    "id": "QUI-8-009", "materia": "quimica", "tema": "propiedades de la materia", "grado": 8, "dificultad": 1,
+    "enunciado": "¿Cuál es el estado de la materia que NO tiene forma ni volumen propio?",
+    "opciones": ["Sólido", "Líquido", "Gas", "Plasma"],
+    "correcta": 2,
+    "explicacion": "El gas no tiene forma ni volumen propio: ocupa todo el recipiente que lo contiene.",
+    "imagen": null, "autor": "ia", "activa": true
+  },
+  {
+    "id": "QUI-8-010", "materia": "quimica", "tema": "tabla periodica", "grado": 8, "dificultad": 2,
+    "enunciado": "¿Qué son los isótopos de un elemento?",
+    "opciones": ["Átomos con diferente número de protones", "Átomos con igual número de protones pero diferente número de neutrones", "Átomos con diferente número de electrones", "Átomos de diferente elemento"],
+    "correcta": 1,
+    "explicacion": "Los isótopos tienen el mismo número de protones (mismo elemento) pero distinto número de neutrones. Ej: C-12 y C-14.",
+    "imagen": null, "autor": "ia", "activa": true
+  },
+  {
+    "id": "QUI-8-011", "materia": "quimica", "tema": "propiedades de la materia", "grado": 8, "dificultad": 1,
+    "enunciado": "¿Cuál de estas mezclas es HETEROGÉNEA?",
+    "opciones": ["Agua con sal", "Agua con azúcar", "Ensalada de frutas", "Aire"],
+    "correcta": 2,
+    "explicacion": "La ensalada de frutas es heterogénea porque puedes ver y separar sus componentes a simple vista.",
+    "imagen": null, "autor": "ia", "activa": true
+  },
+  {
+    "id": "QUI-8-012", "materia": "quimica", "tema": "tabla periodica", "grado": 8, "dificultad": 2,
+    "enunciado": "¿Qué elemento tiene número atómico 1?",
+    "opciones": ["Helio", "Hidrógeno", "Carbono", "Litio"],
+    "correcta": 1,
+    "explicacion": "El hidrógeno (H) es el elemento más simple y abundante del universo, con un solo protón.",
+    "imagen": null, "autor": "ia", "activa": true
+  },
+  {
+    "id": "QUI-9-001", "materia": "quimica", "tema": "reacciones quimicas", "grado": 9, "dificultad": 2,
     "enunciado": "En la reacción: 2H₂ + O₂ → 2H₂O, ¿qué tipo de reacción es?",
     "opciones": ["Descomposición", "Síntesis", "Sustitución simple", "Doble sustitución"],
     "correcta": 1,
-    "explicacion": "Es una síntesis (o combinación): dos o más reactivos se unen para formar un solo producto.",
-    "imagen": null,
-    "autor": "ia",
-    "activa": true
+    "explicacion": "Es una síntesis: dos o más reactivos se combinan para formar un solo producto (el agua).",
+    "imagen": null, "autor": "ia", "activa": true
   },
   {
-    "id": "QUI-9-002",
-    "materia": "quimica",
-    "tema": "nomenclatura basica",
-    "grado": 9,
-    "dificultad": 2,
+    "id": "QUI-9-002", "materia": "quimica", "tema": "nomenclatura basica", "grado": 9, "dificultad": 2,
     "enunciado": "¿Cuál es la fórmula del dióxido de carbono?",
     "opciones": ["CO", "C₂O", "CO₂", "C₂O₃"],
     "correcta": 2,
-    "explicacion": "Di = 2 átomos de oxígeno. CO₂ es el gas que exhalan los seres vivos y que usan las plantas en la fotosíntesis.",
-    "imagen": null,
-    "autor": "ia",
-    "activa": true
+    "explicacion": "'Di' significa 2. CO₂ es el gas que usamos al respirar y que absorben las plantas.",
+    "imagen": null, "autor": "ia", "activa": true
   },
   {
-    "id": "QUI-10-001",
-    "materia": "quimica",
-    "tema": "reacciones quimicas",
-    "grado": 10,
-    "dificultad": 3,
+    "id": "QUI-9-003", "materia": "quimica", "tema": "reacciones quimicas", "grado": 9, "dificultad": 2,
+    "enunciado": "¿Cuáles son los reactivos en una reacción química?",
+    "opciones": ["Las sustancias que se forman", "Las sustancias que se consumen", "Los catalizadores", "Los productos finales"],
+    "correcta": 1,
+    "explicacion": "Los reactivos son las sustancias que entran a la reacción (lado izquierdo de la flecha →).",
+    "imagen": null, "autor": "ia", "activa": true
+  },
+  {
+    "id": "QUI-9-004", "materia": "quimica", "tema": "reacciones quimicas", "grado": 9, "dificultad": 2,
+    "enunciado": "¿Qué hace un catalizador en una reacción química?",
+    "opciones": ["Aumenta la temperatura", "Consume más reactivos", "Acelera la reacción sin consumirse", "Produce más productos"],
+    "correcta": 2,
+    "explicacion": "Un catalizador acelera la reacción disminuyendo la energía de activación, pero no se consume en el proceso.",
+    "imagen": null, "autor": "ia", "activa": true
+  },
+  {
+    "id": "QUI-9-005", "materia": "quimica", "tema": "nomenclatura basica", "grado": 9, "dificultad": 2,
+    "enunciado": "¿Cómo se llama el compuesto NaCl?",
+    "opciones": ["Óxido de sodio", "Hidróxido de sodio", "Cloruro de sodio", "Nitrato de sodio"],
+    "correcta": 2,
+    "explicacion": "NaCl es cloruro de sodio, más conocido como sal de cocina. Ión Na⁺ con ion Cl⁻.",
+    "imagen": null, "autor": "ia", "activa": true
+  },
+  {
+    "id": "QUI-9-006", "materia": "quimica", "tema": "nomenclatura basica", "grado": 9, "dificultad": 2,
+    "enunciado": "¿Cuál es la fórmula del agua oxigenada (peróxido de hidrógeno)?",
+    "opciones": ["H₂O", "HO", "H₂O₂", "H₃O"],
+    "correcta": 2,
+    "explicacion": "El peróxido de hidrógeno es H₂O₂. Tiene dos átomos de H y dos de O, diferente al agua (H₂O).",
+    "imagen": null, "autor": "ia", "activa": true
+  },
+  {
+    "id": "QUI-9-007", "materia": "quimica", "tema": "tabla periodica", "grado": 9, "dificultad": 2,
+    "enunciado": "¿Cuántos electrones de valencia tiene el carbono (C, Z=6)?",
+    "opciones": ["2", "4", "6", "8"],
+    "correcta": 1,
+    "explicacion": "El carbono tiene configuración 2,4. Sus 4 electrones de valencia le permiten formar 4 enlaces, base de la química orgánica.",
+    "imagen": null, "autor": "ia", "activa": true
+  },
+  {
+    "id": "QUI-9-008", "materia": "quimica", "tema": "reacciones quimicas", "grado": 9, "dificultad": 2,
+    "enunciado": "Una reacción de DESCOMPOSICIÓN es aquella en la que:",
+    "opciones": ["Dos sustancias forman una sola", "Una sustancia se divide en dos o más", "Un elemento reemplaza a otro", "Dos compuestos intercambian iones"],
+    "correcta": 1,
+    "explicacion": "En la descomposición un reactivo se divide. Ej: 2H₂O → 2H₂ + O₂ (electrólisis del agua).",
+    "imagen": null, "autor": "ia", "activa": true
+  },
+  {
+    "id": "QUI-9-009", "materia": "quimica", "tema": "nomenclatura basica", "grado": 9, "dificultad": 3,
+    "enunciado": "¿Cuál es el nombre del compuesto H₂SO₄?",
+    "opciones": ["Ácido clorhídrico", "Ácido nítrico", "Ácido sulfúrico", "Ácido carbónico"],
+    "correcta": 2,
+    "explicacion": "H₂SO₄ es el ácido sulfúrico. Es uno de los ácidos más utilizados en la industria química.",
+    "imagen": null, "autor": "ia", "activa": true
+  },
+  {
+    "id": "QUI-9-010", "materia": "quimica", "tema": "reacciones quimicas", "grado": 9, "dificultad": 2,
+    "enunciado": "¿Cuál de estas es una evidencia de que ocurrió una reacción química?",
+    "opciones": ["El agua hierve", "El hielo se derrite", "Un clavo se oxida (se pone rojo)", "El vidrio se rompe"],
+    "correcta": 2,
+    "explicacion": "La oxidación del hierro produce óxido de hierro (herrumbre), una nueva sustancia. Eso es reacción química.",
+    "imagen": null, "autor": "ia", "activa": true
+  },
+  {
+    "id": "QUI-10-001", "materia": "quimica", "tema": "reacciones quimicas", "grado": 10, "dificultad": 3,
     "enunciado": "¿Qué se conserva en toda reacción química según la Ley de Lavoisier?",
     "opciones": ["El color", "La masa", "El volumen", "La temperatura"],
     "correcta": 1,
-    "explicacion": "Ley de conservación de la masa: la masa de los reactivos siempre iguala la masa de los productos.",
-    "imagen": null,
-    "autor": "ia",
-    "activa": true
+    "explicacion": "Ley de conservación de la masa: la masa de los reactivos iguala la masa de los productos.",
+    "imagen": null, "autor": "ia", "activa": true
   },
   {
-    "id": "FIS-8-001",
-    "materia": "fisica",
-    "tema": "movimiento",
-    "grado": 8,
-    "dificultad": 1,
+    "id": "QUI-10-002", "materia": "quimica", "tema": "reacciones quimicas", "grado": 10, "dificultad": 3,
+    "enunciado": "En la escala de pH, ¿qué valor indica una solución NEUTRA?",
+    "opciones": ["0", "7", "14", "10"],
+    "correcta": 1,
+    "explicacion": "pH 7 es neutro (como el agua pura). Por debajo de 7 es ácido, por encima de 7 es básico (alcalino).",
+    "imagen": null, "autor": "ia", "activa": true
+  },
+  {
+    "id": "QUI-10-003", "materia": "quimica", "tema": "nomenclatura basica", "grado": 10, "dificultad": 3,
+    "enunciado": "¿Qué tipo de enlace se forma cuando dos átomos comparten electrones?",
+    "opciones": ["Enlace iónico", "Enlace metálico", "Enlace covalente", "Enlace de hidrógeno"],
+    "correcta": 2,
+    "explicacion": "El enlace covalente se forma por compartición de pares de electrones entre átomos (típico en no metales).",
+    "imagen": null, "autor": "ia", "activa": true
+  },
+  {
+    "id": "QUI-10-004", "materia": "quimica", "tema": "reacciones quimicas", "grado": 10, "dificultad": 3,
+    "enunciado": "¿Qué ocurre en una reacción EXOTÉRMICA?",
+    "opciones": ["Absorbe calor del ambiente", "Libera energía en forma de calor", "No hay cambio de temperatura", "Solo ocurre a temperaturas muy bajas"],
+    "correcta": 1,
+    "explicacion": "Las reacciones exotérmicas liberan calor (ΔH < 0). Ejemplo: quemar madera o carbón.",
+    "imagen": null, "autor": "ia", "activa": true
+  },
+  {
+    "id": "QUI-10-005", "materia": "quimica", "tema": "tabla periodica", "grado": 10, "dificultad": 3,
+    "enunciado": "¿Qué propiedad periódica aumenta de izquierda a derecha en un período de la tabla periódica?",
+    "opciones": ["Radio atómico", "Electronegatividad", "Carácter metálico", "Reactividad de metales alcalinos"],
+    "correcta": 1,
+    "explicacion": "La electronegatividad aumenta de izquierda a derecha (y de abajo hacia arriba). El flúor es el más electronegativo.",
+    "imagen": null, "autor": "ia", "activa": true
+  },
+  {
+    "id": "QUI-10-006", "materia": "quimica", "tema": "reacciones quimicas", "grado": 10, "dificultad": 3,
+    "enunciado": "En una reacción REDOX, ¿qué le ocurre al agente oxidante?",
+    "opciones": ["Se oxida (pierde electrones)", "Se reduce (gana electrones)", "No cambia su estado de oxidación", "Solo actúa como catalizador"],
+    "correcta": 1,
+    "explicacion": "El agente oxidante SE REDUCE: gana electrones. Mnemotecnia: OIL RIG (Oxidation Is Loss, Reduction Is Gain).",
+    "imagen": null, "autor": "ia", "activa": true
+  },
+  {
+    "id": "QUI-10-007", "materia": "quimica", "tema": "propiedades de la materia", "grado": 10, "dificultad": 3,
+    "enunciado": "¿Qué es la molaridad de una solución?",
+    "opciones": ["Gramos de soluto por litro", "Moles de soluto por litro de solución", "Masa del soluto dividida por masa del solvente", "Volumen de soluto en 100 mL"],
+    "correcta": 1,
+    "explicacion": "Molaridad (M) = moles de soluto / litros de solución. Es la forma más común de expresar concentración en química.",
+    "imagen": null, "autor": "ia", "activa": true
+  },
+  {
+    "id": "QUI-10-008", "materia": "quimica", "tema": "nomenclatura basica", "grado": 10, "dificultad": 3,
+    "enunciado": "¿Cuál es el nombre del compuesto formado por Ca²⁺ y OH⁻?",
+    "opciones": ["Óxido de calcio", "Cloruro de calcio", "Hidróxido de calcio", "Carbonato de calcio"],
+    "correcta": 2,
+    "explicacion": "Ca(OH)₂ es el hidróxido de calcio, conocido como cal apagada. Se usa en construcción y tratamiento de agua.",
+    "imagen": null, "autor": "ia", "activa": true
+  },
+  {
+    "id": "FIS-8-001", "materia": "fisica", "tema": "movimiento", "grado": 8, "dificultad": 1,
     "enunciado": "Un auto recorre 120 km en 2 horas. ¿Cuál es su velocidad media?",
     "opciones": ["60 km/h", "240 km/h", "30 km/h", "120 km/h"],
     "correcta": 0,
-    "explicacion": "Velocidad = distancia / tiempo = 120 km ÷ 2 h = 60 km/h.",
-    "imagen": null,
-    "autor": "ia",
-    "activa": true
+    "explicacion": "Velocidad = distancia ÷ tiempo = 120 km ÷ 2 h = 60 km/h.",
+    "imagen": null, "autor": "ia", "activa": true
   },
   {
-    "id": "FIS-8-002",
-    "materia": "fisica",
-    "tema": "fuerza",
-    "grado": 8,
-    "dificultad": 1,
-    "enunciado": "¿Qué ley de Newton explica que un objeto en reposo permanece en reposo si no actúa una fuerza sobre él?",
+    "id": "FIS-8-002", "materia": "fisica", "tema": "fuerza", "grado": 8, "dificultad": 1,
+    "enunciado": "¿Qué ley de Newton explica que un objeto en reposo permanece en reposo si no actúa una fuerza neta?",
     "opciones": ["Segunda ley", "Tercera ley", "Ley de gravedad", "Primera ley (inercia)"],
     "correcta": 3,
-    "explicacion": "La primera ley (principio de inercia): un cuerpo mantiene su estado de reposo o movimiento uniforme si la fuerza neta es cero.",
-    "imagen": null,
-    "autor": "ia",
-    "activa": true
+    "explicacion": "La primera ley (inercia): un cuerpo mantiene su estado si la fuerza neta es cero.",
+    "imagen": null, "autor": "ia", "activa": true
   },
   {
-    "id": "FIS-9-001",
-    "materia": "fisica",
-    "tema": "energia",
-    "grado": 9,
-    "dificultad": 2,
+    "id": "FIS-8-003", "materia": "fisica", "tema": "movimiento", "grado": 8, "dificultad": 1,
+    "enunciado": "¿Cuál es la unidad de velocidad en el Sistema Internacional?",
+    "opciones": ["km/h", "m/s", "cm/s", "mph"],
+    "correcta": 1,
+    "explicacion": "En el Sistema Internacional (SI), la velocidad se mide en metros por segundo (m/s).",
+    "imagen": null, "autor": "ia", "activa": true
+  },
+  {
+    "id": "FIS-8-004", "materia": "fisica", "tema": "fuerza", "grado": 8, "dificultad": 1,
+    "enunciado": "¿Cuál es la diferencia entre masa y peso?",
+    "opciones": ["Son lo mismo", "La masa es la cantidad de materia; el peso es la fuerza gravitacional sobre esa masa", "El peso no cambia en la Luna", "La masa depende de la gravedad"],
+    "correcta": 1,
+    "explicacion": "Masa (kg) es cantidad de materia y no cambia. Peso (N) = masa × gravedad, y varía según el lugar.",
+    "imagen": null, "autor": "ia", "activa": true
+  },
+  {
+    "id": "FIS-8-005", "materia": "fisica", "tema": "energia", "grado": 8, "dificultad": 1,
+    "enunciado": "Un objeto está en lo alto de una montaña. ¿Qué tipo de energía tiene principalmente?",
+    "opciones": ["Energía cinética", "Energía química", "Energía potencial gravitacional", "Energía nuclear"],
+    "correcta": 2,
+    "explicacion": "Al estar en altura, el objeto tiene energía potencial gravitacional (Ep = m·g·h). Al caer se convierte en cinética.",
+    "imagen": null, "autor": "ia", "activa": true
+  },
+  {
+    "id": "FIS-8-006", "materia": "fisica", "tema": "fuerza", "grado": 8, "dificultad": 2,
+    "enunciado": "Según la Segunda Ley de Newton: si aplicas el doble de fuerza a un objeto, su aceleración:",
+    "opciones": ["Se mantiene igual", "Se divide a la mitad", "Se duplica", "Se cuadruplica"],
+    "correcta": 2,
+    "explicacion": "F = m·a, entonces a = F/m. Si F se duplica con la misma masa, la aceleración también se duplica.",
+    "imagen": null, "autor": "ia", "activa": true
+  },
+  {
+    "id": "FIS-8-007", "materia": "fisica", "tema": "movimiento", "grado": 8, "dificultad": 2,
+    "enunciado": "Un ciclista viaja a 10 m/s y frena hasta detenerse en 5 s. ¿Cuál es su aceleración?",
+    "opciones": ["-2 m/s²", "2 m/s²", "-50 m/s²", "0.5 m/s²"],
+    "correcta": 0,
+    "explicacion": "a = Δv/t = (0 - 10)/5 = -2 m/s². El signo negativo indica desaceleración (frenado).",
+    "imagen": null, "autor": "ia", "activa": true
+  },
+  {
+    "id": "FIS-8-008", "materia": "fisica", "tema": "fuerza", "grado": 8, "dificultad": 1,
+    "enunciado": "Cuando empujas una pared y la pared te empuja de regreso con la misma fuerza, ¿cuál ley explica esto?",
+    "opciones": ["Primera ley de Newton", "Segunda ley de Newton", "Tercera ley de Newton (acción y reacción)", "Ley de gravitación"],
+    "correcta": 2,
+    "explicacion": "Tercera ley: toda acción genera una reacción igual y opuesta. La pared te devuelve la misma fuerza.",
+    "imagen": null, "autor": "ia", "activa": true
+  },
+  {
+    "id": "FIS-8-009", "materia": "fisica", "tema": "energia", "grado": 8, "dificultad": 2,
+    "enunciado": "¿Cuál de estos es un ejemplo de energía CINÉTICA?",
+    "opciones": ["Una pelota parada en el suelo", "Un resorte comprimido", "Una pelota rodando", "Un libro sobre una mesa"],
+    "correcta": 2,
+    "explicacion": "La energía cinética es la energía del movimiento (Ec = ½mv²). La pelota rodando la tiene; las demás tienen potencial.",
+    "imagen": null, "autor": "ia", "activa": true
+  },
+  {
+    "id": "FIS-9-001", "materia": "fisica", "tema": "energia", "grado": 9, "dificultad": 2,
     "enunciado": "¿Cuál es la unidad del trabajo y la energía en el Sistema Internacional?",
     "opciones": ["Newton (N)", "Watt (W)", "Joule (J)", "Pascal (Pa)"],
     "correcta": 2,
-    "explicacion": "El Joule (J) es la unidad de energía y trabajo. 1 J = 1 N·m (fuerza de 1 Newton sobre 1 metro).",
-    "imagen": null,
-    "autor": "ia",
-    "activa": true
+    "explicacion": "El Joule (J) mide energía y trabajo. 1 J = fuerza de 1 N aplicada sobre 1 m.",
+    "imagen": null, "autor": "ia", "activa": true
   },
   {
-    "id": "FIS-9-002",
-    "materia": "fisica",
-    "tema": "electromagnetismo",
-    "grado": 9,
-    "dificultad": 2,
+    "id": "FIS-9-002", "materia": "fisica", "tema": "electromagnetismo", "grado": 9, "dificultad": 2,
     "enunciado": "¿Qué produce un imán al moverse cerca de un conductor eléctrico?",
-    "opciones": ["Luz", "Corriente eléctrica", "Calor", "Sonido"],
+    "opciones": ["Luz", "Corriente eléctrica inducida", "Calor únicamente", "Sonido"],
     "correcta": 1,
-    "explicacion": "Este es el principio de la inducción electromagnética (Faraday): un campo magnético variable genera corriente eléctrica.",
-    "imagen": null,
-    "autor": "ia",
-    "activa": true
+    "explicacion": "Inducción electromagnética (Faraday): un campo magnético variable genera corriente eléctrica. Así funcionan los generadores.",
+    "imagen": null, "autor": "ia", "activa": true
   },
   {
-    "id": "FIS-10-001",
-    "materia": "fisica",
-    "tema": "energia y transformaciones",
-    "grado": 10,
-    "dificultad": 3,
+    "id": "FIS-9-003", "materia": "fisica", "tema": "ondas", "grado": 9, "dificultad": 2,
+    "enunciado": "¿Cuál es la velocidad del sonido aproximada en el aire a temperatura ambiente?",
+    "opciones": ["300.000 km/s", "340 m/s", "1500 m/s", "100 m/s"],
+    "correcta": 1,
+    "explicacion": "El sonido viaja a ~340 m/s en el aire. 300.000 km/s es la velocidad de la luz, mucho mayor.",
+    "imagen": null, "autor": "ia", "activa": true
+  },
+  {
+    "id": "FIS-9-004", "materia": "fisica", "tema": "calor", "grado": 9, "dificultad": 2,
+    "enunciado": "¿Cómo se llama el proceso por el que el calor viaja a través de un sólido de molécula en molécula?",
+    "opciones": ["Convección", "Radiación", "Conducción", "Evaporación"],
+    "correcta": 2,
+    "explicacion": "Conducción: el calor se transfiere por contacto entre partículas adyacentes. Típico en metales.",
+    "imagen": null, "autor": "ia", "activa": true
+  },
+  {
+    "id": "FIS-9-005", "materia": "fisica", "tema": "presion", "grado": 9, "dificultad": 2,
+    "enunciado": "¿Cuál es la fórmula de la presión?",
+    "opciones": ["P = m × v", "P = F / A", "P = m × a", "P = W / t"],
+    "correcta": 1,
+    "explicacion": "Presión = Fuerza / Área. Cuanto menor es el área, mayor la presión (por eso los clavos cortan).",
+    "imagen": null, "autor": "ia", "activa": true
+  },
+  {
+    "id": "FIS-9-006", "materia": "fisica", "tema": "electromagnetismo", "grado": 9, "dificultad": 2,
+    "enunciado": "¿Qué tipo de cargas eléctricas se ATRAEN?",
+    "opciones": ["Dos cargas positivas", "Dos cargas negativas", "Una carga positiva y una negativa", "Cargas del mismo signo siempre se atraen"],
+    "correcta": 2,
+    "explicacion": "Cargas de signos opuestos se atraen; cargas del mismo signo se repelen. Ley de Coulomb.",
+    "imagen": null, "autor": "ia", "activa": true
+  },
+  {
+    "id": "FIS-9-007", "materia": "fisica", "tema": "ondas", "grado": 9, "dificultad": 2,
+    "enunciado": "¿Qué tipo de onda es el sonido?",
+    "opciones": ["Onda transversal", "Onda electromagnética", "Onda longitudinal", "Onda estacionaria"],
+    "correcta": 2,
+    "explicacion": "El sonido es una onda longitudinal: las partículas vibran en la misma dirección en que viaja la onda.",
+    "imagen": null, "autor": "ia", "activa": true
+  },
+  {
+    "id": "FIS-9-008", "materia": "fisica", "tema": "calor", "grado": 9, "dificultad": 2,
+    "enunciado": "¿Cómo viaja el calor del Sol hasta la Tierra?",
+    "opciones": ["Conducción", "Convección", "Radiación", "Evaporación"],
+    "correcta": 2,
+    "explicacion": "El calor solar llega por radiación (ondas electromagnéticas). No necesita medio material, viaja por el vacío.",
+    "imagen": null, "autor": "ia", "activa": true
+  },
+  {
+    "id": "FIS-9-009", "materia": "fisica", "tema": "presion", "grado": 9, "dificultad": 3,
+    "enunciado": "Una persona pesa 600 N y sus dos pies tienen un área total de 0.03 m². ¿Cuánta presión ejerce sobre el suelo?",
+    "opciones": ["18 Pa", "20.000 Pa", "600 Pa", "0.05 Pa"],
+    "correcta": 1,
+    "explicacion": "P = F/A = 600 N ÷ 0.03 m² = 20.000 Pa. Los tacones altos generan más presión porque el área es menor.",
+    "imagen": null, "autor": "ia", "activa": true
+  },
+  {
+    "id": "FIS-10-001", "materia": "fisica", "tema": "energia y transformaciones", "grado": 10, "dificultad": 3,
     "enunciado": "Una bombilla transforma energía eléctrica principalmente en:",
     "opciones": ["Solo luz", "Luz y calor", "Solo calor", "Movimiento"],
     "correcta": 1,
-    "explicacion": "Las bombillas incandescentes convierten energía eléctrica en luz (~10%) y calor (~90%). Las LED son más eficientes.",
-    "imagen": null,
-    "autor": "ia",
-    "activa": true
+    "explicacion": "Las bombillas incandescentes convierten ~10% en luz y ~90% en calor. Las LED son más eficientes.",
+    "imagen": null, "autor": "ia", "activa": true
   },
   {
-    "id": "FIS-10-002",
-    "materia": "fisica",
-    "tema": "maquinas",
-    "grado": 10,
-    "dificultad": 3,
+    "id": "FIS-10-002", "materia": "fisica", "tema": "maquinas", "grado": 10, "dificultad": 3,
     "enunciado": "¿Cuál de estas es una máquina simple?",
     "opciones": ["Bicicleta completa", "Motor de auto", "Palanca", "Computador"],
     "correcta": 2,
-    "explicacion": "Las máquinas simples (palanca, polea, plano inclinado, rueda) transforman fuerzas con un solo movimiento.",
-    "imagen": null,
-    "autor": "ia",
-    "activa": true
+    "explicacion": "Las máquinas simples (palanca, polea, plano inclinado, rueda y eje) transforman fuerzas con un movimiento básico.",
+    "imagen": null, "autor": "ia", "activa": true
+  },
+  {
+    "id": "FIS-10-003", "materia": "fisica", "tema": "energia y transformaciones", "grado": 10, "dificultad": 3,
+    "enunciado": "¿Qué establece la Ley de Conservación de la Energía?",
+    "opciones": ["La energía se destruye al usarla", "La energía se crea en las reacciones nucleares", "La energía no se crea ni se destruye, solo se transforma", "La energía siempre aumenta"],
+    "correcta": 2,
+    "explicacion": "Primera ley de la termodinámica: la energía total del universo es constante. Solo cambia de forma.",
+    "imagen": null, "autor": "ia", "activa": true
+  },
+  {
+    "id": "FIS-10-004", "materia": "fisica", "tema": "maquinas", "grado": 10, "dificultad": 3,
+    "enunciado": "¿Qué ventaja mecánica ofrece una palanca de segundo género (como un cascanueces)?",
+    "opciones": ["Aumenta la velocidad", "Multiplica la fuerza aplicada", "Cambia la dirección de la fuerza", "No ofrece ventaja mecánica"],
+    "correcta": 1,
+    "explicacion": "La palanca de segundo género amplifica la fuerza: con poca fuerza en un extremo, se ejerce mucha fuerza en el objeto.",
+    "imagen": null, "autor": "ia", "activa": true
+  },
+  {
+    "id": "FIS-10-005", "materia": "fisica", "tema": "electromagnetismo", "grado": 10, "dificultad": 3,
+    "enunciado": "¿Cuál es la unidad de la resistencia eléctrica?",
+    "opciones": ["Voltio (V)", "Amperio (A)", "Watt (W)", "Ohm (Ω)"],
+    "correcta": 3,
+    "explicacion": "La resistencia se mide en Ohms (Ω). Ley de Ohm: V = I × R (voltaje = corriente × resistencia).",
+    "imagen": null, "autor": "ia", "activa": true
+  },
+  {
+    "id": "FIS-10-006", "materia": "fisica", "tema": "energia y transformaciones", "grado": 10, "dificultad": 3,
+    "enunciado": "¿Cuál es la potencia de un aparato que consume 500 J en 10 segundos?",
+    "opciones": ["5000 W", "50 W", "0.02 W", "500 W"],
+    "correcta": 1,
+    "explicacion": "Potencia = Trabajo / Tiempo = 500 J ÷ 10 s = 50 W. El Watt (W) es la unidad de potencia.",
+    "imagen": null, "autor": "ia", "activa": true
+  },
+  {
+    "id": "FIS-10-007", "materia": "fisica", "tema": "maquinas", "grado": 10, "dificultad": 3,
+    "enunciado": "¿Qué es el rendimiento (eficiencia) de una máquina?",
+    "opciones": ["La fuerza que aplica", "La relación entre trabajo útil y trabajo total invertido", "La velocidad a la que trabaja", "El número de piezas que tiene"],
+    "correcta": 1,
+    "explicacion": "Rendimiento = (Trabajo útil / Trabajo total) × 100%. Ninguna máquina real tiene 100% por las pérdidas en calor y fricción.",
+    "imagen": null, "autor": "ia", "activa": true
+  },
+  {
+    "id": "FIS-10-008", "materia": "fisica", "tema": "electromagnetismo", "grado": 10, "dificultad": 3,
+    "enunciado": "En un circuito eléctrico en SERIE, si una bombilla se funde:",
+    "opciones": ["Las demás siguen funcionando", "El circuito se corta y todas se apagan", "Solo se apaga esa bombilla", "La corriente aumenta en las otras"],
+    "correcta": 1,
+    "explicacion": "En serie hay un solo camino para la corriente. Si se interrumpe en un punto, todo el circuito se apaga.",
+    "imagen": null, "autor": "ia", "activa": true
+  },
+  {
+    "id": "FIS-10-009", "materia": "fisica", "tema": "presion", "grado": 10, "dificultad": 3,
+    "enunciado": "¿Qué principio explica por qué un barco de acero flota en el agua?",
+    "opciones": ["Principio de Pascal", "Principio de Arquímedes", "Ley de Boyle", "Ley de Hook"],
+    "correcta": 1,
+    "explicacion": "Arquímedes: todo cuerpo sumergido recibe un empuje igual al peso del fluido desplazado. El barco desplaza mucha agua.",
+    "imagen": null, "autor": "ia", "activa": true
+  },
+  {
+    "id": "QUI-8-013", "materia": "quimica", "tema": "propiedades de la materia", "grado": 8, "dificultad": 1,
+    "enunciado": "¿Cuál de estos métodos sirve para separar una mezcla de agua y arena?",
+    "opciones": ["Destilación", "Filtración", "Evaporación", "Cristalización"],
+    "correcta": 1,
+    "explicacion": "La filtración retiene los sólidos (arena) y deja pasar el líquido (agua) a través de un filtro.",
+    "imagen": null, "autor": "ia", "activa": true
+  },
+  {
+    "id": "QUI-8-014", "materia": "quimica", "tema": "tabla periodica", "grado": 8, "dificultad": 2,
+    "enunciado": "¿Dónde se encuentran los METALES en la tabla periódica?",
+    "opciones": ["Solo en el lado derecho", "Solo en el lado izquierdo y centro", "En la fila del fondo", "Distribuidos aleatoriamente"],
+    "correcta": 1,
+    "explicacion": "Los metales ocupan el lado izquierdo y el bloque central (transición). Los no metales están a la derecha.",
+    "imagen": null, "autor": "ia", "activa": true
+  },
+  {
+    "id": "QUI-9-011", "materia": "quimica", "tema": "reacciones quimicas", "grado": 9, "dificultad": 2,
+    "enunciado": "La fotosíntesis es: 6CO₂ + 6H₂O → C₆H₁₂O₆ + 6O₂. ¿Qué tipo de reacción es?",
+    "opciones": ["Combustión", "Síntesis (endotérmica)", "Descomposición", "Neutralización"],
+    "correcta": 1,
+    "explicacion": "La fotosíntesis es una síntesis que absorbe energía luminosa. Las plantas construyen glucosa a partir de CO₂ y agua.",
+    "imagen": null, "autor": "ia", "activa": true
+  },
+  {
+    "id": "QUI-10-009", "materia": "quimica", "tema": "reacciones quimicas", "grado": 10, "dificultad": 3,
+    "enunciado": "¿Cuántos moles de H₂O se producen si reaccionan 4 moles de H₂ con exceso de O₂? (2H₂ + O₂ → 2H₂O)",
+    "opciones": ["2 moles", "4 moles", "8 moles", "1 mol"],
+    "correcta": 1,
+    "explicacion": "La relación es 2:2 (H₂:H₂O). Si hay 4 moles de H₂, se producen 4 moles de H₂O. Estequiometría directa.",
+    "imagen": null, "autor": "ia", "activa": true
+  },
+  {
+    "id": "FIS-8-010", "materia": "fisica", "tema": "movimiento", "grado": 8, "dificultad": 2,
+    "enunciado": "¿Qué tipo de movimiento describe un objeto que cae libremente bajo la gravedad (sin aire)?",
+    "opciones": ["Movimiento rectilíneo uniforme (MRU)", "Movimiento circular", "Movimiento rectilíneo uniformemente acelerado (MRUA)", "Movimiento ondulatorio"],
+    "correcta": 2,
+    "explicacion": "La caída libre es MRUA: la velocidad aumenta constantemente por la aceleración gravitacional (g ≈ 9.8 m/s²).",
+    "imagen": null, "autor": "ia", "activa": true
+  },
+  {
+    "id": "FIS-9-010", "materia": "fisica", "tema": "ondas", "grado": 9, "dificultad": 2,
+    "enunciado": "¿Qué es la frecuencia de una onda?",
+    "opciones": ["La altura de la onda", "La distancia entre dos crestas", "El número de ciclos completos por segundo", "La velocidad de propagación"],
+    "correcta": 2,
+    "explicacion": "Frecuencia (Hz) = ciclos por segundo. Una onda de 440 Hz vibra 440 veces por segundo (nota musical La).",
+    "imagen": null, "autor": "ia", "activa": true
+  },
+  {
+    "id": "FIS-10-010", "materia": "fisica", "tema": "energia y transformaciones", "grado": 10, "dificultad": 3,
+    "enunciado": "¿Qué tipo de energía tienen los alimentos que consumimos?",
+    "opciones": ["Energía cinética", "Energía nuclear", "Energía química", "Energía eléctrica"],
+    "correcta": 2,
+    "explicacion": "Los alimentos almacenan energía química en enlaces moleculares. El cuerpo la libera mediante reacciones metabólicas.",
+    "imagen": null, "autor": "ia", "activa": true
+  },
+  {
+    "id": "QUI-8-015", "materia": "quimica", "tema": "propiedades de la materia", "grado": 8, "dificultad": 1,
+    "enunciado": "¿Cuál es el punto de ebullición del agua al nivel del mar?",
+    "opciones": ["0°C", "37°C", "100°C", "212°F solamente"],
+    "correcta": 2,
+    "explicacion": "El agua hierve a 100°C (212°F) al nivel del mar. A mayor altitud, hierve a menor temperatura por la presión.",
+    "imagen": null, "autor": "ia", "activa": true
+  },
+  {
+    "id": "FIS-9-011", "materia": "fisica", "tema": "electromagnetismo", "grado": 9, "dificultad": 2,
+    "enunciado": "¿Cuál es la función de un transformador eléctrico?",
+    "opciones": ["Almacenar energía eléctrica", "Convertir corriente en luz", "Aumentar o disminuir el voltaje de corriente alterna", "Generar corriente continua"],
+    "correcta": 2,
+    "explicacion": "El transformador usa inducción electromagnética para cambiar el voltaje. Es clave en la distribución de electricidad.",
+    "imagen": null, "autor": "ia", "activa": true
+  },
+  {
+    "id": "FIS-8-011", "materia": "fisica", "tema": "energia", "grado": 8, "dificultad": 2,
+    "enunciado": "¿En qué punto de una montaña rusa es MÁXIMA la energía cinética?",
+    "opciones": ["En el punto más alto", "Al inicio del recorrido", "En el punto más bajo", "En las curvas"],
+    "correcta": 2,
+    "explicacion": "En el punto más bajo toda la energía potencial se ha convertido en cinética: es donde el carro va más rápido.",
+    "imagen": null, "autor": "ia", "activa": true
+  },
+  {
+    "id": "QUI-9-012", "materia": "quimica", "tema": "nomenclatura basica", "grado": 9, "dificultad": 2,
+    "enunciado": "¿Qué tipo de compuesto es el HCl disuelto en agua?",
+    "opciones": ["Una base fuerte", "Una sal", "Un ácido fuerte", "Un óxido"],
+    "correcta": 2,
+    "explicacion": "HCl (ácido clorhídrico) disuelto en agua libera H⁺, por eso es un ácido. Se usa en el estómago para la digestión.",
+    "imagen": null, "autor": "ia", "activa": true
+  },
+  {
+    "id": "FIS-10-011", "materia": "fisica", "tema": "maquinas", "grado": 10, "dificultad": 3,
+    "enunciado": "¿Cómo funciona el principio de Pascal en una prensa hidráulica?",
+    "opciones": ["Multiplicando la velocidad", "Una fuerza pequeña en un área pequeña genera una fuerza grande en un área mayor", "Convirtiendo energía química en mecánica", "Reduciendo la fricción"],
+    "correcta": 1,
+    "explicacion": "Pascal: la presión aplicada en un fluido cerrado se transmite igual en todas direcciones. Permite levantar carros con poca fuerza.",
+    "imagen": null, "autor": "ia", "activa": true
+  },
+  {
+    "id": "QUI-10-010", "materia": "quimica", "tema": "propiedades de la materia", "grado": 10, "dificultad": 3,
+    "enunciado": "¿Qué es una solución SATURADA?",
+    "opciones": ["Una solución con muy poco soluto", "Una solución donde el solvente no puede disolver más soluto", "Una solución hervida", "Una mezcla heterogénea"],
+    "correcta": 1,
+    "explicacion": "Una solución saturada ha alcanzado su capacidad máxima de disolver soluto. Si agregas más, no se disuelve.",
+    "imagen": null, "autor": "ia", "activa": true
+  },
+  {
+    "id": "FIS-9-012", "materia": "fisica", "tema": "calor", "grado": 9, "dificultad": 2,
+    "enunciado": "¿Qué es la temperatura en términos físicos?",
+    "opciones": ["La cantidad total de calor de un cuerpo", "La medida de la energía cinética promedio de las partículas", "El calor que fluye entre dos cuerpos", "La presión interna de un gas"],
+    "correcta": 1,
+    "explicacion": "La temperatura mide qué tan rápido se mueven las partículas promedio. A mayor temperatura, más agitación molecular.",
+    "imagen": null, "autor": "ia", "activa": true
   }
 ]
