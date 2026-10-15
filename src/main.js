@@ -240,10 +240,10 @@ function mostrarPregunta() {
   // Enunciado
   document.getElementById('enunciado').textContent = p.enunciado;
 
-  // Imagen (opcional)
+  // Imagen (opcional) — URLs absolutas (Firebase) o relativas al public/
   const imgEl = document.getElementById('img-pregunta');
   if (p.imagen) {
-    imgEl.src = p.imagen;
+    imgEl.src = p.imagen.startsWith('http') ? p.imagen : (import.meta.env.BASE_URL + p.imagen);
     imgEl.classList.remove('oculto');
   } else {
     imgEl.src = '';
