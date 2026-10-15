@@ -2,8 +2,7 @@
 import { barajar, elegirN } from './azar.js';
 import { generarPreguntas10 } from './razonamiento/index.js';
 
-// Carga el banco desde el JSON (Vite lo importa como módulo)
-import bancoBruto from '../data/banco-preguntas.json';
+import { getBanco } from './banco.js';
 
 // Claves para recordar preguntas recientes del estudiante (evitar repetición)
 const CLAVE_HISTORIAL = (nombre, grado) => `historial_${nombre}_${grado}`;
@@ -15,7 +14,7 @@ const CLAVE_HISTORIAL = (nombre, grado) => `historial_${nombre}_${grado}`;
  * Devuelve array de objetos pregunta con opciones ya barajadas.
  */
 export function armarExamen(estudiante) {
-  const banco = bancoBruto.filter(p => p.activa);
+  const banco = getBanco().filter(p => p.activa);
 
   // Recuperar IDs de las últimas 2 partidas del mismo estudiante
   const claveHistorial = CLAVE_HISTORIAL(estudiante.nombre, estudiante.grado);

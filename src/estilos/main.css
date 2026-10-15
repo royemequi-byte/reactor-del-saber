@@ -761,6 +761,8 @@ body {
 /* =============================================
    PANTALLA 7 — ADMIN
    ============================================= */
+
+/* Caja de login */
 .admin-contenido {
   background: var(--fondo2);
   border: 1px solid var(--magenta);
@@ -780,7 +782,143 @@ body {
 }
 #admin-login input:focus { border-color: var(--magenta); }
 .admin-error { color: var(--error); font-size: 0.9rem; }
-.aviso-fase { color: var(--cian); font-style: italic; }
+
+/* Panel completo del admin */
+.admin-panel-full {
+  width: 100%; max-width: 1100px;
+  display: flex; flex-direction: column; gap: 16px;
+  padding: 0 10px 40px;
+}
+
+.admin-panel-header {
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;
+  padding: 12px 0; border-bottom: 1px solid #ff00c840;
+}
+.admin-panel-header h2 { color: var(--magenta); font-size: 1.3rem; }
+
+/* Tabs */
+.admin-tabs { display: flex; gap: 8px; flex-wrap: wrap; }
+.admin-tab {
+  background: var(--gris); border: 1px solid #3a5070;
+  border-radius: 8px; color: var(--blanco);
+  padding: 8px 18px; font-size: 0.9rem; cursor: pointer;
+  transition: background 0.2s;
+}
+.admin-tab.activo { background: var(--magenta); color: #fff; border-color: var(--magenta); }
+.admin-tabcontent { width: 100%; }
+
+/* Toolbar de filtros */
+.admin-toolbar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 14px; }
+.admin-select {
+  background: var(--gris); border: 1px solid #3a5070;
+  border-radius: 8px; color: var(--blanco); padding: 8px 12px; font-size: 0.88rem;
+}
+
+/* Botones de acción genéricos */
+.btn-accion {
+  border: none; border-radius: 8px;
+  padding: 8px 16px; font-size: 0.9rem;
+  cursor: pointer; font-weight: 600; transition: opacity 0.2s;
+}
+.btn-accion:hover { opacity: 0.82; }
+.btn-accion.verde  { background: var(--verde);    color: #000; }
+.btn-accion.cian   { background: var(--cian);     color: #000; }
+.btn-accion.rojo   { background: var(--rojo-iti); color: #fff; }
+.btn-accion.gris   { background: var(--gris);     color: var(--blanco); border: 1px solid #4a6080; }
+.btn-accion.chico  { padding: 5px 10px; font-size: 0.8rem; }
+
+/* Lista scrolleable */
+.admin-lista {
+  display: flex; flex-direction: column; gap: 10px;
+  max-height: 58vh; overflow-y: auto; padding-right: 4px;
+}
+.admin-lista::-webkit-scrollbar { width: 6px; }
+.admin-lista::-webkit-scrollbar-track { background: #0a1628; }
+.admin-lista::-webkit-scrollbar-thumb { background: #2a4060; border-radius: 3px; }
+.admin-vacio { color: #8ab; padding: 20px; text-align: center; }
+
+/* Tarjeta de pregunta */
+.admin-card {
+  background: #0a1628; border: 1px solid #1e3050;
+  border-radius: 10px; padding: 12px 14px;
+  display: flex; flex-direction: column; gap: 8px;
+  transition: border-color 0.2s;
+}
+.admin-card:hover { border-color: #3a5a7a; }
+
+.admin-card-head { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+.admin-badge {
+  font-size: 0.72rem; padding: 2px 8px; border-radius: 10px;
+  background: #1a2a40; font-weight: 700;
+}
+.admin-badge.grado   { color: var(--amarillo); }
+.admin-badge.dif     { color: #9aacbc; }
+.admin-badge.activo  { color: var(--verde); }
+.admin-badge.inactivo{ color: var(--error); }
+.admin-card-tema { font-size: 0.75rem; color: #6a8aaa; margin-left: auto; }
+.admin-card-enunciado { font-size: 0.86rem; color: #b0c4d4; line-height: 1.4; }
+.admin-card-acciones { display: flex; gap: 8px; flex-wrap: wrap; }
+
+/* Modal */
+.admin-modal {
+  position: fixed; inset: 0;
+  background: rgba(0,4,16,0.82);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 300; padding: 20px;
+}
+.admin-modal-inner {
+  background: #0d1f3c; border: 1px solid var(--magenta);
+  border-radius: 16px; padding: 26px 22px;
+  width: min(700px, 100%); max-height: 90vh; overflow-y: auto;
+  display: flex; flex-direction: column; gap: 14px;
+}
+.admin-modal-inner h3 { color: var(--magenta); font-size: 1.2rem; }
+
+/* Formulario de pregunta */
+.admin-form { display: flex; flex-direction: column; gap: 13px; }
+.af-fila { display: flex; gap: 12px; flex-wrap: wrap; }
+.af-campo { display: flex; flex-direction: column; gap: 5px; flex: 1; min-width: 120px; }
+.af-campo.full { flex: 1 0 100%; }
+.af-campo label { font-size: 0.82rem; color: var(--cian); font-weight: 600; }
+.af-campo input,
+.af-campo select,
+.af-campo textarea {
+  background: #060e1f; border: 1px solid #2a3a55;
+  border-radius: 8px; color: var(--blanco);
+  padding: 9px 11px; font-size: 0.92rem; outline: none; width: 100%;
+}
+.af-campo input:focus,
+.af-campo select:focus,
+.af-campo textarea:focus  { border-color: var(--cian); }
+.af-campo textarea { resize: vertical; font-family: inherit; }
+
+.af-opciones { display: flex; flex-direction: column; gap: 8px; }
+.af-opciones > label { font-size: 0.82rem; color: var(--cian); font-weight: 600; }
+.af-opcion-fila { display: flex; align-items: center; gap: 8px; }
+.af-letra { font-weight: 700; color: var(--amarillo); width: 22px; flex-shrink: 0; }
+.af-opcion-fila input[type="text"] {
+  flex: 1; background: #060e1f; border: 1px solid #2a3a55;
+  border-radius: 8px; color: var(--blanco); padding: 8px 10px; font-size: 0.88rem; outline: none;
+}
+.af-opcion-fila input[type="text"]:focus { border-color: var(--cian); }
+.af-opcion-fila input[type="radio"] { width: 18px; height: 18px; accent-color: var(--verde); flex-shrink: 0; }
+
+.af-check-label { display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 0.9rem; }
+.af-check-label input { width: 17px; height: 17px; accent-color: var(--verde); }
+.af-botones { display: flex; gap: 12px; justify-content: flex-end; padding-top: 4px; }
+
+/* Exportar */
+.admin-exportar-info { font-size: 0.88rem; color: #8ab; line-height: 1.5; }
+.admin-exportar-info code {
+  background: #1a2a40; padding: 2px 7px; border-radius: 4px;
+  color: var(--cian); font-size: 0.85rem;
+}
+.admin-json-pre {
+  background: #020a18; border: 1px solid #1a2a40; border-radius: 8px;
+  padding: 14px; font-size: 0.75rem; color: #7a9aaa;
+  overflow: auto; max-height: 52vh; width: 100%;
+  white-space: pre; text-align: left; margin-top: 10px;
+}
 
 /* =============================================
    WIDGET DE VOLUMEN

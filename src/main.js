@@ -4,6 +4,7 @@ import { armarExamen, guardarHistorial } from './examen.js';
 import { iniciarAudio, setVolumen, toggleSilencio, setMateria, setRacha, setProgreso, setTiempoRestante } from './audio/motor-audio.js';
 import { tocarAcierto, tocarError, tocarRacha, tocarPoder, tocarFanfarra, tocarIntro } from './audio/efectos.js';
 import confetti from 'canvas-confetti';
+import { adminInicializar } from './admin.js';
 
 // ─── NAVEGACIÓN ────────────────────────────────────────────────────────────
 export function irA(id) {
@@ -486,6 +487,7 @@ document.addEventListener('keydown', (e) => {
     e.preventDefault();
     irA('pantalla-admin');
     document.getElementById('admin-panel').classList.add('oculto');
+    document.getElementById('admin-login-box').classList.remove('oculto');
     document.getElementById('admin-login').style.display = 'flex';
     document.getElementById('admin-error').classList.add('oculto');
     document.getElementById('inp-admin-pass').value = '';
@@ -495,8 +497,9 @@ document.addEventListener('keydown', (e) => {
 document.getElementById('btn-admin-entrar').addEventListener('click', async () => {
   const pass = document.getElementById('inp-admin-pass').value;
   if (await verificarAdmin(pass)) {
-    document.getElementById('admin-login').style.display = 'none';
+    document.getElementById('admin-login-box').classList.add('oculto');
     document.getElementById('admin-panel').classList.remove('oculto');
+    adminInicializar();
   } else {
     document.getElementById('admin-error').classList.remove('oculto');
   }

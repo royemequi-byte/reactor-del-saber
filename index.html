@@ -213,19 +213,168 @@
 
   <!-- PANTALLA 7: SUPER ADMIN (oculta, acceso: Ctrl+Shift+A) -->
   <section id="pantalla-admin" class="pantalla">
-    <div class="admin-contenido">
+
+    <!-- Caja de login -->
+    <div class="admin-contenido" id="admin-login-box">
       <h2>🔐 Panel Super Admin</h2>
       <div id="admin-login">
         <p>Acceso restringido al laboratorio</p>
-        <input type="password" id="inp-admin-pass" placeholder="Contraseña" />
+        <input type="password" id="inp-admin-pass" placeholder="Contraseña" autocomplete="off" />
         <button class="btn-principal" id="btn-admin-entrar">Entrar</button>
         <p class="admin-error oculto" id="admin-error">Contraseña incorrecta</p>
       </div>
-      <div id="admin-panel" class="oculto">
-        <p class="aviso-fase">Panel completo disponible en Fase 7</p>
+    </div>
+
+    <!-- Panel completo (se muestra tras autenticar) -->
+    <div id="admin-panel" class="admin-panel-full oculto">
+
+      <div class="admin-panel-header">
+        <h2>🔐 Super Admin · ITI-Olimpiadas 2026</h2>
         <button class="btn-secundario" id="btn-admin-salir">Cerrar sesión</button>
       </div>
-    </div>
+
+      <!-- Tabs de navegación -->
+      <div class="admin-tabs">
+        <button class="admin-tab activo" data-tab="preguntas">
+          📋 Preguntas (<span id="admin-count-preguntas">…</span>)
+        </button>
+        <button class="admin-tab" data-tab="ranking">🏆 Ranking</button>
+        <button class="admin-tab" data-tab="exportar">📤 Exportar JSON</button>
+      </div>
+
+      <!-- ── TAB: PREGUNTAS ── -->
+      <div id="admin-tab-preguntas" class="admin-tabcontent">
+        <div class="admin-toolbar">
+          <button class="btn-accion verde" id="btn-nueva-pregunta">＋ Nueva pregunta</button>
+          <select id="admin-fil-materia" class="admin-select">
+            <option value="">Todas las materias</option>
+            <option value="quimica">⚗️ Química</option>
+            <option value="fisica">⚡ Física</option>
+            <option value="biologia">🌿 Biología</option>
+          </select>
+          <select id="admin-fil-grado" class="admin-select">
+            <option value="">Todos los grados</option>
+            <option value="8">Grado 8°</option>
+            <option value="9">Grado 9°</option>
+            <option value="10">Grado 10°</option>
+          </select>
+          <select id="admin-fil-activa" class="admin-select">
+            <option value="">Activas + Inactivas</option>
+            <option value="1">Solo activas</option>
+            <option value="0">Solo inactivas</option>
+          </select>
+          <button class="btn-accion gris" id="btn-reset-banco">↩ Restaurar banco original</button>
+        </div>
+        <div id="admin-lista" class="admin-lista"></div>
+      </div>
+
+      <!-- ── TAB: RANKING ── -->
+      <div id="admin-tab-ranking" class="admin-tabcontent oculto">
+        <div class="admin-toolbar">
+          <button class="btn-accion rojo" id="btn-limpiar-ranking">🗑 Limpiar todo el ranking</button>
+        </div>
+        <div id="admin-ranking-lista" class="admin-lista"></div>
+      </div>
+
+      <!-- ── TAB: EXPORTAR ── -->
+      <div id="admin-tab-exportar" class="admin-tabcontent oculto">
+        <p class="admin-exportar-info">
+          Copia este JSON y reemplaza <code>data/banco-preguntas.json</code> en el repositorio
+          para que los cambios sean permanentes en todos los dispositivos.
+        </p>
+        <button class="btn-accion cian" id="btn-copiar-json">📋 Copiar JSON</button>
+        <pre id="admin-json-pre" class="admin-json-pre"></pre>
+      </div>
+
+      <!-- ── MODAL CREAR / EDITAR PREGUNTA ── -->
+      <div id="admin-modal" class="admin-modal oculto" role="dialog" aria-modal="true">
+        <div class="admin-modal-inner">
+          <h3 id="admin-modal-titulo">Nueva pregunta</h3>
+          <form id="admin-form-pregunta" class="admin-form" autocomplete="off">
+            <input type="hidden" id="af-id" />
+            <div class="af-fila">
+              <div class="af-campo">
+                <label for="af-materia">Materia</label>
+                <select id="af-materia" required>
+                  <option value="quimica">⚗️ Química</option>
+                  <option value="fisica">⚡ Física</option>
+                  <option value="biologia">🌿 Biología</option>
+                </select>
+              </div>
+              <div class="af-campo">
+                <label for="af-grado">Grado</label>
+                <select id="af-grado" required>
+                  <option value="8">8°</option>
+                  <option value="9">9°</option>
+                  <option value="10">10°</option>
+                  <option value="todos">Todos</option>
+                </select>
+              </div>
+              <div class="af-campo">
+                <label for="af-dificultad">Dificultad</label>
+                <select id="af-dificultad">
+                  <option value="1">1 — Fácil</option>
+                  <option value="2" selected>2 — Media</option>
+                  <option value="3">3 — Difícil</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="af-campo full">
+              <label for="af-tema">Tema</label>
+              <input type="text" id="af-tema" placeholder="Ej: Tabla periódica" required />
+            </div>
+
+            <div class="af-campo full">
+              <label for="af-enunciado">Enunciado de la pregunta</label>
+              <textarea id="af-enunciado" rows="3" placeholder="Escribe aquí la pregunta completa..." required></textarea>
+            </div>
+
+            <div class="af-opciones">
+              <label>Opciones — marca el radio (●) de la correcta</label>
+              <div class="af-opcion-fila">
+                <span class="af-letra">A.</span>
+                <input type="text" id="af-op0" placeholder="Opción A" required />
+                <input type="radio" name="af-correcta" value="0" title="Opción A es correcta" />
+              </div>
+              <div class="af-opcion-fila">
+                <span class="af-letra">B.</span>
+                <input type="text" id="af-op1" placeholder="Opción B" required />
+                <input type="radio" name="af-correcta" value="1" title="Opción B es correcta" />
+              </div>
+              <div class="af-opcion-fila">
+                <span class="af-letra">C.</span>
+                <input type="text" id="af-op2" placeholder="Opción C" required />
+                <input type="radio" name="af-correcta" value="2" title="Opción C es correcta" />
+              </div>
+              <div class="af-opcion-fila">
+                <span class="af-letra">D.</span>
+                <input type="text" id="af-op3" placeholder="Opción D" required />
+                <input type="radio" name="af-correcta" value="3" title="Opción D es correcta" />
+              </div>
+            </div>
+
+            <div class="af-campo full">
+              <label for="af-explicacion">Explicación (retroalimentación)</label>
+              <textarea id="af-explicacion" rows="2" placeholder="¿Por qué esa es la respuesta correcta?"></textarea>
+            </div>
+
+            <div class="af-campo">
+              <label class="af-check-label">
+                <input type="checkbox" id="af-activa" checked />
+                Pregunta activa (aparece en exámenes)
+              </label>
+            </div>
+
+            <div class="af-botones">
+              <button type="submit" class="btn-accion verde">💾 Guardar</button>
+              <button type="button" class="btn-accion gris" id="btn-cancelar-form">Cancelar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+    </div><!-- /admin-panel-full -->
   </section>
 
   <!-- Widget de volumen (visible durante el examen) -->
