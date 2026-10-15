@@ -446,7 +446,7 @@ body {
 
 /* Crédito desarrollador */
 .dev-credit {
-  position: absolute; bottom: 56px; right: 12px;
+  position: absolute; bottom: 56px; right: 4px;
   display: flex; align-items: center; gap: 6px;
   text-decoration: none; opacity: 0.32;
   transition: opacity 0.3s, transform 0.3s;
