@@ -1,16 +1,15 @@
 // firebase.js — inicialización de Firebase
-// ⚠️ Reemplaza los valores PEGA_AQUI con tu configuración de Firebase Console
 import { initializeApp } from 'firebase/app';
 import { getDatabase }   from 'firebase/database';
 
 const firebaseConfig = {
-  apiKey:            "PEGA_AQUI_TU_API_KEY",
-  authDomain:        "PEGA_AQUI_TU_PROJECT_ID.firebaseapp.com",
-  databaseURL:       "https://PEGA_AQUI_TU_PROJECT_ID-default-rtdb.firebaseio.com",
-  projectId:         "PEGA_AQUI_TU_PROJECT_ID",
-  storageBucket:     "PEGA_AQUI_TU_PROJECT_ID.appspot.com",
-  messagingSenderId: "PEGA_AQUI_TU_SENDER_ID",
-  appId:             "PEGA_AQUI_TU_APP_ID",
+  apiKey:            "AIzaSyBNE8g0il0ISljpCgmk__AtF_AQHMbVfAg",
+  authDomain:        "iti-olimpiadas.firebaseapp.com",
+  databaseURL:       "https://iti-olimpiadas-default-rtdb.firebaseio.com",
+  projectId:         "iti-olimpiadas",
+  storageBucket:     "iti-olimpiadas.firebasestorage.app",
+  messagingSenderId: "762225015291",
+  appId:             "1:762225015291:web:dd4bf9faf01f46823fb35e",
 };
 
 const app = initializeApp(firebaseConfig);
