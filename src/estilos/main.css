@@ -444,6 +444,24 @@ body {
   box-shadow: 0 0 12px #ff00c866;
 }
 
+/* Crédito desarrollador */
+.dev-credit {
+  position: absolute; bottom: 56px; right: 12px;
+  display: flex; align-items: center; gap: 6px;
+  text-decoration: none; opacity: 0.32;
+  transition: opacity 0.3s, transform 0.3s;
+  z-index: 10;
+}
+.dev-credit:hover { opacity: 0.85; transform: translateY(-2px); }
+.dev-icon {
+  font-size: 1rem; color: #00e5ff;
+}
+.dev-texto {
+  font-size: 0.62rem; line-height: 1.4; text-align: right;
+  color: #8ab8d4;
+}
+.dev-texto strong { color: #00e5ff; font-weight: 700; }
+
 /* Organizadoras del evento */
 .portada-organizadoras {
   text-align: center; margin-top: 4px; padding-bottom: 4px;
