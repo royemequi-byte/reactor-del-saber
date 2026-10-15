@@ -446,8 +446,7 @@ body {
 
 /* Organizadoras del evento */
 .portada-organizadoras {
-  position: absolute; bottom: 2px; left: 50%; transform: translateX(-50%);
-  text-align: center; z-index: 10; white-space: nowrap;
+  text-align: center; margin-top: 4px; padding-bottom: 4px;
 }
 .org-institucion {
   font-size: 0.78rem; font-weight: 700; letter-spacing: 0.06em;
@@ -455,6 +454,7 @@ body {
 }
 .org-docentes {
   display: flex; align-items: center; justify-content: center; gap: 8px;
+  flex-wrap: wrap;
 }
 .org-docente { font-size: 0.72rem; color: #5a7a9a; }
 .org-sep     { color: #3a5a7a; font-size: 0.72rem; }
