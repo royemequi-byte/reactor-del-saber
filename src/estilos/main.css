@@ -625,32 +625,111 @@ body {
    PANTALLA 6 — PODIO / RANKING
    ============================================= */
 .podio-contenido {
-  width: 100%; max-width: 900px;
-  display: flex; flex-direction: column; gap: 24px; align-items: center;
+  width: 100%; max-width: 920px;
+  display: flex; flex-direction: column; gap: 20px; align-items: center;
+  padding-bottom: 30px;
 }
 .podio-contenido h2 { font-size: 2rem; text-shadow: 0 0 16px var(--amarillo); }
 
+/* Escenario olímpico: align-items:flex-end sube el más alto naturalmente */
 .podio-top3 {
-  display: flex; align-items: flex-end; justify-content: center; gap: 16px;
-  width: 100%;
+  display: flex; align-items: flex-end; justify-content: center; gap: 0;
+  width: 100%; padding-top: 50px; position: relative;
 }
-.podio-lugar {
-  display: flex; flex-direction: column; align-items: center; gap: 8px;
-  background: var(--fondo2);
-  border-radius: var(--radio);
-  padding: 16px 12px;
-  min-width: 100px;
-  border: 2px solid var(--gris);
-}
-.podio-lugar.primer  { border-color: #ffd600; box-shadow: 0 0 20px #ffd60066; min-height: 180px; }
-.podio-lugar.segundo { border-color: #c0c0c0; min-height: 150px; }
-.podio-lugar.tercero { border-color: #cd7f32; min-height: 130px; }
 
-.podio-medalla { font-size: 2.5rem; }
-.podio-elemento { font-size: 1.8rem; font-weight: 900; color: var(--verde); }
-.podio-nombre { font-size: 0.9rem; text-align: center; color: var(--blanco); }
-.podio-pts { font-size: 0.8rem; color: var(--cian); }
-.podio-nota { font-size: 1rem; font-weight: 700; color: var(--amarillo); }
+/* Spotlight dorado sobre el 1° */
+.podio-top3::before {
+  content: '';
+  position: absolute; top: 0; left: 50%;
+  transform: translateX(-50%);
+  width: 240px; height: 200px;
+  background: radial-gradient(ellipse at 50% 0%, #ffd60028, transparent 70%);
+  pointer-events: none;
+}
+
+.podio-lugar {
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  background: var(--fondo2);
+  border-radius: 14px 14px 0 0;
+  padding: 14px 8px 0;
+  width: 140px; min-width: 100px;
+  border: 2px solid var(--gris); border-bottom: none;
+  position: relative;
+}
+
+.podio-lugar.primer  {
+  border-color: #ffd600;
+  box-shadow: 0 0 30px #ffd60055;
+  animation: subir-podio 0.5s 0.1s both;
+}
+.podio-lugar.segundo {
+  border-color: #aaaaaa;
+  box-shadow: 0 0 12px #aaaaaa33;
+  animation: subir-podio 0.5s 0.3s both;
+}
+.podio-lugar.tercero {
+  border-color: #cd7f32;
+  box-shadow: 0 0 12px #cd7f3233;
+  animation: subir-podio 0.5s 0.5s both;
+}
+
+/* Resaltar al estudiante actual en el podio */
+.podio-lugar.es-mio { outline: 3px solid var(--verde); outline-offset: 4px; }
+.podio-lugar.es-mio::after {
+  content: 'TÚ';
+  position: absolute; top: -22px;
+  background: var(--verde); color: #000;
+  font-size: 0.62rem; font-weight: 900;
+  padding: 2px 8px; border-radius: 8px;
+  letter-spacing: 0.1em;
+}
+
+@keyframes subir-podio {
+  from { opacity: 0; transform: translateY(25px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.podio-medalla  { font-size: 2.2rem; }
+.podio-elemento { font-size: 1.7rem; font-weight: 900; color: var(--verde); letter-spacing: 0.05em; }
+.podio-nombre   { font-size: 0.82rem; text-align: center; color: var(--blanco); max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.podio-grado    { font-size: 0.7rem; color: #7a9aaa; }
+.podio-pts      { font-size: 0.78rem; color: var(--cian); }
+.podio-nota     { font-size: 1rem; font-weight: 700; color: var(--amarillo); }
+
+/* Pedestal (plataforma del podio) */
+.podio-plataforma {
+  width: 100%; margin-top: 10px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 900; border-radius: 0 0 4px 4px;
+}
+.podio-lugar.primer  .podio-plataforma {
+  height: 80px; font-size: 2rem;
+  background: linear-gradient(180deg, #ffd700 0%, #9a7000 100%);
+  color: #1a0800; box-shadow: 0 6px 24px #ffd60055;
+}
+.podio-lugar.segundo .podio-plataforma {
+  height: 55px; font-size: 1.8rem;
+  background: linear-gradient(180deg, #d0d0d0 0%, #606060 100%);
+  color: #111;
+}
+.podio-lugar.tercero .podio-plataforma {
+  height: 35px; font-size: 1.3rem;
+  background: linear-gradient(180deg, #cd7f32 0%, #6a3a10 100%);
+  color: #fff0dd;
+}
+
+/* Badge de posición en resultados */
+.tu-posicion-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 10px 24px; border-radius: 30px;
+  font-size: 1.05rem; font-weight: 700;
+  border: 2px solid var(--cian); color: var(--cian);
+  background: #001a2a; margin: 4px 0;
+}
+.tu-posicion-badge.puesto-1 { border-color: #ffd600; color: #ffd600; background: #120d00; box-shadow: 0 0 20px #ffd60044; }
+.tu-posicion-badge.puesto-2 { border-color: #c0c0c0; color: #c0c0c0; background: #111111; }
+.tu-posicion-badge.puesto-3 { border-color: #cd7f32; color: #cd7f32; background: #120800; }
+.tu-posicion-badge.puesto-4 { border-color: var(--cian); color: var(--cian); background: #001a2a; }
 
 /* Filtros ranking */
 .ranking-filtros { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
@@ -676,6 +755,8 @@ body {
 .ranking-tabla tr.top1 td { color: var(--amarillo); font-weight: 700; }
 .ranking-tabla tr.top2 td { color: #c0c0c0; }
 .ranking-tabla tr.top3 td { color: #cd7f32; }
+.ranking-tabla tr.mi-fila td { background: #002a10; color: var(--verde); font-weight: 700; }
+.ranking-tabla tr.mi-fila:hover td { background: #003a18; }
 
 /* =============================================
    PANTALLA 7 — ADMIN
@@ -769,14 +850,19 @@ body {
   .botones-resultado .btn-secundario { width: 100%; text-align: center; }
 
   /* Podio */
-  .podio-top3   { gap: 8px; }
-  .podio-lugar  { min-width: 85px; padding: 10px 6px; }
-  .podio-medalla { font-size: 1.8rem; }
-  .podio-elemento { font-size: 1.4rem; }
-  .podio-nombre  { font-size: 0.75rem; }
+  .podio-top3    { padding-top: 36px; }
+  .podio-lugar   { width: 100px; min-width: 80px; padding: 10px 5px 0; }
+  .podio-medalla { font-size: 1.6rem; }
+  .podio-elemento{ font-size: 1.3rem; }
+  .podio-nombre  { font-size: 0.7rem; }
+  .podio-grado   { font-size: 0.62rem; }
   .podio-nota    { font-size: 0.85rem; }
-  .ranking-tabla { font-size: 0.82rem; }
-  .ranking-tabla th, .ranking-tabla td { padding: 8px 8px; }
+  .podio-lugar.primer  .podio-plataforma { height: 60px; font-size: 1.5rem; }
+  .podio-lugar.segundo .podio-plataforma { height: 42px; font-size: 1.3rem; }
+  .podio-lugar.tercero .podio-plataforma { height: 26px; font-size: 1rem; }
+  .tu-posicion-badge { padding: 8px 16px; font-size: 0.92rem; }
+  .ranking-tabla { font-size: 0.78rem; }
+  .ranking-tabla th, .ranking-tabla td { padding: 7px 6px; }
 
   /* Admin */
   .admin-contenido { padding: 24px 16px; }
@@ -791,7 +877,7 @@ body {
   .logo-wrapper { width: 190px; height: 190px; }
   .logo-imagen  { width: 155px; height: 155px; }
   .opciones-grid { grid-template-columns: 1fr 1fr; }
-  .podio-lugar { min-width: 90px; }
+  .podio-lugar { width: 120px; min-width: 90px; }
 }
 
 /* Respeta preferencia de movimiento reducido */

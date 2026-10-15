@@ -3,6 +3,7 @@ import { estado, resetearEstado } from './estado.js';
 import { armarExamen, guardarHistorial } from './examen.js';
 import { iniciarAudio, setVolumen, toggleSilencio, setMateria, setRacha, setProgreso, setTiempoRestante } from './audio/motor-audio.js';
 import { tocarAcierto, tocarError, tocarRacha, tocarPoder, tocarFanfarra, tocarIntro } from './audio/efectos.js';
+import confetti from 'canvas-confetti';
 
 // ─── NAVEGACIÓN ────────────────────────────────────────────────────────────
 export function irA(id) {
@@ -290,11 +291,11 @@ document.getElementById('ctrl-volumen').addEventListener('input', (e) => {
 function finalizarExamen() {
   detenerReloj();
   const nota = calcularNota();
+  guardarEnRanking(nota);       // primero guardar para que el badge lo lea
   mostrarResultados(nota);
-  guardarEnRanking(nota);
   const ranking = JSON.parse(localStorage.getItem('ranking') || '[]');
   const puesto = ranking.findIndex(r =>
-    r.nombre === estado.estudiante.nombre && r.puntaje === estado.puntaje
+    r.nombre === estado.estudiante.nombre && String(r.puntaje) === String(estado.puntaje)
   ) + 1;
   tocarFanfarra(puesto >= 1 && puesto <= 3 ? puesto : 0);
   irA('pantalla-resultados');
@@ -322,6 +323,21 @@ function mostrarResultados(nota) {
   document.getElementById('barra-razon').style.width    = pctR + '%';
   document.getElementById('txt-ciencias').textContent   = `${estado.aciertos.ciencias}/19`;
   document.getElementById('txt-razon').textContent      = `${estado.aciertos.razonamiento}/10`;
+
+  // Badge de posición en el ranking
+  const badge = document.getElementById('tu-posicion-badge');
+  if (badge) {
+    const ranking = JSON.parse(localStorage.getItem('ranking') || '[]');
+    const puesto = ranking.findIndex(r =>
+      r.nombre === estado.estudiante.nombre && String(r.puntaje) === String(estado.puntaje)
+    ) + 1;
+    if (puesto > 0) {
+      const emojis = { 1: '🥇', 2: '🥈', 3: '🥉' };
+      const emoji  = emojis[puesto] || '🎓';
+      badge.innerHTML = `${emoji} Posición <strong>#${puesto}</strong> en el ranking`;
+      badge.className = `tu-posicion-badge puesto-${Math.min(puesto, 4)}`;
+    }
+  }
 }
 
 function guardarEnRanking(nota) {
@@ -381,38 +397,76 @@ function renderizarPodio() {
   contenedor.innerHTML = orden.map(i => {
     const p = top3[i];
     if (!p) return '';
+    const esMio = p.nombre === estado.estudiante.nombre && String(p.puntaje) === String(estado.puntaje);
     return `
-      <div class="podio-lugar ${clases[i]}">
+      <div class="podio-lugar ${clases[i]}${esMio ? ' es-mio' : ''}">
         <div class="podio-medalla">${medallas[i]}</div>
         <div class="podio-elemento">${p.avatar}</div>
         <div class="podio-nombre">${p.nombre}</div>
+        <div class="podio-grado">Grado ${p.grado}° · ${p.curso}</div>
         <div class="podio-pts">${Number(p.puntaje).toLocaleString('es-CO')} pts</div>
         <div class="podio-nota">${p.nota}/5.0</div>
+        <div class="podio-plataforma">${i + 1}</div>
       </div>`;
   }).join('');
 
   renderizarTablaRanking('todos');
+
+  // Confetti según posición del estudiante actual
+  const miPuesto = datos.findIndex(r =>
+    r.nombre === estado.estudiante.nombre && String(r.puntaje) === String(estado.puntaje)
+  ) + 1;
+  if      (miPuesto === 1) lanzarConfettiEpico();
+  else if (miPuesto <= 3)  lanzarConfettiMedio();
+  else                     lanzarConfettiSuave();
 }
 
 function renderizarTablaRanking(filtro) {
   const datos = JSON.parse(localStorage.getItem('ranking') || '[]');
   const filtrados = filtro === 'todos' ? datos : datos.filter(p => String(p.grado) === String(filtro));
   const topClases = ['top1', 'top2', 'top3'];
+  const prefijos  = ['🥇 ', '🥈 ', '🥉 '];
   const tbody = document.getElementById('ranking-tbody');
-  tbody.innerHTML = filtrados.map((p, i) => `
-    <tr class="${topClases[i] || ''}">
-      <td>${i + 1}</td>
-      <td>${p.nombre}</td>
+  tbody.innerHTML = filtrados.map((p, i) => {
+    const esMio = p.nombre === estado.estudiante.nombre && String(p.puntaje) === String(estado.puntaje);
+    return `
+    <tr class="${topClases[i] || ''}${esMio ? ' mi-fila' : ''}">
+      <td>${(prefijos[i] || '') + (i + 1)}</td>
+      <td>${p.nombre}${esMio ? ' ◀' : ''}</td>
       <td>${p.avatar}</td>
       <td>${p.grado}°</td>
       <td>${p.curso}</td>
       <td>${Number(p.puntaje).toLocaleString('es-CO')}</td>
       <td>${p.nota}</td>
-    </tr>`).join('');
+    </tr>`;
+  }).join('');
 
   if (!filtrados.length) {
     tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:#8ab">Sin resultados aún</td></tr>';
   }
+}
+
+// ─── CONFETTI ──────────────────────────────────────────────────────────────
+function lanzarConfettiEpico() {
+  const colores = ['#ffd600', '#ff00c8', '#00e5ff', '#39ff14', '#ffffff'];
+  // Explosión central inicial
+  confetti({ particleCount: 120, spread: 100, origin: { y: 0.5 }, colors: colores });
+  // Lluvia lateral continua 3.5s
+  const fin = Date.now() + 3500;
+  (function bucle() {
+    confetti({ particleCount: 4, angle: 60,  spread: 55, origin: { x: 0 }, colors: colores });
+    confetti({ particleCount: 4, angle: 120, spread: 55, origin: { x: 1 }, colors: colores });
+    if (Date.now() < fin) requestAnimationFrame(bucle);
+  }());
+}
+
+function lanzarConfettiMedio() {
+  confetti({ particleCount: 80, spread: 70, origin: { y: 0.6 },
+    colors: ['#c0c0c0', '#00e5ff', '#ffffff', '#39ff14'] });
+}
+
+function lanzarConfettiSuave() {
+  confetti({ particleCount: 35, spread: 55, origin: { y: 0.7 } });
 }
 
 // ─── RACHA DISPLAY ─────────────────────────────────────────────────────────
