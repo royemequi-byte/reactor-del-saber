@@ -16,7 +16,8 @@
     "explicacion": "Na viene del latín 'Natrium'. El sodio es un metal alcalino del grupo 1.",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "QUI-8-002",
@@ -35,7 +36,8 @@
     "explicacion": "La densidad no cambia si divides la muestra. Masa y volumen sí cambian (son extensivas).",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "QUI-8-003",
@@ -54,7 +56,8 @@
     "explicacion": "El número atómico del oxígeno es 8: tiene 8 protones y 8 electrones en estado neutro.",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "QUI-8-004",
@@ -73,7 +76,8 @@
     "explicacion": "Fe viene del latín 'Ferrum'. El hierro es un metal de transición, número atómico 26.",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "QUI-8-005",
@@ -92,7 +96,8 @@
     "explicacion": "Los gases nobles (He, Ne, Ar, Kr, Xe, Rn) están en el grupo 18. Tienen capa de valencia completa.",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "QUI-8-006",
@@ -111,7 +116,8 @@
     "explicacion": "El número atómico (Z) indica la cantidad de protones en el núcleo. Es único para cada elemento.",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "QUI-8-007",
@@ -130,7 +136,8 @@
     "explicacion": "Congelar el agua es un cambio físico: solo cambia de estado (líquido → sólido), no su composición química.",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "QUI-8-008",
@@ -149,7 +156,8 @@
     "explicacion": "La densidad es una propiedad intensiva: no cambia con la cantidad de sustancia. Siempre será 2 g/cm³.",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "QUI-8-009",
@@ -168,7 +176,8 @@
     "explicacion": "El gas no tiene forma ni volumen propio: ocupa todo el recipiente que lo contiene.",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "QUI-8-010",
@@ -187,7 +196,8 @@
     "explicacion": "Los isótopos tienen el mismo número de protones (mismo elemento) pero distinto número de neutrones. Ej: C-12 y C-14.",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "QUI-8-011",
@@ -206,7 +216,8 @@
     "explicacion": "La ensalada de frutas es heterogénea porque puedes ver y separar sus componentes a simple vista.",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "QUI-8-012",
@@ -225,7 +236,8 @@
     "explicacion": "El hidrógeno (H) es el elemento más simple y abundante del universo, con un solo protón.",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "QUI-9-001",
@@ -244,7 +256,8 @@
     "explicacion": "Es una síntesis: dos o más reactivos se combinan para formar un solo producto (el agua).",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "QUI-9-002",
@@ -263,7 +276,8 @@
     "explicacion": "'Di' significa 2. CO₂ es el gas que usamos al respirar y que absorben las plantas.",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "QUI-9-003",
@@ -282,7 +296,8 @@
     "explicacion": "Los reactivos son las sustancias que entran a la reacción (lado izquierdo de la flecha →).",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "QUI-9-004",
@@ -301,7 +316,8 @@
     "explicacion": "Un catalizador acelera la reacción disminuyendo la energía de activación, pero no se consume en el proceso.",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "QUI-9-005",
@@ -320,7 +336,8 @@
     "explicacion": "NaCl es cloruro de sodio, más conocido como sal de cocina. Ión Na⁺ con ion Cl⁻.",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "QUI-9-006",
@@ -339,7 +356,8 @@
     "explicacion": "El peróxido de hidrógeno es H₂O₂. Tiene dos átomos de H y dos de O, diferente al agua (H₂O).",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "QUI-9-007",
@@ -358,7 +376,8 @@
     "explicacion": "El carbono tiene configuración 2,4. Sus 4 electrones de valencia le permiten formar 4 enlaces, base de la química orgánica.",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "QUI-9-008",
@@ -377,7 +396,8 @@
     "explicacion": "En la descomposición un reactivo se divide. Ej: 2H₂O → 2H₂ + O₂ (electrólisis del agua).",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "QUI-9-009",
@@ -396,7 +416,8 @@
     "explicacion": "H₂SO₄ es el ácido sulfúrico. Es uno de los ácidos más utilizados en la industria química.",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "QUI-9-010",
@@ -415,7 +436,8 @@
     "explicacion": "La oxidación del hierro produce óxido de hierro (herrumbre), una nueva sustancia. Eso es reacción química.",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "QUI-10-001",
@@ -434,7 +456,8 @@
     "explicacion": "Ley de conservación de la masa: la masa de los reactivos iguala la masa de los productos.",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "QUI-10-002",
@@ -453,7 +476,8 @@
     "explicacion": "pH 7 es neutro (como el agua pura). Por debajo de 7 es ácido, por encima de 7 es básico (alcalino).",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "QUI-10-003",
@@ -472,7 +496,8 @@
     "explicacion": "El enlace covalente se forma por compartición de pares de electrones entre átomos (típico en no metales).",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "QUI-10-004",
@@ -491,7 +516,8 @@
     "explicacion": "Las reacciones exotérmicas liberan calor (ΔH < 0). Ejemplo: quemar madera o carbón.",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "QUI-10-005",
@@ -510,7 +536,8 @@
     "explicacion": "La electronegatividad aumenta de izquierda a derecha (y de abajo hacia arriba). El flúor es el más electronegativo.",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "QUI-10-006",
@@ -529,7 +556,8 @@
     "explicacion": "El agente oxidante SE REDUCE: gana electrones. Mnemotecnia: OIL RIG (Oxidation Is Loss, Reduction Is Gain).",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "QUI-10-007",
@@ -548,7 +576,8 @@
     "explicacion": "Molaridad (M) = moles de soluto / litros de solución. Es la forma más común de expresar concentración en química.",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "QUI-10-008",
@@ -567,7 +596,8 @@
     "explicacion": "Ca(OH)₂ es el hidróxido de calcio, conocido como cal apagada. Se usa en construcción y tratamiento de agua.",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "FIS-8-001",
@@ -586,7 +616,8 @@
     "explicacion": "Velocidad = distancia ÷ tiempo = 120 km ÷ 2 h = 60 km/h.",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "FIS-8-002",
@@ -605,7 +636,8 @@
     "explicacion": "La primera ley (inercia): un cuerpo mantiene su estado si la fuerza neta es cero.",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "FIS-8-003",
@@ -624,7 +656,8 @@
     "explicacion": "En el Sistema Internacional (SI), la velocidad se mide en metros por segundo (m/s).",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "FIS-8-004",
@@ -643,7 +676,8 @@
     "explicacion": "Masa (kg) es cantidad de materia y no cambia. Peso (N) = masa × gravedad, y varía según el lugar.",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "FIS-8-005",
@@ -662,7 +696,8 @@
     "explicacion": "Al estar en altura, el objeto tiene energía potencial gravitacional (Ep = m·g·h). Al caer se convierte en cinética.",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "FIS-8-006",
@@ -681,7 +716,8 @@
     "explicacion": "F = m·a, entonces a = F/m. Si F se duplica con la misma masa, la aceleración también se duplica.",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "FIS-8-007",
@@ -700,7 +736,8 @@
     "explicacion": "a = Δv/t = (0 - 10)/5 = -2 m/s². El signo negativo indica desaceleración (frenado).",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "FIS-8-008",
@@ -719,7 +756,8 @@
     "explicacion": "Tercera ley: toda acción genera una reacción igual y opuesta. La pared te devuelve la misma fuerza.",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "FIS-8-009",
@@ -738,7 +776,8 @@
     "explicacion": "La energía cinética es la energía del movimiento (Ec = ½mv²). La pelota rodando la tiene; las demás tienen potencial.",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "FIS-9-001",
@@ -757,7 +796,8 @@
     "explicacion": "El Joule (J) mide energía y trabajo. 1 J = fuerza de 1 N aplicada sobre 1 m.",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "FIS-9-002",
@@ -776,7 +816,8 @@
     "explicacion": "Inducción electromagnética (Faraday): un campo magnético variable genera corriente eléctrica. Así funcionan los generadores.",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "FIS-9-003",
@@ -795,7 +836,8 @@
     "explicacion": "El sonido viaja a ~340 m/s en el aire. 300.000 km/s es la velocidad de la luz, mucho mayor.",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "FIS-9-004",
@@ -814,7 +856,8 @@
     "explicacion": "Conducción: el calor se transfiere por contacto entre partículas adyacentes. Típico en metales.",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "FIS-9-005",
@@ -833,7 +876,8 @@
     "explicacion": "Presión = Fuerza / Área. Cuanto menor es el área, mayor la presión (por eso los clavos cortan).",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "FIS-9-006",
@@ -852,7 +896,8 @@
     "explicacion": "Cargas de signos opuestos se atraen; cargas del mismo signo se repelen. Ley de Coulomb.",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "FIS-9-007",
@@ -871,7 +916,8 @@
     "explicacion": "El sonido es una onda longitudinal: las partículas vibran en la misma dirección en que viaja la onda.",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "FIS-9-008",
@@ -890,7 +936,8 @@
     "explicacion": "El calor solar llega por radiación (ondas electromagnéticas). No necesita medio material, viaja por el vacío.",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "FIS-9-009",
@@ -909,7 +956,8 @@
     "explicacion": "P = F/A = 600 N ÷ 0.03 m² = 20.000 Pa. Los tacones altos generan más presión porque el área es menor.",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "FIS-10-001",
@@ -928,7 +976,8 @@
     "explicacion": "Las bombillas incandescentes convierten ~10% en luz y ~90% en calor. Las LED son más eficientes.",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "FIS-10-002",
@@ -947,7 +996,8 @@
     "explicacion": "Las máquinas simples (palanca, polea, plano inclinado, rueda y eje) transforman fuerzas con un movimiento básico.",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "FIS-10-003",
@@ -966,7 +1016,8 @@
     "explicacion": "Primera ley de la termodinámica: la energía total del universo es constante. Solo cambia de forma.",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "FIS-10-004",
@@ -985,7 +1036,8 @@
     "explicacion": "La palanca de segundo género amplifica la fuerza: con poca fuerza en un extremo, se ejerce mucha fuerza en el objeto.",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "FIS-10-005",
@@ -1004,7 +1056,8 @@
     "explicacion": "La resistencia se mide en Ohms (Ω). Ley de Ohm: V = I × R (voltaje = corriente × resistencia).",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "FIS-10-006",
@@ -1023,7 +1076,8 @@
     "explicacion": "Potencia = Trabajo / Tiempo = 500 J ÷ 10 s = 50 W. El Watt (W) es la unidad de potencia.",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "FIS-10-007",
@@ -1042,7 +1096,8 @@
     "explicacion": "Rendimiento = (Trabajo útil / Trabajo total) × 100%. Ninguna máquina real tiene 100% por las pérdidas en calor y fricción.",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "FIS-10-008",
@@ -1061,7 +1116,8 @@
     "explicacion": "En serie hay un solo camino para la corriente. Si se interrumpe en un punto, todo el circuito se apaga.",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "FIS-10-009",
@@ -1080,7 +1136,8 @@
     "explicacion": "Arquímedes: todo cuerpo sumergido recibe un empuje igual al peso del fluido desplazado. El barco desplaza mucha agua.",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "QUI-8-013",
@@ -1099,7 +1156,8 @@
     "explicacion": "La filtración retiene los sólidos (arena) y deja pasar el líquido (agua) a través de un filtro.",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "QUI-8-014",
@@ -1118,7 +1176,8 @@
     "explicacion": "Los metales ocupan el lado izquierdo y el bloque central (transición). Los no metales están a la derecha.",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "QUI-9-011",
@@ -1137,7 +1196,8 @@
     "explicacion": "La fotosíntesis es una síntesis que absorbe energía luminosa. Las plantas construyen glucosa a partir de CO₂ y agua.",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "QUI-10-009",
@@ -1156,7 +1216,8 @@
     "explicacion": "La relación es 2:2 (H₂:H₂O). Si hay 4 moles de H₂, se producen 4 moles de H₂O. Estequiometría directa.",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "FIS-8-010",
@@ -1175,7 +1236,8 @@
     "explicacion": "La caída libre es MRUA: la velocidad aumenta constantemente por la aceleración gravitacional (g ≈ 9.8 m/s²).",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "FIS-9-010",
@@ -1194,7 +1256,8 @@
     "explicacion": "Frecuencia (Hz) = ciclos por segundo. Una onda de 440 Hz vibra 440 veces por segundo (nota musical La).",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "FIS-10-010",
@@ -1213,7 +1276,8 @@
     "explicacion": "Los alimentos almacenan energía química en enlaces moleculares. El cuerpo la libera mediante reacciones metabólicas.",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "QUI-8-015",
@@ -1232,7 +1296,8 @@
     "explicacion": "El agua hierve a 100°C (212°F) al nivel del mar. A mayor altitud, hierve a menor temperatura por la presión.",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "FIS-9-011",
@@ -1251,7 +1316,8 @@
     "explicacion": "El transformador usa inducción electromagnética para cambiar el voltaje. Es clave en la distribución de electricidad.",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "FIS-8-011",
@@ -1270,7 +1336,8 @@
     "explicacion": "En el punto más bajo toda la energía potencial se ha convertido en cinética: es donde el carro va más rápido.",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "QUI-9-012",
@@ -1289,7 +1356,8 @@
     "explicacion": "HCl (ácido clorhídrico) disuelto en agua libera H⁺, por eso es un ácido. Se usa en el estómago para la digestión.",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "FIS-10-011",
@@ -1308,7 +1376,8 @@
     "explicacion": "Pascal: la presión aplicada en un fluido cerrado se transmite igual en todas direcciones. Permite levantar carros con poca fuerza.",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "QUI-10-010",
@@ -1327,7 +1396,8 @@
     "explicacion": "Una solución saturada ha alcanzado su capacidad máxima de disolver soluto. Si agregas más, no se disuelve.",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "FIS-9-012",
@@ -1346,7 +1416,8 @@
     "explicacion": "La temperatura mide qué tan rápido se mueven las partículas promedio. A mayor temperatura, más agitación molecular.",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "BIO-8-001",
@@ -1365,7 +1436,8 @@
     "explicacion": "La célula es la unidad mínima con vida propia. Todo ser vivo está formado por una o más células.",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "BIO-8-002",
@@ -1384,7 +1456,8 @@
     "explicacion": "La mitocondria produce ATP (energía) mediante la respiración celular. Sin ella, la célula no puede funcionar.",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "BIO-8-003",
@@ -1403,7 +1476,8 @@
     "explicacion": "Las células vegetales tienen pared celular (de celulosa), cloroplastos y vacuola central grande, que las animales no poseen.",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "BIO-8-004",
@@ -1422,7 +1496,8 @@
     "explicacion": "El núcleo es el 'cerebro' de la célula: contiene el ADN con la información genética que dirige todas sus funciones.",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "BIO-8-005",
@@ -1441,7 +1516,8 @@
     "explicacion": "Los cloroplastos contienen clorofila y realizan la fotosíntesis: convierten luz solar + CO₂ + agua en glucosa y oxígeno.",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "BIO-8-006",
@@ -1460,7 +1536,8 @@
     "explicacion": "La jerarquía es: Célula → Tejido → Órgano → Sistema → Organismo. Cada nivel forma al siguiente.",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "BIO-8-007",
@@ -1479,7 +1556,8 @@
     "explicacion": "La mitosis produce dos células hijas idénticas a la madre. Permite el crecimiento y la regeneración de tejidos.",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "BIO-8-008",
@@ -1498,7 +1576,8 @@
     "explicacion": "El sistema circulatorio (corazón, vasos, sangre) transporta oxígeno, nutrientes y elimina desechos de todas las células.",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "BIO-9-001",
@@ -1517,7 +1596,8 @@
     "explicacion": "Un ecosistema incluye componentes bióticos (seres vivos) y abióticos (agua, suelo, clima) en interacción constante.",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "BIO-9-002",
@@ -1536,7 +1616,8 @@
     "explicacion": "El conejo es consumidor primario (herbívoro): come el productor (pasto). El zorro es consumidor secundario.",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "BIO-9-003",
@@ -1555,7 +1636,8 @@
     "explicacion": "Los descomponedores (hongos, bacterias) reciclan los nutrientes: desintegran cadáveres y materia orgánica devolviendo minerales al suelo.",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "BIO-9-004",
@@ -1574,7 +1656,8 @@
     "explicacion": "Mutualismo: ambas especies se benefician. Ejemplo: las abejas polinizan flores y obtienen néctar a cambio.",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "BIO-9-005",
@@ -1593,7 +1676,8 @@
     "explicacion": "El páramo es un ecosistema único de los Andes (Colombia, Ecuador, Venezuela). Es la mayor reserva de agua dulce del mundo.",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "BIO-9-006",
@@ -1612,7 +1696,8 @@
     "explicacion": "La meiosis produce gametos con n cromosomas (haploide). Al unirse en la fecundación, restauran los 2n cromosomas.",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "BIO-9-007",
@@ -1631,7 +1716,8 @@
     "explicacion": "La membrana es semipermeable: permite el paso de algunas sustancias y bloquea otras, manteniendo el equilibrio interno.",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "BIO-9-008",
@@ -1650,7 +1736,8 @@
     "explicacion": "En el ciclo del carbono: las plantas fijan CO₂ (fotosíntesis), los animales lo liberan (respiración) y los descomponedores lo reciclan.",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "BIO-10-001",
@@ -1669,7 +1756,8 @@
     "explicacion": "El ADN (ácido desoxirribonucleico) almacena la información genética en forma de secuencias de bases nitrogenadas.",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "BIO-10-002",
@@ -1688,7 +1776,8 @@
     "explicacion": "En F2 (Aa × Aa) se obtiene 1AA:2Aa:1aa. Fenotípicamente: 3 con carácter dominante : 1 con carácter recesivo.",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "BIO-10-003",
@@ -1707,7 +1796,8 @@
     "explicacion": "Las células somáticas humanas tienen 46 cromosomas (23 pares). Los gametos tienen 23 (son haploides).",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "BIO-10-004",
@@ -1726,7 +1816,8 @@
     "explicacion": "El ARNm copia la información del ADN (transcripción) y la lleva al ribosoma donde se traduce en proteínas.",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "BIO-10-005",
@@ -1745,7 +1836,8 @@
     "explicacion": "La biodiversidad abarca diversidad de genes, especies y ecosistemas. Colombia es uno de los países más biodiversos del mundo.",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "BIO-10-006",
@@ -1764,7 +1856,8 @@
     "explicacion": "Una mutación es un cambio en el ADN. Pueden ser neutras, beneficiosas (evolución) o causar enfermedades.",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "BIO-10-007",
@@ -1783,7 +1876,8 @@
     "explicacion": "Selección natural: en cada generación sobreviven los individuos con características más ventajosas para su entorno, transmitiéndolas a su descendencia.",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "BIO-8-009",
@@ -1802,7 +1896,8 @@
     "explicacion": "Las bacterias son procariotas: su material genético flota en el citoplasma sin membrana nuclear. Todos los demás son eucariotas.",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "BIO-9-009",
@@ -1821,7 +1916,8 @@
     "explicacion": "Fotosíntesis: 6CO₂ + 6H₂O + luz → C₆H₁₂O₆ + 6O₂. Las plantas producen su alimento y liberan el oxígeno que respiramos.",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "BIO-10-008",
@@ -1840,7 +1936,8 @@
     "explicacion": "La biotecnología usa células, bacterias u organismos modificados para producir medicamentos, alimentos mejorados, biocombustibles y más.",
     "imagen": null,
     "autor": "ia",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "FIS-10-P06",
@@ -1859,7 +1956,8 @@
     "explicacion": "Una onda transfiere energía sin producir un transporte neto de materia. El corcho oscila pero no avanza, lo que confirma que la onda no arrastra las partículas del medio.",
     "imagen": null,
     "autor": "iti-docente",
-    "activa": true
+    "activa": true,
+    "origen": "icfes"
   },
   {
     "id": "FIS-10-P07",
@@ -1878,7 +1976,8 @@
     "explicacion": "En una onda transversal, la dirección de vibración del medio es perpendicular a la dirección en que se propaga la perturbación. La mano mueve la cuerda verticalmente, pero la onda avanza horizontalmente.",
     "imagen": "img/preguntas/fis10_p7.jpeg",
     "autor": "iti-docente",
-    "activa": true
+    "activa": true,
+    "origen": "icfes"
   },
   {
     "id": "FIS-10-P08",
@@ -1897,7 +1996,8 @@
     "explicacion": "La longitud de onda (λ) es la distancia entre dos puntos consecutivos de la onda que se encuentran en la misma fase, como dos crestas o dos valles.",
     "imagen": "img/preguntas/fis10_p8.jpeg",
     "autor": "iti-docente",
-    "activa": true
+    "activa": true,
+    "origen": "icfes"
   },
   {
     "id": "FIS-10-P09",
@@ -1916,7 +2016,8 @@
     "explicacion": "La rapidez de una onda se relaciona con su frecuencia y longitud de onda mediante v = f·λ. Si la rapidez permanece constante y la frecuencia se duplica (2→4 Hz), la longitud de onda se reduce a la mitad (3→1,5 m).",
     "imagen": "img/preguntas/fis10_p9.png",
     "autor": "iti-docente",
-    "activa": true
+    "activa": true,
+    "origen": "icfes"
   },
   {
     "id": "FIS-10-P10",
@@ -1935,7 +2036,8 @@
     "explicacion": "El sonido es una onda mecánica que requiere un medio material para propagarse. La luz, en cambio, es una onda electromagnética y puede viajar por el vacío. En el espacio no hay aire, por eso no se escucha.",
     "imagen": "img/preguntas/fis10_p10.jpeg",
     "autor": "iti-docente",
-    "activa": true
+    "activa": true,
+    "origen": "icfes"
   },
   {
     "id": "QUI-10-P01",
@@ -1954,7 +2056,8 @@
     "explicacion": "La muestra A reúne las dos propiedades requeridas: alta conductividad eléctrica (necesaria para un cable) e insolubilidad en agua (resistente a la humedad).",
     "imagen": "img/preguntas/qui10_q1.jpeg",
     "autor": "iti-docente",
-    "activa": true
+    "activa": true,
+    "origen": "icfes"
   },
   {
     "id": "QUI-10-P02",
@@ -1973,7 +2076,8 @@
     "explicacion": "Densidades: X = 120/40 = 3 g/cm³ (> 2,5 → se hunde), Y = 180/100 = 1,8 g/cm³ (< 2,5 → flota), Z = 90/30 = 3 g/cm³ (> 2,5 → se hunde). Un cuerpo flota si su densidad es menor que la del fluido.",
     "imagen": null,
     "autor": "iti-docente",
-    "activa": true
+    "activa": true,
+    "origen": "icfes"
   },
   {
     "id": "QUI-10-P03",
@@ -1992,7 +2096,8 @@
     "explicacion": "P es líquida a 25 °C (entre su punto de fusión 0 °C y ebullición 100 °C) y se evapora sin superar los 100 °C. Q es sólida a 25 °C. R es líquida a 25 °C pero hierve a 357 °C, lo que supera el límite establecido.",
     "imagen": null,
     "autor": "iti-docente",
-    "activa": true
+    "activa": true,
+    "origen": "icfes"
   },
   {
     "id": "QUI-10-P04",
@@ -2011,7 +2116,8 @@
     "explicacion": "La solubilidad máxima es 200 g bajo las condiciones dadas. La agitación acelera la disolución pero no cambia el máximo. Por tanto, se disuelven 200 g y quedan 250 - 200 = 50 g sin disolver.",
     "imagen": null,
     "autor": "iti-docente",
-    "activa": true
+    "activa": true,
+    "origen": "icfes"
   },
   {
     "id": "QUI-10-P05",
@@ -2030,7 +2136,8 @@
     "explicacion": "Para minimizar la resistencia eléctrica se necesita la mayor conductividad posible. El material M tiene la conductividad más alta, por lo tanto presenta la menor resistencia al paso de la corriente.",
     "imagen": null,
     "autor": "iti-docente",
-    "activa": true
+    "activa": true,
+    "origen": "icfes"
   },
   {
     "id": "QUI-10-P06",
@@ -2049,7 +2156,8 @@
     "explicacion": "En una reacción química, las sustancias iniciales se transforman en otras diferentes. La ecuación representa la formación de N₂ y HCl a partir de NH₃ y Cl₂. Las nuevas sustancias tienen propiedades distintas a los reactivos.",
     "imagen": "img/preguntas/qui10_q6.jpeg",
     "autor": "iti-docente",
-    "activa": true
+    "activa": true,
+    "origen": "icfes"
   },
   {
     "id": "QUI-10-P12",
@@ -2068,7 +2176,8 @@
     "explicacion": "El sodio neutro tiene igual número de protones (11) y electrones (11). Al perder un electrón queda con 11 protones y 10 electrones, dando una carga neta de +1. El número de protones no cambia.",
     "imagen": null,
     "autor": "iti-docente",
-    "activa": true
+    "activa": true,
+    "origen": "icfes"
   },
   {
     "id": "QUI-10-P13",
@@ -2087,7 +2196,8 @@
     "explicacion": "Los isótopos comparten el número atómico (número de protones) y se diferencian en el número de neutrones. Como la masa atómica = protones + neutrones, al variar los neutrones varía la masa, pero la identidad química (determinada por los protones) permanece igual.",
     "imagen": null,
     "autor": "iti-docente",
-    "activa": true
+    "activa": true,
+    "origen": "icfes"
   },
   {
     "id": "QUI-10-P15",
@@ -2106,7 +2216,8 @@
     "explicacion": "A volumen aproximadamente constante, el aumento de temperatura eleva la energía cinética promedio de las partículas. Al moverse más rápido, los choques contra las paredes son más frecuentes e intensos, lo que incrementa la presión.",
     "imagen": null,
     "autor": "iti-docente",
-    "activa": true
+    "activa": true,
+    "origen": "icfes"
   },
   {
     "id": "QUI-10-P17",
@@ -2125,7 +2236,8 @@
     "explicacion": "Los metales tienen electrones de conducción libres que permiten la corriente eléctrica en cualquier estado. En el NaCl sólido, los iones Na⁺ y Cl⁻ están fijos en la red cristalina; solo al fundirse quedan libres para moverse y conducir.",
     "imagen": null,
     "autor": "iti-docente",
-    "activa": true
+    "activa": true,
+    "origen": "icfes"
   },
   {
     "id": "QUI-10-P18",
@@ -2144,7 +2256,8 @@
     "explicacion": "La disminución del punto de congelación es una propiedad coligativa: las partículas disueltas (iones Na⁺ y Cl⁻) interfieren con la formación de la red cristalina del hielo, por lo que la solución necesita una temperatura más baja para congelarse.",
     "imagen": "img/preguntas/qui10_q18.jpeg",
     "autor": "iti-docente",
-    "activa": true
+    "activa": true,
+    "origen": "icfes"
   },
   {
     "id": "QUI-10-P21",
@@ -2163,7 +2276,8 @@
     "explicacion": "El diseño es correcto porque modifica solo la cantidad de sal (variable independiente) y mantiene constantes el volumen, el tipo de agua y la temperatura. Esto permite atribuir los cambios en la conductividad exclusivamente a la cantidad de sal.",
     "imagen": null,
     "autor": "iti-docente",
-    "activa": true
+    "activa": true,
+    "origen": "icfes"
   },
   {
     "id": "QUI-10-P22",
@@ -2182,7 +2296,8 @@
     "explicacion": "La repetición de los ensayos bajo condiciones equivalentes reduce la influencia de variaciones experimentales accidentales, aumentando la reproducibilidad y confiabilidad de los resultados.",
     "imagen": null,
     "autor": "iti-docente",
-    "activa": true
+    "activa": true,
+    "origen": "icfes"
   },
   {
     "id": "QUI-10-P24",
@@ -2201,7 +2316,8 @@
     "explicacion": "54 g ÷ 20 cm³ = 2,7 g/cm³. El valor concuerda con la densidad de referencia del aluminio, pero no lo identifica de forma exclusiva: otras sustancias podrían tener densidades similares. La conclusión correcta reconoce la compatibilidad con la hipótesis y la necesidad de pruebas adicionales.",
     "imagen": null,
     "autor": "iti-docente",
-    "activa": true
+    "activa": true,
+    "origen": "icfes"
   },
   {
     "id": "QUI-10-P25",
@@ -2220,7 +2336,8 @@
     "explicacion": "Comparar datos de reactividad obtenidos bajo condiciones equivalentes para litio, sodio y potasio permite identificar una tendencia con evidencia científica. Extrapolaciones de un solo elemento o medidas indirectas (color, precio) no son métodos válidos.",
     "imagen": null,
     "autor": "iti-docente",
-    "activa": true
+    "activa": true,
+    "origen": "icfes"
   },
   {
     "id": "QUI-10-P27",
@@ -2239,7 +2356,8 @@
     "explicacion": "La secuencia correcta aprovecha las propiedades diferentes de cada componente: 1) imantación para separar el hierro, 2) disolución en agua + filtración para separar la arena (insoluble), y 3) evaporación para recuperar la sal disuelta.",
     "imagen": null,
     "autor": "iti-docente",
-    "activa": true
+    "activa": true,
+    "origen": "icfes"
   },
   {
     "id": "QUI-10-P29",
@@ -2258,7 +2376,8 @@
     "explicacion": "Los datos muestran que 30 g se disuelven completamente pero 40 g no. Por tanto, la solubilidad máxima está en el intervalo (30, 40) g/100 mL. No se puede afirmar que sea exactamente 40 g, ya que no se sabe cuánto del cuarto ensayo quedó sin disolver.",
     "imagen": null,
     "autor": "iti-docente",
-    "activa": true
+    "activa": true,
+    "origen": "icfes"
   },
   {
     "id": "RAZ-10-001",
@@ -2277,7 +2396,8 @@
     "explicacion": "Observando la tabla: 20→35→50→65→80, el incremento es siempre 15 °C cada 10 segundos. Eso indica una relación lineal constante entre tiempo y temperatura.",
     "imagen": null,
     "autor": "iti-docente",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "RAZ-10-002",
@@ -2296,7 +2416,8 @@
     "explicacion": "La variable independiente es la que el investigador manipula deliberadamente. En este caso, la estudiante cambia el color de la luz. El crecimiento es la variable dependiente (lo que se mide), y el agua y la temperatura son variables controladas.",
     "imagen": null,
     "autor": "iti-docente",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "RAZ-10-003",
@@ -2315,7 +2436,8 @@
     "explicacion": "Cada número se multiplica por 3: 2×3=6, 6×3=18, 18×3=54, 54×3=162. La razón de la progresión geométrica es 3.",
     "imagen": null,
     "autor": "iti-docente",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "RAZ-10-004",
@@ -2334,7 +2456,8 @@
     "explicacion": "Una hipótesis es una explicación tentativa y verificable de una observación. La afirmación puede ponerse a prueba con experimentos controlados. No es una ley ni una conclusión definitiva porque aún no se ha comprobado rigurosamente.",
     "imagen": null,
     "autor": "iti-docente",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "RAZ-10-005",
@@ -2353,7 +2476,8 @@
     "explicacion": "El núcleo es el centro de control y la parte más importante de la célula. El Sol es el centro del sistema solar y contiene la mayor masa. La relación es: elemento central → sistema que lo rodea.",
     "imagen": null,
     "autor": "iti-docente",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "RAZ-10-006",
@@ -2372,7 +2496,8 @@
     "explicacion": "Correlación no implica causalidad. Tanto el consumo de helado como el baño en piscinas aumentan en temporadas de calor. La variable oculta es la temperatura alta. Este es un ejemplo clásico de correlación espuria.",
     "imagen": null,
     "autor": "iti-docente",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "RAZ-10-007",
@@ -2391,7 +2516,8 @@
     "explicacion": "La aceleración es el cambio de velocidad en el tiempo. Del minuto 5 al 15 la velocidad permanece constante en 60 km/h, por lo tanto el cambio de velocidad es cero y la aceleración es cero.",
     "imagen": null,
     "autor": "iti-docente",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "RAZ-10-008",
@@ -2410,7 +2536,8 @@
     "explicacion": "Es un silogismo deductivo: si todos los metales conducen electricidad (premisa 1) y el cobre es un metal (premisa 2), entonces necesariamente el cobre conduce electricidad (conclusión). La deducción es válida.",
     "imagen": null,
     "autor": "iti-docente",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "RAZ-10-009",
@@ -2429,7 +2556,8 @@
     "explicacion": "Sin un grupo de control, no puede saberse si el crecimiento se debe al fertilizante o a otros factores como la luz, el tiempo o el ciclo natural de la planta. Todo experimento necesita un grupo control para comparar resultados.",
     "imagen": null,
     "autor": "iti-docente",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "RAZ-10-010",
@@ -2448,7 +2576,8 @@
     "explicacion": "Son los cuadrados perfectos: 1²=1, 2²=4, 3²=9, 4²=16, 5²=25, 6²=36. El siguiente término es 6² = 36.",
     "imagen": null,
     "autor": "iti-docente",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "RAZ-10-011",
@@ -2467,7 +2596,8 @@
     "explicacion": "Aunque el clima ha cambiado naturalmente, el argumento ignora la evidencia de que el ritmo actual de cambio es mucho más rápido que los ciclos naturales y está correlacionado con el aumento de CO₂ por actividad humana. Reconocer cambios naturales no descarta la influencia humana.",
     "imagen": null,
     "autor": "iti-docente",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "RAZ-10-012",
@@ -2486,7 +2616,8 @@
     "explicacion": "Precisión: los valores están muy cercanos entre sí (25,0-25,3 g). Exactitud: los valores están cercanos al valor real de 25,2 g. Cuando las mediciones son consistentes entre sí y con el valor real, son a la vez precisas y exactas.",
     "imagen": null,
     "autor": "iti-docente",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "RAZ-10-013",
@@ -2505,7 +2636,8 @@
     "explicacion": "El electrón orbita alrededor del núcleo del átomo, así como los planetas orbitan alrededor del Sol en el sistema solar. La analogía compara las partes que orbitan al centro.",
     "imagen": null,
     "autor": "iti-docente",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "RAZ-10-014",
@@ -2524,7 +2656,8 @@
     "explicacion": "En ciencia, los resultados deben ser reproducibles y verificados por terceros independientes. Un estudio financiado por quien se beneficia tiene posible sesgo de confirmación. La actitud correcta es considerarlo como evidencia inicial hasta que sea replicado por fuentes independientes.",
     "imagen": null,
     "autor": "iti-docente",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "RAZ-10-015",
@@ -2543,7 +2676,8 @@
     "explicacion": "Usando la fórmula de conjuntos: |Fútbol ∪ Baloncesto| = 18 + 12 - 5 = 25 estudiantes practican al menos un deporte. Los que no practican ninguno: 30 - 25 = 5 estudiantes.",
     "imagen": null,
     "autor": "iti-docente",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "REL-10-001",
@@ -2575,7 +2709,8 @@
     "explicacion": "Iónico: transferencia Na→Cl. Covalente polar: O y H tienen ΔEN ≈ 1.4 → dipolo. Metálico: los e⁻ de valencia se comparten en toda la red cristalina. Covalente apolar: igual electronegatividad → carga nula.",
     "imagen": null,
     "autor": "iti-docente",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "REL-10-002",
@@ -2603,7 +2738,8 @@
     "explicacion": "1ª: principio de inercia (Galileo-Newton). 2ª: ΣF = ma, define la dinámica del movimiento. 3ª: las fuerzas siempre aparecen en pares acción-reacción sobre cuerpos distintos.",
     "imagen": null,
     "autor": "iti-docente",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "REL-10-003",
@@ -2635,7 +2771,8 @@
     "explicacion": "Sonido: longitudinal mecánica. Luz: transversal electromagnética que puede viajar en vacío. La clasificación longitudinal/transversal se refiere a la dirección de oscilación vs propagación.",
     "imagen": null,
     "autor": "iti-docente",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "REL-10-004",
@@ -2667,7 +2804,8 @@
     "explicacion": "Mitocondria: 'central energética'. Ribosoma: puede estar libre o en RER. Golgi: sistema de distribución internal. Cloroplasto: solo en células vegetales y algas.",
     "imagen": null,
     "autor": "iti-docente",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "ORD-10-001",
@@ -2697,7 +2835,8 @@
     "explicacion": "El método científico sigue este orden canónico: primero observar para identificar el problema, luego revisar bibliografía, plantear hipótesis verificable, experimentar controlando variables, analizar datos y finalmente concluir y publicar.",
     "imagen": null,
     "autor": "iti-docente",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "ORD-10-002",
@@ -2723,7 +2862,8 @@
     "explicacion": "Profase → Metafase → Anafase → Telofase. Mnemotecnia: PMAT. La mitosis garantiza que ambas células hijas reciban el mismo número de cromosomas que la célula madre.",
     "imagen": null,
     "autor": "iti-docente",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "ORD-10-003",
@@ -2751,7 +2891,8 @@
     "explicacion": "La formación del NaCl ocurre por transferencia de e⁻ del Na al Cl. La gran diferencia de electronegatividad (Na = 0.93, Cl = 3.16) explica por qué el Na cede y el Cl acepta el electrón para estabilizarse.",
     "imagen": null,
     "autor": "iti-docente",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "ORD-10-004",
@@ -2779,7 +2920,8 @@
     "explicacion": "La electrólisis descompone el agua en H₂ y O₂. La reacción global es: 2H₂O → 2H₂ + O₂. Se produce el doble de hidrógeno que de oxígeno (2:1 en volumen, según la ley de los gases ideales).",
     "imagen": null,
     "autor": "iti-docente",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "CRU-10-001",
@@ -2823,7 +2965,8 @@
     "explicacion": "PROTON: carga +1 en el núcleo. ORBITA: en el modelo de Bohr los electrones recorren órbitas circulares de energía fija. BORON: Z=5, semimetal utilizado en dopaje de semiconductores. TITANIO: Z=22, resistente y biocompatible.",
     "imagen": null,
     "autor": "iti-docente",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "CRU-10-002",
@@ -2867,7 +3010,8 @@
     "explicacion": "ONDA: v = λ·f. NEUTRON: sin carga, mantiene cohesión del núcleo. TRABAJO: escalar; W>0 si F y d en el mismo sentido. OPTICA: incluye el estudio de lentes, espejos y fenómenos luminosos.",
     "imagen": null,
     "autor": "iti-docente",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "CLA-10-001",
@@ -2911,7 +3055,8 @@
     "explicacion": "Exotérmicas: ΔH < 0 (liberan calor al entorno): combustión, termita, neutralización. Endotérmicas: ΔH > 0 (absorben calor): fotosíntesis, electrólisis, descomposición del CaCO₃.",
     "imagen": null,
     "autor": "iti-docente",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "CLA-10-002",
@@ -2955,7 +3100,8 @@
     "explicacion": "Orgánicos: moléculas con cadena carbono-hidrógeno (C−H). Glucosa, etanol y ácido acético son orgánicos. Inorgánicos: NaCl (iónico), H₂O (polar), CO₂ (sin enlace C−H, sin cadena carbonada) son inorgánicos.",
     "imagen": null,
     "autor": "iti-docente",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "CLA-10-003",
@@ -2999,7 +3145,8 @@
     "explicacion": "Mecánicas: necesitan medio material (sólido, líquido o gas). Electromagnéticas: son perturbaciones del campo electromagnético y se propagan en el vacío a c = 3×10⁸ m/s. El sonido NO puede viajar en el vacío; la luz sí.",
     "imagen": null,
     "autor": "iti-docente",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   },
   {
     "id": "CLA-10-004",
@@ -3043,6 +3190,7 @@
     "explicacion": "Ácidos: [H⁺] > [OH⁻], pH < 7. Bases: [OH⁻] > [H⁺], pH > 7. A pH = 7 es neutro (agua pura). Recordar: estómago (pH ≈ 1.5) es muy ácido para activar la pepsina; bicarbonato lo neutraliza.",
     "imagen": null,
     "autor": "iti-docente",
-    "activa": true
+    "activa": true,
+    "origen": "normal"
   }
 ]

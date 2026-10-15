@@ -73,6 +73,17 @@
         <div class="stat-item"><span class="stat-num">2026</span><span class="stat-label">Edición</span></div>
       </div>
     <button id="btn-ir-admin" class="btn-admin-portada">🔐 Admin</button>
+
+    <!-- Organizadoras del evento -->
+    <div class="portada-organizadoras">
+      <p class="org-institucion">Instituto Técnico Industrial · 2026</p>
+      <div class="org-docentes">
+        <span class="org-docente">Blanca Rodríguez &mdash; Lic. Química</span>
+        <span class="org-sep">·</span>
+        <span class="org-docente">Angela &mdash; Lic. Biología</span>
+      </div>
+    </div>
+
   </section>
 
   <!-- PANTALLA: LOGIN PROFESOR -->
@@ -278,8 +289,8 @@
       </div>
       <div class="nota-real">
         <span class="nota-label">Nota final</span>
-        <span class="nota-valor" id="res-nota">0.0</span>
-        <span class="nota-escala">/ 5.0</span>
+        <span class="nota-valor" id="res-nota">0</span>
+        <span class="nota-escala">/ 500</span>
       </div>
       <div class="detalle-bloques">
         <div class="bloque-item">
@@ -416,6 +427,11 @@
             <option value="1">Solo activas</option>
             <option value="0">Solo inactivas</option>
           </select>
+          <select id="admin-fil-origen" class="admin-select">
+            <option value="">Todos los tipos</option>
+            <option value="icfes">📄 ICFES (documentos)</option>
+            <option value="normal">🧩 Normales</option>
+          </select>
           <button class="btn-accion gris" id="btn-reset-banco">↩ Restaurar banco original</button>
         </div>
         <div id="admin-lista" class="admin-lista"></div>
@@ -526,6 +542,18 @@
                 </div>
                 <span id="af-imagen-estado" class="af-imagen-estado"></span>
               </div>
+            </div>
+
+            <div class="af-campo">
+              <label for="af-tiempo">⏱ Tiempo límite</label>
+              <select id="af-tiempo" class="admin-select">
+                <option value="30">30 segundos (defecto)</option>
+                <option value="60">60 segundos</option>
+                <option value="90">90 segundos</option>
+                <option value="120">120 segundos</option>
+                <option value="150">150 segundos</option>
+                <option value="180">180 segundos</option>
+              </select>
             </div>
 
             <div class="af-campo">

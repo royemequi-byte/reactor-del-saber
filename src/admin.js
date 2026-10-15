@@ -22,7 +22,7 @@ export function adminInicializar() {
   );
 
   // Filtros
-  ['admin-fil-materia', 'admin-fil-grado', 'admin-fil-activa'].forEach(id =>
+  ['admin-fil-materia', 'admin-fil-grado', 'admin-fil-activa', 'admin-fil-origen'].forEach(id =>
     document.getElementById(id).addEventListener('change', renderizarPreguntas)
   );
 
@@ -106,12 +106,14 @@ function renderizarPreguntas() {
   const materia = document.getElementById('admin-fil-materia').value;
   const grado   = document.getElementById('admin-fil-grado').value;
   const activa  = document.getElementById('admin-fil-activa').value;
+  const origen  = document.getElementById('admin-fil-origen').value;
 
   let banco = getBanco();
-  if (materia)      banco = banco.filter(p => p.materia === materia);
-  if (grado)        banco = banco.filter(p => String(p.grado) === grado || p.grado === 'todos');
+  if (materia)        banco = banco.filter(p => p.materia === materia);
+  if (grado)          banco = banco.filter(p => String(p.grado) === grado || p.grado === 'todos');
   if (activa === '1') banco = banco.filter(p =>  p.activa);
   if (activa === '0') banco = banco.filter(p => !p.activa);
+  if (origen)         banco = banco.filter(p => (p.origen || 'normal') === origen);
 
   const colores = { quimica: '#39ff14', fisica: '#00e5ff', biologia: '#ff9f1c' };
   const emojis  = { quimica: '⚗️', fisica: '⚡', biologia: '🌿' };
@@ -122,18 +124,23 @@ function renderizarPreguntas() {
     return;
   }
 
-  lista.innerHTML = banco.map(p => {
+  lista.innerHTML = banco.map((p, idx) => {
     const col = colores[p.materia] || '#ccc';
     const emo = emojis[p.materia]  || '';
     const snippet = p.enunciado.length > 100
       ? p.enunciado.substring(0, 100) + '…'
       : p.enunciado;
+    const icfesTag = p.origen === 'icfes'
+      ? '<span class="admin-badge icfes">📄 ICFES</span>'
+      : '';
     return `
       <div class="admin-card">
         <div class="admin-card-head">
+          <span class="admin-badge num">#${idx + 1}</span>
           <span class="admin-badge" style="color:${col}">${emo} ${p.materia}</span>
           <span class="admin-badge grado">G${p.grado}</span>
           <span class="admin-badge dif">D${p.dificultad}</span>
+          ${icfesTag}
           <span class="admin-badge ${p.activa ? 'activo' : 'inactivo'}">${p.activa ? '✓ Activa' : '✗ Inactiva'}</span>
           <span class="admin-card-tema">${p.tema || ''}</span>
         </div>
@@ -195,6 +202,7 @@ function abrirModal(id) {
     const radio = form.querySelector(`input[name="af-correcta"][value="${p.correcta ?? 0}"]`);
     if (radio) radio.checked = true;
     document.getElementById('af-explicacion').value = p.explicacion || '';
+    document.getElementById('af-tiempo').value      = String(p.tiempo || 30);
     document.getElementById('af-activa').checked   = !!p.activa;
     if (p.imagen) {
       document.getElementById('af-imagen-url').value = p.imagen;
@@ -240,6 +248,7 @@ function guardarPregunta(e) {
     dificultad: parseInt(document.getElementById('af-dificultad').value),
     enunciado:  document.getElementById('af-enunciado').value.trim(),
     explicacion:document.getElementById('af-explicacion').value.trim(),
+    tiempo:     parseInt(document.getElementById('af-tiempo').value) || 30,
     imagen:     document.getElementById('af-imagen-url').value || null,
     autor:      'admin',
     activa:     document.getElementById('af-activa').checked,

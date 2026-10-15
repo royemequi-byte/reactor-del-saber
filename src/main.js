@@ -584,7 +584,7 @@ function finalizarExamen() {
 
   // En modo sala, reportar resultado a Firebase
   if (sala.modo === 'sala' && sala.codigo && sala.uid) {
-    reportarResultado(sala.codigo, sala.uid, estado.puntaje, nota.toFixed(1)).catch(() => {});
+    reportarResultado(sala.codigo, sala.uid, estado.puntaje, String(nota)).catch(() => {});
   }
 
   irA('pantalla-resultados');
@@ -593,9 +593,10 @@ function finalizarExamen() {
 function calcularNota() {
   const pctC = estado.aciertos.ciencias / 19;
   const pctR = estado.aciertos.razonamiento / 10;
-  const nota = (pctC * 0.8 + pctR * 0.2) * 5;
-  estado.notaFinal = Math.round(nota * 10) / 10;
-  return estado.notaFinal;
+  // Escala ICFES: máximo 500 puntos (ciencias 80 %, razonamiento 20 %)
+  const nota = Math.round((pctC * 0.8 + pctR * 0.2) * 500);
+  estado.notaFinal = nota;
+  return nota;
 }
 
 function mostrarResultados(nota) {
@@ -604,7 +605,7 @@ function mostrarResultados(nota) {
     `${e.nombre} · ${e.avatar} · Grado ${e.grado}° · Curso ${e.curso}`;
 
   document.getElementById('res-puntaje').textContent = estado.puntaje.toLocaleString('es-CO');
-  document.getElementById('res-nota').textContent = nota.toFixed(1);
+  document.getElementById('res-nota').textContent = nota;
 
   const pctC = (estado.aciertos.ciencias / 19) * 100;
   const pctR = (estado.aciertos.razonamiento / 10) * 100;
@@ -637,7 +638,7 @@ function guardarEnRanking(nota) {
     grado:   estado.estudiante.grado,
     curso:   estado.estudiante.curso,
     puntaje: estado.puntaje,
-    nota:    nota.toFixed(1),
+    nota:    String(nota),
     tiempo:  estado.tiempoTotal,
     fecha:   new Date().toLocaleDateString('es-CO')
   };

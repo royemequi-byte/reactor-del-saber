@@ -22,10 +22,21 @@ export function armarExamen(estudiante, gradoSala = null) {
   const claveHistorial = CLAVE_HISTORIAL(estudiante.nombre, gradoFiltro);
   const historial = JSON.parse(localStorage.getItem(claveHistorial) || '[]');
 
-  // ── Ciencias (química + física + biología) ──
-  const ciencias = banco.filter(p => ['quimica','fisica','biologia'].includes(p.materia));
-  const cienciasSinVer = ciencias.filter(p => !historial.includes(p.id));
-  const cienciasFinal  = elegirN(cienciasSinVer.length >= 19 ? cienciasSinVer : ciencias, 19);
+  // ── Ciencias (química + física + biología) — 70 % ICFES garantizado ──
+  const ciencias     = banco.filter(p => ['quimica','fisica','biologia'].includes(p.materia));
+  const sinVer       = ciencias.filter(p => !historial.includes(p.id));
+  const fuente       = sinVer.length >= 19 ? sinVer : ciencias;
+
+  const icfes        = fuente.filter(p => p.origen === 'icfes');
+  const normales     = fuente.filter(p => p.origen !== 'icfes');
+
+  const minICFES     = Math.ceil(19 * 0.7);          // 14
+  const selICFES     = elegirN(icfes, Math.min(minICFES, icfes.length));
+  const restantes    = 19 - selICFES.length;
+  const selNormales  = elegirN(normales, restantes);
+
+  // Si aún faltan (pocos ICFES para el grado), completa con cualquier ciencia
+  const cienciasFinal = barajar([...selICFES, ...selNormales]).slice(0, 19);
 
   // ── Razonamiento: del banco si hay ≥10, sino código generado ──
   const razBanco   = banco.filter(p => p.materia === 'razonamiento');
