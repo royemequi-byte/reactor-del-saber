@@ -1,160 +1,165 @@
-// motor-audio.js — música generativa con Web Audio API
-// Todo el sonido se sintetiza en código; no se necesitan archivos .mp3
-
-let ctx = null;          // AudioContext (se crea solo tras interacción del usuario)
-let masterGain = null;   // Volumen maestro
+// motor-audio.js — música generativa mejorada con reverb y sonidos cálidos
+let ctx = null;
+let masterGain = null;
+let reverbBus  = null;   // bus de reverb global
 let silenciado = false;
 let volumenActual = 0.7;
 
-// Nodos activos
-let baseNodo   = null;   // Reactor zumbando (capa base)
-let energiaNodo = null;  // Arpegio de racha
+let baseNodo   = null;
+let lfoNodo    = null;
 let intervaloArpegio = null;
 let intervaloTicTac  = null;
-let lfoNodo    = null;
 
-// Estado musical
-let bpmActual  = 90;
+let bpmActual     = 90;
 let materiaActual = 'quimica';
 let rachaActual   = 0;
 
-// Escalas por materia (frecuencias en Hz)
 const ESCALAS = {
-  quimica:      [261.6, 293.7, 329.6, 392.0, 440.0, 523.2],  // Do mayor (burbujeante)
-  fisica:       [220.0, 246.9, 293.7, 329.6, 369.9, 440.0],  // La menor (eléctrico)
-  biologia:     [261.6, 311.1, 349.2, 392.0, 466.2, 523.2],  // Do mixolidio (natural)
-  razonamiento: [349.2, 392.0, 440.0, 493.9, 523.2, 587.3],  // Fa mayor (campanas)
+  quimica:      [261.6, 293.7, 329.6, 392.0, 440.0, 523.2],
+  fisica:       [220.0, 246.9, 293.7, 329.6, 369.9, 440.0],
+  biologia:     [261.6, 311.1, 349.2, 392.0, 466.2, 523.2],
+  razonamiento: [349.2, 392.0, 440.0, 493.9, 523.2, 587.3],
 };
 
-// ──────────────────────────────────────────────────────────
-//  INICIALIZACIÓN (solo una vez, tras clic del usuario)
-// ──────────────────────────────────────────────────────────
+// ── INICIALIZACIÓN ──────────────────────────────────────────────────────────
 export function iniciarAudio() {
-  if (ctx) return; // ya iniciado
+  if (ctx) return;
   ctx = new (window.AudioContext || window.webkitAudioContext)();
   masterGain = ctx.createGain();
   masterGain.gain.setValueAtTime(silenciado ? 0 : volumenActual, ctx.currentTime);
   masterGain.connect(ctx.destination);
+
+  reverbBus = crearReverb();
+  reverbBus.connect(masterGain);
+
   iniciarCapaBase();
 }
 
 export function setVolumen(v) {
   volumenActual = v;
   if (masterGain && !silenciado) {
-    masterGain.gain.linearRampToValueAtTime(v, ctx.currentTime + 0.1);
+    masterGain.gain.linearRampToValueAtTime(v, ctx.currentTime + 0.15);
   }
 }
 
 export function toggleSilencio() {
   silenciado = !silenciado;
-  if (!masterGain) return;
+  if (!masterGain) return silenciado;
   masterGain.gain.linearRampToValueAtTime(
     silenciado ? 0 : volumenActual,
-    ctx.currentTime + 0.1
+    ctx.currentTime + 0.15
   );
   return silenciado;
 }
 
-// ──────────────────────────────────────────────────────────
-//  CAPA BASE — Reactor zumbando en loop
-// ──────────────────────────────────────────────────────────
+// ── REVERB (impulso sintético) ──────────────────────────────────────────────
+function crearReverb() {
+  const convolver = ctx.createConvolver();
+  const duracion  = 1.2;
+  const samples   = Math.round(ctx.sampleRate * duracion);
+  const buffer    = ctx.createBuffer(2, samples, ctx.sampleRate);
+
+  for (let canal = 0; canal < 2; canal++) {
+    const datos = buffer.getChannelData(canal);
+    for (let i = 0; i < samples; i++) {
+      datos[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / samples, 2.5);
+    }
+  }
+  convolver.buffer = buffer;
+
+  const gainReverb = ctx.createGain();
+  gainReverb.gain.value = 0.18;
+  convolver.connect(gainReverb);
+  return gainReverb; // conecta al masterGain externamente
+}
+
+// ── CAPA BASE (zumbido del reactor) ─────────────────────────────────────────
 function iniciarCapaBase() {
   if (!ctx) return;
 
-  // Oscilador base (pulso del reactor)
-  const osc = ctx.createOscillator();
-  const gain = ctx.createGain();
+  // Oscilador principal: onda seno suave a 80 Hz
+  const osc1  = ctx.createOscillator();
+  const osc2  = ctx.createOscillator(); // capa armónica a la quinta
+  const gain  = ctx.createGain();
   const filtro = ctx.createBiquadFilter();
 
-  osc.type = 'sine';
-  osc.frequency.setValueAtTime(80, ctx.currentTime);
-  gain.gain.setValueAtTime(0.12, ctx.currentTime);
+  osc1.type = 'sine';
+  osc1.frequency.value = 80;
+  osc2.type = 'sine';
+  osc2.frequency.value = 120; // quinta perfecta
+  gain.gain.value = 0.08;
   filtro.type = 'lowpass';
-  filtro.frequency.setValueAtTime(400, ctx.currentTime);
+  filtro.frequency.value = 400;
+  filtro.Q.value = 0.5;
 
-  // LFO: hace que el volumen pulse suavemente (como reactor respirando)
-  const lfo = ctx.createOscillator();
+  // LFO de respiración (0.6 Hz)
+  const lfo     = ctx.createOscillator();
   const lfoGain = ctx.createGain();
-  lfo.frequency.setValueAtTime(0.8, ctx.currentTime); // 0.8 Hz = casi 1 pulso/seg
-  lfoGain.gain.setValueAtTime(0.06, ctx.currentTime);
+  lfo.type = 'sine';
+  lfo.frequency.value = 0.6;
+  lfoGain.gain.value = 0.03;
   lfo.connect(lfoGain);
   lfoGain.connect(gain.gain);
   lfo.start();
   lfoNodo = lfo;
 
-  osc.connect(filtro);
+  osc1.connect(filtro);
+  osc2.connect(filtro);
   filtro.connect(gain);
   gain.connect(masterGain);
-  osc.start();
-  baseNodo = { osc, gain, filtro };
-
-  // Segunda capa: acorde suave de fondo (pad)
-  const pad = ctx.createOscillator();
-  const padGain = ctx.createGain();
-  const padFiltro = ctx.createBiquadFilter();
-  pad.type = 'triangle';
-  pad.frequency.setValueAtTime(160, ctx.currentTime);
-  padGain.gain.setValueAtTime(0.05, ctx.currentTime);
-  padFiltro.type = 'lowpass';
-  padFiltro.frequency.setValueAtTime(600, ctx.currentTime);
-  pad.connect(padFiltro);
-  padFiltro.connect(padGain);
-  padGain.connect(masterGain);
-  pad.start();
+  gain.connect(reverbBus); // algo de reverb en el fondo
+  osc1.start();
+  osc2.start();
+  baseNodo = { osc1, osc2, gain, filtro };
 }
 
-// ──────────────────────────────────────────────────────────
-//  ACTUALIZAR SEGÚN EL JUEGO
-// ──────────────────────────────────────────────────────────
-
-// Cambia timbre según la materia de la pregunta actual
+// ── CAMBIAR TIMBRE POR MATERIA ───────────────────────────────────────────────
 export function setMateria(materia) {
   materiaActual = materia || 'quimica';
   if (!ctx || !baseNodo) return;
 
   const configs = {
-    quimica:      { freq: 80,  filtro: 500,  tipo: 'sine'     },
-    fisica:       { freq: 110, filtro: 800,  tipo: 'sawtooth' },
-    biologia:     { freq: 70,  filtro: 350,  tipo: 'sine'     },
-    razonamiento: { freq: 130, filtro: 1200, tipo: 'triangle' },
+    quimica:      { f1: 80,  f2: 120, filtro: 500  },
+    fisica:       { f1: 110, f2: 165, filtro: 700  },
+    biologia:     { f1: 65,  f2:  98, filtro: 350  },
+    razonamiento: { f1: 130, f2: 195, filtro: 1000 },
   };
   const c = configs[materia] || configs.quimica;
   const t = ctx.currentTime;
-  baseNodo.osc.frequency.linearRampToValueAtTime(c.freq, t + 0.3);
-  baseNodo.filtro.frequency.linearRampToValueAtTime(c.filtro, t + 0.3);
+  baseNodo.osc1.frequency.linearRampToValueAtTime(c.f1, t + 0.5);
+  baseNodo.osc2.frequency.linearRampToValueAtTime(c.f2, t + 0.5);
+  baseNodo.filtro.frequency.linearRampToValueAtTime(c.filtro, t + 0.5);
 }
 
-// Sube el BPM según el progreso del examen (pregunta 1→29)
+// ── BPM PROGRESIVO ──────────────────────────────────────────────────────────
 export function setProgreso(preguntaNum) {
-  bpmActual = Math.round(90 + (preguntaNum / 29) * 40); // 90→130 BPM
-  if (baseNodo && lfoNodo) {
+  bpmActual = Math.round(90 + (preguntaNum / 29) * 40);
+  if (lfoNodo) {
     const bps = bpmActual / 60;
-    lfoNodo.frequency.linearRampToValueAtTime(bps * 0.5, ctx.currentTime + 0.5);
+    lfoNodo.frequency.linearRampToValueAtTime(bps * 0.4, ctx.currentTime + 0.5);
   }
 }
 
-// Activa/desactiva la capa de energía (arpegio) según la racha
+// ── ARPEGIO DE RACHA ────────────────────────────────────────────────────────
 export function setRacha(racha) {
   rachaActual = racha;
-  if (racha >= 3) {
-    activarArpegio();
-  } else {
-    detenerArpegio();
-  }
+  if (racha >= 3) activarArpegio();
+  else            detenerArpegio();
 }
 
 function activarArpegio() {
   if (intervaloArpegio || !ctx) return;
   let idx = 0;
   const escala = ESCALAS[materiaActual] || ESCALAS.quimica;
-  const intervaloMs = Math.round(60000 / bpmActual / 2); // corcheas
+  const ms     = Math.round(60000 / bpmActual / 2);
 
   intervaloArpegio = setInterval(() => {
     if (!ctx || silenciado) return;
-    const freq = escala[idx % escala.length] * (rachaActual >= 5 ? 2 : 1);
-    tocarNota(freq, 'triangle', 0.06, 0.12);
+    const oct  = rachaActual >= 5 ? 2 : 1;
+    const freq = escala[idx % escala.length] * oct;
+    tocarNota(freq, 'sine', 0.05, 0.18);
     idx++;
-  }, intervaloMs);
+  }, ms);
 }
 
 function detenerArpegio() {
@@ -162,14 +167,13 @@ function detenerArpegio() {
   intervaloArpegio = null;
 }
 
-// Capa de tensión: tic-tac cuando quedan ≤10 segundos
+// ── TIC-TAC DE URGENCIA ─────────────────────────────────────────────────────
 export function setTiempoRestante(segundos) {
   if (segundos <= 10 && segundos > 0) {
     activarTicTac(segundos);
-    // Sube el filtro para dar sensación de "urgencia"
     if (baseNodo) {
       baseNodo.filtro.frequency.linearRampToValueAtTime(
-        1200 + (10 - segundos) * 100,
+        600 + (10 - segundos) * 80,
         ctx.currentTime + 0.1
       );
     }
@@ -181,13 +185,12 @@ export function setTiempoRestante(segundos) {
   }
 }
 
-function activarTicTac(segsRestantes) {
+function activarTicTac(segs) {
   detenerTicTac();
   if (!ctx) return;
-  // El intervalo se acorta con cada segundo que pasa
-  const ms = Math.max(300, segsRestantes * 80);
-  tocarNota(880, 'square', 0.08, 0.05); // tic inmediato
-  intervaloTicTac = setTimeout(() => activarTicTac(segsRestantes - 0.5), ms);
+  const ms = Math.max(220, segs * 70);
+  tocarNota(1200, 'sine', 0.07, 0.04);
+  intervaloTicTac = setTimeout(() => activarTicTac(segs - 0.5), ms);
 }
 
 function detenerTicTac() {
@@ -195,25 +198,31 @@ function detenerTicTac() {
   intervaloTicTac = null;
 }
 
-// ──────────────────────────────────────────────────────────
-//  UTILIDAD: toca una nota breve
-// ──────────────────────────────────────────────────────────
-function tocarNota(freq, tipo = 'sine', volumen = 0.1, duracion = 0.2) {
+// ── UTILIDAD: nota individual con envolvente suave ───────────────────────────
+export function tocarNota(freq, tipo = 'sine', volumen = 0.1, duracion = 0.25, conReverb = false) {
   if (!ctx || silenciado) return;
   const osc  = ctx.createOscillator();
   const gain = ctx.createGain();
+  const atacke = 0.012;
+
   osc.type = tipo;
   osc.frequency.setValueAtTime(freq, ctx.currentTime);
-  gain.gain.setValueAtTime(volumen, ctx.currentTime);
-  gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duracion);
+
+  // Envolvente ADSR suave
+  gain.gain.setValueAtTime(0, ctx.currentTime);
+  gain.gain.linearRampToValueAtTime(volumen, ctx.currentTime + atacke);
+  gain.gain.setValueAtTime(volumen, ctx.currentTime + duracion * 0.4);
+  gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + duracion);
+
   osc.connect(gain);
   gain.connect(masterGain);
+  if (conReverb && reverbBus) gain.connect(reverbBus);
   osc.start();
   osc.stop(ctx.currentTime + duracion + 0.05);
 }
 
-// Exportar para uso interno en efectos.js
-export function getCtx()       { return ctx; }
-export function getMasterGain(){ return masterGain; }
-export function getSilenciado(){ return silenciado; }
-export { tocarNota };
+// Exports internos para efectos.js
+export function getCtx()        { return ctx; }
+export function getMasterGain() { return masterGain; }
+export function getReverbBus()  { return reverbBus; }
+export function getSilenciado() { return silenciado; }
