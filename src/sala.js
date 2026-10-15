@@ -15,13 +15,24 @@ export function generarCodigo() {
 }
 
 // ── CREAR SALA (profesor) ───────────────────────────────────────────────────
-export async function crearSala() {
+export async function crearSala(grado) {
   const codigo = generarCodigo();
   await set(ref(db, `salas/${codigo}`), {
-    estado:    'esperando',
-    creadaEn:  Date.now(),
+    estado:   'esperando',
+    grado:    grado,   // 8 | 9 | 10 | 'final'
+    creadaEn: Date.now(),
   });
   return codigo;
+}
+
+// ── OBTENER GRADO DE SALA ───────────────────────────────────────────────────
+export async function obtenerGradoSala(codigo) {
+  const snap = await get(ref(db, `salas/${codigo}`));
+  if (!snap.exists()) return { error: 'Sala no encontrada. Revisa el código.' };
+  const data = snap.val();
+  if (data.estado === 'jugando')    return { error: 'El examen ya empezó. Llegaste tarde 😅' };
+  if (data.estado === 'finalizada') return { error: 'Esta sala ya terminó.' };
+  return { grado: data.grado, estado: data.estado };
 }
 
 // ── UNIRSE A SALA (estudiante) ──────────────────────────────────────────────
@@ -31,6 +42,11 @@ export async function unirseASala(codigo, estudiante) {
   const sala = salaSnap.val();
   if (sala.estado === 'jugando')    return { error: 'El examen ya empezó. Llegaste tarde 😅' };
   if (sala.estado === 'finalizada') return { error: 'Esta sala ya terminó.' };
+  // Validar grado (segunda línea de defensa, la primera es el cliente)
+  if (sala.grado !== 'final' && sala.grado != null &&
+      Number(estudiante.grado) !== Number(sala.grado)) {
+    return { error: `Esta sala es para grado ${sala.grado}°. Selecciona el grado correcto para continuar.` };
+  }
 
   const nuevoRef = push(ref(db, `salas/${codigo}/estudiantes`));
   await set(nuevoRef, {

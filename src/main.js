@@ -8,7 +8,7 @@ import { adminInicializar } from './admin.js';
 import {
   crearSala, unirseASala, iniciarJuego,
   reportarResultado, escucharEstudiantes,
-  escucharEstadoSala, cerrarSala
+  escucharEstadoSala, cerrarSala, obtenerGradoSala
 } from './sala.js';
 
 // ─── NAVEGACIÓN ────────────────────────────────────────────────────────────
@@ -27,6 +27,7 @@ const sala = {
   rol:       null,     // 'profesor' | 'estudiante'
   codigo:    null,
   uid:       null,     // Firebase key del estudiante
+  gradoSala: null,     // 8 | 9 | 10 | 'final'
   unsub:     [],       // funciones de cleanup de listeners
 };
 
@@ -60,7 +61,9 @@ function salaLimpiar() {
 document.getElementById('btn-entrar').addEventListener('click', () => {
   iniciarAudio();
   setTimeout(() => tocarIntro(), 120);
-  sala.modo = 'solo';
+  sala.modo      = 'solo';
+  sala.gradoSala = null;
+  document.getElementById('aviso-grado-sala').classList.add('oculto');
   irA('pantalla-registro');
 });
 
@@ -72,23 +75,34 @@ document.getElementById('btn-sala').addEventListener('click', () => {
 // ─── ELEGIR ROL ────────────────────────────────────────────────────────────
 document.getElementById('btn-volver-portada-sala').addEventListener('click', () => irA('pantalla-portada'));
 
-document.getElementById('btn-rol-profesor').addEventListener('click', async () => {
+document.getElementById('btn-rol-profesor').addEventListener('click', () => {
   sala.modo = 'sala';
   sala.rol  = 'profesor';
-  try {
-    const codigo = await crearSala();
-    sala.codigo  = codigo;
-    document.getElementById('sala-codigo-display').textContent = codigo;
-    document.getElementById('sala-contador').textContent = '0 estudiantes conectados';
-    document.getElementById('sala-lista-profesor').innerHTML = '<p style="color:#8ab;padding:20px">Esperando que se conecten…</p>';
-    document.getElementById('btn-sala-iniciar').disabled = true;
-    irA('pantalla-crear-sala');
-    // Escuchar estudiantes en tiempo real
-    const unsub = escucharEstudiantes(codigo, actualizarLobbyProfesor);
-    sala.unsub.push(unsub);
-  } catch (err) {
-    alert('Error al crear sala. Verifica la configuración de Firebase.\n' + err.message);
-  }
+  irA('pantalla-elegir-grado');
+});
+
+document.getElementById('btn-volver-a-rol').addEventListener('click', () => irA('pantalla-sala-rol'));
+
+document.querySelectorAll('.btn-grado-sel').forEach(btn => {
+  btn.addEventListener('click', async () => {
+    const grado = btn.dataset.grado === 'final' ? 'final' : parseInt(btn.dataset.grado);
+    sala.gradoSala = grado;
+    const labelGrado = grado === 'final' ? '🏆 Final Olimpiadas' : `Grado ${grado}°`;
+    try {
+      const codigo = await crearSala(grado);
+      sala.codigo  = codigo;
+      document.getElementById('sala-codigo-display').textContent = codigo;
+      document.getElementById('sala-grado-badge').textContent = labelGrado;
+      document.getElementById('sala-contador').textContent = '0 estudiantes conectados';
+      document.getElementById('sala-lista-profesor').innerHTML = '<p style="color:#8ab;padding:20px">Esperando que se conecten…</p>';
+      document.getElementById('btn-sala-iniciar').disabled = true;
+      irA('pantalla-crear-sala');
+      const unsub = escucharEstudiantes(codigo, actualizarLobbyProfesor);
+      sala.unsub.push(unsub);
+    } catch (err) {
+      alert('Error al crear sala. Verifica la configuración de Firebase.\n' + err.message);
+    }
+  });
 });
 
 document.getElementById('btn-rol-estudiante').addEventListener('click', () => {
@@ -157,9 +171,31 @@ document.getElementById('btn-validar-codigo').addEventListener('click', async ()
   if (codigo.length < 4) return;
   const errEl = document.getElementById('sala-error-codigo');
   errEl.classList.add('oculto');
-  sala.codigo = codigo;
-  // Ir al registro normal y dejar que al submit vaya a espera
-  irA('pantalla-registro');
+
+  try {
+    const res = await obtenerGradoSala(codigo);
+    if (res.error) {
+      errEl.textContent = res.error;
+      errEl.classList.remove('oculto');
+      return;
+    }
+    sala.codigo    = codigo;
+    sala.gradoSala = res.grado;
+
+    // Mostrar aviso de grado en el formulario de registro
+    const aviso = document.getElementById('aviso-grado-sala');
+    if (res.grado === 'final') {
+      aviso.innerHTML = '🏆 <strong>Final Olimpiadas</strong> — Se usarán las preguntas de tu grado';
+    } else {
+      aviso.innerHTML = `⚠️ Esta sala es para <strong>Grado ${res.grado}°</strong> — Selecciónalo en el formulario`;
+    }
+    aviso.classList.remove('oculto');
+
+    irA('pantalla-registro');
+  } catch (err) {
+    errEl.textContent = 'Error de conexión. Intenta de nuevo.';
+    errEl.classList.remove('oculto');
+  }
 });
 
 // ─── REGISTRO ──────────────────────────────────────────────────────────────
@@ -180,6 +216,17 @@ document.getElementById('form-registro').addEventListener('submit', async (e) =>
   const avatar = inpAvatar.value.trim().toUpperCase();
 
   if (!avatar) { alert('Por favor escribe tu apodo de científico ⚗️'); return; }
+
+  // Validar grado contra sala
+  const errGrado = document.getElementById('error-grado-sala');
+  if (sala.modo === 'sala' && sala.gradoSala !== 'final' && sala.gradoSala !== null) {
+    if (grado !== Number(sala.gradoSala)) {
+      errGrado.textContent = `Esta sala es para Grado ${sala.gradoSala}°. Selecciona el grado correcto para continuar.`;
+      errGrado.classList.remove('oculto');
+      return;
+    }
+  }
+  errGrado.classList.add('oculto');
 
   estado.estudiante = { nombre, grado, curso, avatar };
 
@@ -215,7 +262,7 @@ document.getElementById('form-registro').addEventListener('submit', async (e) =>
 // ─── INICIO DEL EXAMEN ─────────────────────────────────────────────────────
 function iniciarExamen() {
   resetearEstado();
-  estado.preguntas = armarExamen(estado.estudiante);
+  estado.preguntas = armarExamen(estado.estudiante, sala.gradoSala);
   guardarHistorial(estado.estudiante, estado.preguntas);
   estado.preguntaActual = 0;
 

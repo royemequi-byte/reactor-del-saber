@@ -96,6 +96,21 @@
     </div>
   </section>
 
+  <!-- PANTALLA: ELEGIR GRADO (Profesor) -->
+  <section id="pantalla-elegir-grado" class="pantalla">
+    <div class="sala-rol-contenido">
+      <h2>📋 ¿Para qué grado es el examen?</h2>
+      <p class="instruccion">Selecciona el grado antes de abrir la sala</p>
+      <div class="grado-sel-botones">
+        <button class="btn-grado-sel" data-grado="8">📚 Grado 8°</button>
+        <button class="btn-grado-sel" data-grado="9">📚 Grado 9°</button>
+        <button class="btn-grado-sel" data-grado="10">📚 Grado 10°</button>
+        <button class="btn-grado-sel final" data-grado="final">🏆 Final Olimpiadas<br><small>Todos los grados</small></button>
+      </div>
+      <button class="btn-secundario" id="btn-volver-a-rol">← Volver</button>
+    </div>
+  </section>
+
   <!-- PANTALLA: LOBBY DEL PROFESOR -->
   <section id="pantalla-crear-sala" class="pantalla">
     <div class="sala-profesor-contenido">
@@ -104,6 +119,7 @@
         <div class="sala-codigo" id="sala-codigo-display">------</div>
         <p class="sala-codigo-hint">Los estudiantes ingresan este código desde sus celulares</p>
       </div>
+      <div class="sala-grado-badge" id="sala-grado-badge">Grado —</div>
       <div class="sala-stats-bar">
         <span id="sala-contador">0 estudiantes conectados</span>
         <button id="btn-sala-iniciar" class="btn-sala-start" disabled>🚀 ¡Empezar el desafío!</button>
@@ -152,6 +168,7 @@
     <div class="registro-contenido">
       <h2>🔬 Identifica tu elemento</h2>
       <p class="instruccion">Química · Física · Biología — Grados 8°, 9° y 10° · 2026</p>
+      <div id="aviso-grado-sala" class="aviso-grado oculto"></div>
       <form id="form-registro">
         <div class="campo">
           <label for="inp-nombre">Tu nombre</label>
@@ -165,6 +182,7 @@
             <option value="9">9°</option>
             <option value="10">10°</option>
           </select>
+          <p id="error-grado-sala" class="campo-error oculto"></p>
         </div>
         <div class="campo">
           <label for="inp-curso">Curso</label>
