@@ -175,11 +175,24 @@ function abrirModal(id) {
     document.getElementById('af-dificultad').value = String(p.dificultad);
     document.getElementById('af-tema').value       = p.tema || '';
     document.getElementById('af-enunciado').value  = p.enunciado;
-    document.getElementById('af-op0').value        = p.opciones[0] || '';
-    document.getElementById('af-op1').value        = p.opciones[1] || '';
-    document.getElementById('af-op2').value        = p.opciones[2] || '';
-    document.getElementById('af-op3').value        = p.opciones[3] || '';
-    const radio = form.querySelector(`input[name="af-correcta"][value="${p.correcta}"]`);
+
+    const tipoInteractivo = p.tipo && p.tipo !== 'seleccion';
+    const ops = p.opciones || [];
+    document.getElementById('af-op0').value        = ops[0] || '';
+    document.getElementById('af-op1').value        = ops[1] || '';
+    document.getElementById('af-op2').value        = ops[2] || '';
+    document.getElementById('af-op3').value        = ops[3] || '';
+
+    // Advertir si es tipo interactivo (las opciones no aplican)
+    const avisoTipo = document.getElementById('af-aviso-tipo');
+    if (avisoTipo) {
+      avisoTipo.textContent = tipoInteractivo
+        ? `⚠️ Tipo "${p.tipo}": solo puedes editar enunciado, materia, grado, imagen y estado.`
+        : '';
+      avisoTipo.style.display = tipoInteractivo ? 'block' : 'none';
+    }
+
+    const radio = form.querySelector(`input[name="af-correcta"][value="${p.correcta ?? 0}"]`);
     if (radio) radio.checked = true;
     document.getElementById('af-explicacion').value = p.explicacion || '';
     document.getElementById('af-activa').checked   = !!p.activa;
@@ -212,7 +225,12 @@ function guardarPregunta(e) {
   const radioChecked = document.querySelector('input[name="af-correcta"]:checked');
   if (!radioChecked) { alert('Selecciona cuál opción es la correcta.'); return; }
 
+  // Base existente para preservar campos de tipos interactivos
+  const base = id ? (getBanco().find(p => p.id === id) || {}) : {};
+  const tipoInteractivo = base.tipo && base.tipo !== 'seleccion';
+
   const pregunta = {
+    ...base,
     id:         id || `P-${Date.now()}`,
     materia:    document.getElementById('af-materia').value,
     tema:       document.getElementById('af-tema').value.trim(),
@@ -221,18 +239,22 @@ function guardarPregunta(e) {
                   : parseInt(document.getElementById('af-grado').value),
     dificultad: parseInt(document.getElementById('af-dificultad').value),
     enunciado:  document.getElementById('af-enunciado').value.trim(),
-    opciones: [
-      document.getElementById('af-op0').value.trim(),
-      document.getElementById('af-op1').value.trim(),
-      document.getElementById('af-op2').value.trim(),
-      document.getElementById('af-op3').value.trim(),
-    ],
-    correcta:   parseInt(radioChecked.value),
     explicacion:document.getElementById('af-explicacion').value.trim(),
     imagen:     document.getElementById('af-imagen-url').value || null,
     autor:      'admin',
     activa:     document.getElementById('af-activa').checked,
   };
+
+  // Solo actualizar opciones/correcta si es tipo seleccion
+  if (!tipoInteractivo) {
+    pregunta.opciones = [
+      document.getElementById('af-op0').value.trim(),
+      document.getElementById('af-op1').value.trim(),
+      document.getElementById('af-op2').value.trim(),
+      document.getElementById('af-op3').value.trim(),
+    ];
+    pregunta.correcta = parseInt(radioChecked.value);
+  }
 
   if (id) {
     actualizarPregunta(id, pregunta);
