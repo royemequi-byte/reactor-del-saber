@@ -56,6 +56,9 @@
         <span class="btn-brillo"></span>
       </button>
 
+      <!-- Acceso admin -->
+      <button id="btn-ir-admin" class="btn-admin-portada">🔐 Admin</button>
+
       <!-- Estadísticas animadas -->
       <div class="stats-portada">
         <div class="stat-item"><span class="stat-num">29</span><span class="stat-label">Preguntas</span></div>
@@ -219,9 +222,10 @@
       <h2>🔐 Panel Super Admin</h2>
       <div id="admin-login">
         <p>Acceso restringido al laboratorio</p>
-        <input type="password" id="inp-admin-pass" placeholder="Contraseña" autocomplete="off" />
+        <input type="text"     id="inp-admin-user" placeholder="Usuario"     autocomplete="off" />
+        <input type="password" id="inp-admin-pass" placeholder="Contraseña"  autocomplete="off" />
         <button class="btn-principal" id="btn-admin-entrar">Entrar</button>
-        <p class="admin-error oculto" id="admin-error">Contraseña incorrecta</p>
+        <p class="admin-error oculto" id="admin-error">Usuario o contraseña incorrectos</p>
       </div>
     </div>
 

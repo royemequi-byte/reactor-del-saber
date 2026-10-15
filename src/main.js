@@ -482,21 +482,29 @@ function actualizarRacha() {
 }
 
 // ─── ADMIN (Ctrl+Shift+A) ──────────────────────────────────────────────────
+function abrirPantallaAdmin() {
+  irA('pantalla-admin');
+  document.getElementById('admin-panel').classList.add('oculto');
+  document.getElementById('admin-login-box').classList.remove('oculto');
+  document.getElementById('admin-login').style.display = 'flex';
+  document.getElementById('admin-error').classList.add('oculto');
+  document.getElementById('inp-admin-user').value = '';
+  document.getElementById('inp-admin-pass').value = '';
+}
+
+document.getElementById('btn-ir-admin').addEventListener('click', abrirPantallaAdmin);
+
 document.addEventListener('keydown', (e) => {
   if (e.ctrlKey && e.shiftKey && e.key === 'A') {
     e.preventDefault();
-    irA('pantalla-admin');
-    document.getElementById('admin-panel').classList.add('oculto');
-    document.getElementById('admin-login-box').classList.remove('oculto');
-    document.getElementById('admin-login').style.display = 'flex';
-    document.getElementById('admin-error').classList.add('oculto');
-    document.getElementById('inp-admin-pass').value = '';
+    abrirPantallaAdmin();
   }
 });
 
 document.getElementById('btn-admin-entrar').addEventListener('click', async () => {
+  const user = document.getElementById('inp-admin-user').value.trim();
   const pass = document.getElementById('inp-admin-pass').value;
-  if (await verificarAdmin(pass)) {
+  if (await verificarAdmin(user, pass)) {
     document.getElementById('admin-login-box').classList.add('oculto');
     document.getElementById('admin-panel').classList.remove('oculto');
     adminInicializar();
@@ -507,16 +515,12 @@ document.getElementById('btn-admin-entrar').addEventListener('click', async () =
 
 document.getElementById('btn-admin-salir').addEventListener('click', () => irA('pantalla-portada'));
 
-async function verificarAdmin(pass) {
-  const hashGuardado = localStorage.getItem('adminHash');
-  if (!hashGuardado) {
-    const nueva = prompt('Primera vez: crea tu contraseña de super admin');
-    if (!nueva || nueva.length < 4) return false;
-    const hash = await sha256(nueva);
-    localStorage.setItem('adminHash', hash);
-    return (await sha256(pass)) === hash;
-  }
-  return (await sha256(pass)) === hashGuardado;
+const ADMIN_USER = 'admin';
+const ADMIN_HASH = '31e99cad92af26174febd9dae33f155187521845fe00b294824909150afee575'; // iti2026
+
+async function verificarAdmin(user, pass) {
+  if (user.toLowerCase() !== ADMIN_USER) return false;
+  return (await sha256(pass)) === ADMIN_HASH;
 }
 
 async function sha256(texto) {
