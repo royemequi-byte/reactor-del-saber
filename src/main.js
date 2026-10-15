@@ -39,7 +39,8 @@ export function irA(id) {
 
 // ─── PORTADA ───────────────────────────────────────────────────────────────
 document.getElementById('btn-entrar').addEventListener('click', () => {
-  iniciarAudio(); // primer clic del usuario: el navegador ya permite audio
+  iniciarAudio();
+  setTimeout(() => tocarIntro(), 120); // pequeño delay para que el contexto arranque
   irA('pantalla-registro');
 });
 
