@@ -203,6 +203,7 @@ function abrirModal(id) {
     if (radio) radio.checked = true;
     document.getElementById('af-explicacion').value = p.explicacion || '';
     document.getElementById('af-tiempo').value      = String(p.tiempo || 30);
+    document.getElementById('af-origen').value      = p.origen || 'normal';
     document.getElementById('af-activa').checked   = !!p.activa;
     if (p.imagen) {
       document.getElementById('af-imagen-url').value = p.imagen;
@@ -215,6 +216,8 @@ function abrirModal(id) {
   } else {
     titulo.textContent = '➕ Nueva pregunta';
     document.getElementById('af-id').value = '';
+    document.getElementById('af-origen').value = 'normal';
+    document.getElementById('af-tiempo').value = '30';
     document.getElementById('af-activa').checked = true;
     const r = form.querySelector('input[name="af-correcta"][value="0"]');
     if (r) r.checked = true;
@@ -249,6 +252,7 @@ function guardarPregunta(e) {
     enunciado:  document.getElementById('af-enunciado').value.trim(),
     explicacion:document.getElementById('af-explicacion').value.trim(),
     tiempo:     parseInt(document.getElementById('af-tiempo').value) || 30,
+    origen:     document.getElementById('af-origen').value || 'normal',
     imagen:     document.getElementById('af-imagen-url').value || null,
     autor:      'admin',
     activa:     document.getElementById('af-activa').checked,
