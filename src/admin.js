@@ -312,7 +312,7 @@ function renderizarRanking() {
       <thead>
         <tr>
           <th>#</th><th>Nombre</th><th>Avatar</th>
-          <th>Grado</th><th>Curso</th><th>Pts</th><th>Nota</th><th>Fecha</th><th></th>
+          <th>Colegio</th><th>Grado</th><th>Curso</th><th>Pts</th><th>Nota</th><th>Fecha</th><th></th>
         </tr>
       </thead>
       <tbody>
@@ -321,6 +321,7 @@ function renderizarRanking() {
             <td>${i + 1}</td>
             <td>${r.nombre}</td>
             <td>${r.avatar}</td>
+            <td style="font-size:0.75rem;max-width:140px">${r.colegio || '—'}</td>
             <td>${r.grado}°</td>
             <td>${r.curso}</td>
             <td>${Number(r.puntaje).toLocaleString('es-CO')}</td>

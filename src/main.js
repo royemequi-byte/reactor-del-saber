@@ -236,10 +236,11 @@ inpAvatar.addEventListener('input', () => {
 document.getElementById('form-registro').addEventListener('submit', async (e) => {
   e.preventDefault();
 
-  const nombre = document.getElementById('inp-nombre').value.trim();
-  const grado  = parseInt(document.getElementById('inp-grado').value);
-  const curso  = document.getElementById('inp-curso').value.trim();
-  const avatar = inpAvatar.value.trim().toUpperCase();
+  const nombre   = document.getElementById('inp-nombre').value.trim();
+  const grado    = parseInt(document.getElementById('inp-grado').value);
+  const colegio  = document.getElementById('inp-colegio').value;
+  const curso    = document.getElementById('inp-curso').value.trim();
+  const avatar   = inpAvatar.value.trim().toUpperCase();
 
   if (!avatar) { alert('Por favor escribe tu apodo de científico ⚗️'); return; }
 
@@ -254,7 +255,7 @@ document.getElementById('form-registro').addEventListener('submit', async (e) =>
   }
   errGrado.classList.add('oculto');
 
-  estado.estudiante = { nombre, grado, curso, avatar };
+  estado.estudiante = { nombre, grado, colegio, curso, avatar };
 
   if (sala.modo === 'sala') {
     // Unirse a Firebase y esperar al profesor
@@ -602,7 +603,7 @@ function calcularNota() {
 function mostrarResultados(nota) {
   const e = estado.estudiante;
   document.getElementById('res-estudiante').textContent =
-    `${e.nombre} · ${e.avatar} · Grado ${e.grado}° · Curso ${e.curso}`;
+    `${e.nombre} · ${e.avatar} · Grado ${e.grado}° · Curso ${e.curso} · ${e.colegio || ''}`;
 
   document.getElementById('res-puntaje').textContent = estado.puntaje.toLocaleString('es-CO');
   document.getElementById('res-nota').textContent = nota;
@@ -633,10 +634,11 @@ function mostrarResultados(nota) {
 function guardarEnRanking(nota) {
   const ranking = JSON.parse(localStorage.getItem('ranking') || '[]');
   const entrada = {
-    nombre:  estado.estudiante.nombre,
-    avatar:  estado.estudiante.avatar,
-    grado:   estado.estudiante.grado,
-    curso:   estado.estudiante.curso,
+    nombre:   estado.estudiante.nombre,
+    avatar:   estado.estudiante.avatar,
+    grado:    estado.estudiante.grado,
+    colegio:  estado.estudiante.colegio || '',
+    curso:    estado.estudiante.curso,
     puntaje: estado.puntaje,
     nota:    String(nota),
     tiempo:  estado.tiempoTotal,
