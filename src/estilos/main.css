@@ -258,7 +258,6 @@ body {
 }
 
 .subtitulo-evento {
-  font-family: 'Sprucken', sans-serif;
   font-size: 1rem;
   color: var(--teal-iti);
   letter-spacing: 0.1em;
@@ -267,7 +266,6 @@ body {
   font-weight: 600;
 }
 .subtitulo-grados {
-  font-family: 'Sprucken', sans-serif;
   font-size: 0.82rem;
   color: #7a9ab8;
   letter-spacing: 0.08em;
