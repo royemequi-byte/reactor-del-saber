@@ -5,6 +5,7 @@ import {
   eliminarPregunta, toggleActiva
 } from './banco.js';
 import { subirImagenPregunta } from './storage.js';
+import * as XLSX from 'xlsx';
 
 let listo = false; // evitar listeners duplicados en re-login
 
@@ -76,6 +77,8 @@ export function adminInicializar() {
   });
 
   // Ranking
+  document.getElementById('btn-descargar-excel')
+    .addEventListener('click', descargarExcel);
   document.getElementById('btn-limpiar-ranking')
     .addEventListener('click', limpiarRanking);
 
@@ -331,6 +334,55 @@ function renderizarRanking() {
           </tr>`).join('')}
       </tbody>
     </table>`;
+}
+
+function descargarExcel() {
+  const datos = JSON.parse(localStorage.getItem('ranking') || '[]');
+  if (!datos.length) { alert('El ranking está vacío, no hay datos para exportar.'); return; }
+
+  // Ordenar de mayor a menor nota
+  const ordenados = [...datos].sort((a, b) => Number(b.nota) - Number(a.nota));
+
+  const fila = (r, i) => ({
+    '#':           i + 1,
+    'Nombre':      r.nombre,
+    'Avatar':      r.avatar,
+    'Colegio':     r.colegio || '—',
+    'Grado':       r.grado + '°',
+    'Curso':       r.curso,
+    'Puntaje':     Number(r.puntaje),
+    'Nota / 500':  Number(r.nota),
+    'Tiempo (s)':  r.tiempo || '—',
+    'Fecha':       r.fecha || '—',
+  });
+
+  const wb = XLSX.utils.book_new();
+
+  // Pestaña GENERAL
+  const wsGeneral = XLSX.utils.json_to_sheet(ordenados.map(fila));
+  aplicarEstilos(wsGeneral, ordenados.length);
+  XLSX.utils.book_append_sheet(wb, wsGeneral, 'General');
+
+  // Una pestaña por curso (ordenados dentro de ese curso)
+  const cursos = [...new Set(ordenados.map(r => `${r.grado}°-${r.curso}`))].sort();
+  cursos.forEach(clave => {
+    const [grado, curso] = clave.split('-');
+    const grupo = ordenados.filter(r => String(r.grado) + '°' === grado && r.curso === curso);
+    const ws = XLSX.utils.json_to_sheet(grupo.map(fila));
+    aplicarEstilos(ws, grupo.length);
+    const nombre = `G${grado} Curso ${curso}`.substring(0, 31);
+    XLSX.utils.book_append_sheet(wb, ws, nombre);
+  });
+
+  XLSX.writeFile(wb, `ranking-iti-olimpiadas-${new Date().toISOString().slice(0,10)}.xlsx`);
+}
+
+function aplicarEstilos(ws, filas) {
+  // Ancho de columnas
+  ws['!cols'] = [
+    { wch: 4 }, { wch: 22 }, { wch: 8 }, { wch: 30 },
+    { wch: 7 }, { wch: 7 }, { wch: 10 }, { wch: 10 }, { wch: 10 }, { wch: 12 }
+  ];
 }
 
 function limpiarRanking() {
