@@ -76,6 +76,10 @@ document.getElementById('btn-sala').addEventListener('click', () => {
   irA('pantalla-sala-rol');
 });
 
+// ─── VOLVER AL INICIO (registro y admin login) ─────────────────────────────
+document.getElementById('btn-volver-registro').addEventListener('click', () => irA('pantalla-portada'));
+document.getElementById('btn-volver-admin-login').addEventListener('click', () => irA('pantalla-portada'));
+
 // ─── ELEGIR ROL ────────────────────────────────────────────────────────────
 document.getElementById('btn-volver-portada-sala').addEventListener('click', () => irA('pantalla-portada'));
 

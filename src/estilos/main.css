@@ -561,6 +561,22 @@ body {
 }
 .btn-secundario:hover { background: #00e5ff22; }
 
+.btn-volver-visible {
+  display: block; width: 100%; margin-top: 14px;
+  background: transparent;
+  color: #7ba7d4;
+  border: 1.5px solid #2a4a6a;
+  border-radius: var(--radio);
+  padding: 12px 28px;
+  font-size: 0.95rem; font-weight: 600;
+  cursor: pointer; letter-spacing: 0.03em;
+  transition: color 0.2s, border-color 0.2s, background 0.2s;
+}
+.btn-volver-visible:hover {
+  color: var(--cian); border-color: var(--cian);
+  background: #00e5ff11;
+}
+
 /* =============================================
    PANTALLA 2 — REGISTRO
    ============================================= */
