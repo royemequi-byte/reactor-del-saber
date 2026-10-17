@@ -1,5 +1,5 @@
 // storage.js — subida de imágenes a Cloudinary (upload directo desde el navegador)
-const CLOUD_NAME    = 'div57iwsy';
+const CLOUD_NAME    = 'fvhbzcoh';
 const UPLOAD_PRESET = 'reactor_unsigned';
 
 export async function subirImagenPregunta(file) {
