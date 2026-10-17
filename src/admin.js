@@ -153,8 +153,8 @@ function renderizarPreguntas() {
   if (activa === '0') banco = banco.filter(p => !p.activa);
   if (origen)         banco = banco.filter(p => (p.origen || 'normal') === origen);
 
-  const colores = { quimica: '#39ff14', fisica: '#00e5ff', biologia: '#ff9f1c' };
-  const emojis  = { quimica: '⚗️', fisica: '⚡', biologia: '🌿' };
+  const colores = { quimica: '#39ff14', fisica: '#00e5ff', biologia: '#ff9f1c', cts: '#ff69b4' };
+  const emojis  = { quimica: '⚗️', fisica: '⚡', biologia: '🌿', cts: '🔬' };
 
   const lista = document.getElementById('admin-lista');
   if (!banco.length) {

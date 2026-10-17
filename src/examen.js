@@ -29,7 +29,7 @@ export function armarExamen(estudiante, gradoSala = null) {
   const historial = JSON.parse(localStorage.getItem(claveHistorial) || '[]');
 
   // ── Ciencias (química + física + biología) — 70 % ICFES garantizado ──
-  const ciencias     = banco.filter(p => ['quimica','fisica','biologia'].includes(p.materia));
+  const ciencias     = banco.filter(p => ['quimica','fisica','biologia','cts'].includes(p.materia));
   const sinVer       = ciencias.filter(p => !historial.includes(p.id));
   const fuente       = sinVer.length >= 19 ? sinVer : ciencias;
 

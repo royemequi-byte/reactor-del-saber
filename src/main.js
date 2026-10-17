@@ -314,7 +314,7 @@ function mostrarPregunta() {
   document.getElementById('num-pregunta').textContent = estado.preguntaActual + 1;
 
   // Etiqueta de tipo
-  const etiquetas = { quimica: '⚗️ Química', fisica: '⚡ Física', biologia: '🌿 Biología', razonamiento: '🧠 Razonamiento' };
+  const etiquetas = { quimica: '⚗️ Química', fisica: '⚡ Física', biologia: '🌿 Biología', cts: '🔬 C.T.S.', razonamiento: '🧠 Razonamiento' };
   document.getElementById('tipo-pregunta').textContent = etiquetas[p.materia] || p.materia;
 
   // Etiqueta de formato si no es selección clásica
@@ -883,7 +883,7 @@ function autoRellenarCrucigrama(p, area) {
 function iniciarPreview(p) {
   _preguntaPreview = p;
 
-  const etiquetas = { quimica: '⚗️ Química', fisica: '⚡ Física', biologia: '🌿 Biología', razonamiento: '🧠 Razonamiento' };
+  const etiquetas = { quimica: '⚗️ Química', fisica: '⚡ Física', biologia: '🌿 Biología', cts: '🔬 C.T.S.', razonamiento: '🧠 Razonamiento' };
   document.getElementById('preview-materia').textContent = etiquetas[p.materia] || p.materia;
 
   const formatoLabel = { relacionar: '🔗 Relacionar', ordenar: '🔢 Ordenar', crucigrama: '📝 Crucigrama', clasifica: '📂 Clasificar' };
