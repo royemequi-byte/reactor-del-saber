@@ -292,7 +292,9 @@ document.getElementById('form-registro').addEventListener('submit', async (e) =>
 
 // ─── INICIO DEL EXAMEN ─────────────────────────────────────────────────────
 function iniciarExamen() {
+  const estudianteGuardado = { ...estado.estudiante };
   resetearEstado();
+  estado.estudiante = estudianteGuardado;
   estado.preguntas = armarExamen(estado.estudiante, sala.gradoSala);
   guardarHistorial(estado.estudiante, estado.preguntas);
   estado.preguntaActual = 0;
@@ -332,7 +334,7 @@ function mostrarPregunta() {
   // Enunciado
   document.getElementById('enunciado').textContent = p.enunciado;
 
-  // Imagen (opcional)
+  // Imágenes (opcionales)
   const imgEl = document.getElementById('img-pregunta');
   if (p.imagen) {
     imgEl.src = p.imagen.startsWith('http') ? p.imagen : (import.meta.env.BASE_URL + p.imagen);
@@ -341,6 +343,14 @@ function mostrarPregunta() {
     imgEl.src = '';
     imgEl.classList.add('oculto');
   }
+  const imgEl2 = document.getElementById('img-pregunta2');
+  if (p.imagen2) {
+    imgEl2.src = p.imagen2.startsWith('http') ? p.imagen2 : (import.meta.env.BASE_URL + p.imagen2);
+    imgEl2.classList.remove('oculto');
+  } else {
+    imgEl2.src = '';
+    imgEl2.classList.add('oculto');
+  }
 
   // Área de interacción
   const grid = document.getElementById('opciones-grid');
@@ -348,8 +358,9 @@ function mostrarPregunta() {
   grid.className = 'opciones-grid';
 
   const tipo = p.tipo || 'seleccion';
+  const INTERACTIVOS = new Set(['relacionar', 'ordenar', 'crucigrama', 'clasifica']);
 
-  if (tipo === 'seleccion') {
+  if (!INTERACTIVOS.has(tipo)) {
     const letras = ['A', 'B', 'C', 'D'];
     p.opciones.forEach((op, i) => {
       const btn = document.createElement('button');
@@ -432,8 +443,9 @@ function procesarRespuesta(esCorrecta) {
   estado.respuestas.push({ correcta: esCorrecta, puntaje: pts });
 
   // Texto de la respuesta correcta (solo para selección múltiple cuando falla)
+  const INTERACTIVOS_RESP = new Set(['relacionar', 'ordenar', 'crucigrama', 'clasifica']);
   let respCorrecta = null;
-  if (!esCorrecta && tipo === 'seleccion' && p?.opciones && p.correcta != null) {
+  if (!esCorrecta && !INTERACTIVOS_RESP.has(tipo) && p?.opciones && p.correcta != null) {
     respCorrecta = p.opciones[p.correcta];
   }
 
@@ -493,7 +505,8 @@ function reiniciarReloj() {
     if (estado.tiempoRestante <= 0) {
       detenerReloj();
       const tipoActual = estado.preguntas[estado.preguntaActual]?.tipo || 'seleccion';
-      if (tipoActual === 'seleccion') {
+      const INTERACTIVOS = new Set(['relacionar', 'ordenar', 'crucigrama', 'clasifica']);
+      if (!INTERACTIVOS.has(tipoActual)) {
         responder(-1); // tiempo agotado → incorrecto
       } else {
         // Deshabilitar controles de tipos interactivos
@@ -518,7 +531,7 @@ function actualizarDisplayReloj() {
 document.getElementById('poder-catalizador').addEventListener('click', () => {
   if (!estado.poderes.catalizador) return;
   const p = estado.preguntas[estado.preguntaActual];
-  if ((p?.tipo || 'seleccion') !== 'seleccion') return; // solo para selección múltiple
+  if (new Set(['relacionar', 'ordenar', 'crucigrama', 'clasifica']).has(p?.tipo)) return; // solo para selección múltiple
   estado.poderes.catalizador = false;
   document.getElementById('poder-catalizador').disabled = true;
   tocarPoder('catalizador');
@@ -887,6 +900,14 @@ function iniciarPreview(p) {
   } else {
     imgEl.src = '';
     imgEl.classList.add('oculto');
+  }
+  const imgEl2p = document.getElementById('preview-img2');
+  if (p.imagen2) {
+    imgEl2p.src = p.imagen2.startsWith('http') ? p.imagen2 : (import.meta.env.BASE_URL + p.imagen2);
+    imgEl2p.classList.remove('oculto');
+  } else {
+    imgEl2p.src = '';
+    imgEl2p.classList.add('oculto');
   }
 
   // Ocultar feedback anterior

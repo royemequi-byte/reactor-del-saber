@@ -39,23 +39,23 @@ export function adminInicializar() {
   document.getElementById('admin-modal')
     .addEventListener('click', e => { if (e.target === e.currentTarget) cerrarModal(); });
 
-  // Imagen — subida a Firebase Storage
+  // Imagen 1 — subida a Firebase Storage
   document.getElementById('af-imagen-file').addEventListener('change', async (e) => {
     const file = e.target.files[0];
     if (!file) return;
-    const estado = document.getElementById('af-imagen-estado');
-    const preview = document.getElementById('af-imagen-preview');
-    const btnQuitar = document.getElementById('btn-quitar-imagen');
-    estado.textContent = '⏳ Subiendo…';
+    const estadoEl = document.getElementById('af-imagen-estado');
+    const preview  = document.getElementById('af-imagen-preview');
+    const btnQ     = document.getElementById('btn-quitar-imagen');
+    estadoEl.textContent = '⏳ Subiendo…';
     try {
       const url = await subirImagenPregunta(file);
       document.getElementById('af-imagen-url').value = url;
       preview.src = url;
       preview.classList.remove('oculto');
-      btnQuitar.style.display = 'inline-block';
-      estado.textContent = '✅ Imagen lista';
+      btnQ.style.display = 'inline-block';
+      estadoEl.textContent = '✅ Imagen lista';
     } catch (err) {
-      estado.textContent = '❌ Error al subir: ' + err.message;
+      estadoEl.textContent = '❌ Error al subir: ' + err.message;
     }
   });
 
@@ -66,6 +66,35 @@ export function adminInicializar() {
     document.getElementById('af-imagen-preview').src = '';
     document.getElementById('btn-quitar-imagen').style.display = 'none';
     document.getElementById('af-imagen-estado').textContent = '';
+  });
+
+  // Imagen 2 — subida a Firebase Storage
+  document.getElementById('af-imagen2-file').addEventListener('change', async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const estadoEl = document.getElementById('af-imagen2-estado');
+    const preview  = document.getElementById('af-imagen2-preview');
+    const btnQ     = document.getElementById('btn-quitar-imagen2');
+    estadoEl.textContent = '⏳ Subiendo…';
+    try {
+      const url = await subirImagenPregunta(file);
+      document.getElementById('af-imagen2-url').value = url;
+      preview.src = url;
+      preview.classList.remove('oculto');
+      btnQ.style.display = 'inline-block';
+      estadoEl.textContent = '✅ Imagen 2 lista';
+    } catch (err) {
+      estadoEl.textContent = '❌ Error al subir: ' + err.message;
+    }
+  });
+
+  document.getElementById('btn-quitar-imagen2').addEventListener('click', () => {
+    document.getElementById('af-imagen2-url').value = '';
+    document.getElementById('af-imagen2-file').value = '';
+    document.getElementById('af-imagen2-preview').classList.add('oculto');
+    document.getElementById('af-imagen2-preview').src = '';
+    document.getElementById('btn-quitar-imagen2').style.display = 'none';
+    document.getElementById('af-imagen2-estado').textContent = '';
   });
 
   // Restaurar banco original
@@ -176,13 +205,19 @@ function abrirModal(id) {
   const form   = document.getElementById('admin-form-pregunta');
   form.reset();
 
-  // Resetear área de imagen
+  // Resetear área de imágenes
   document.getElementById('af-imagen-url').value = '';
   document.getElementById('af-imagen-file').value = '';
   document.getElementById('af-imagen-preview').classList.add('oculto');
   document.getElementById('af-imagen-preview').src = '';
   document.getElementById('btn-quitar-imagen').style.display = 'none';
   document.getElementById('af-imagen-estado').textContent = '';
+  document.getElementById('af-imagen2-url').value = '';
+  document.getElementById('af-imagen2-file').value = '';
+  document.getElementById('af-imagen2-preview').classList.add('oculto');
+  document.getElementById('af-imagen2-preview').src = '';
+  document.getElementById('btn-quitar-imagen2').style.display = 'none';
+  document.getElementById('af-imagen2-estado').textContent = '';
 
   if (id) {
     const p = getBanco().find(q => q.id === id);
@@ -227,6 +262,14 @@ function abrirModal(id) {
       prev.classList.remove('oculto');
       document.getElementById('btn-quitar-imagen').style.display = 'inline-block';
       document.getElementById('af-imagen-estado').textContent = '✅ Imagen cargada';
+    }
+    if (p.imagen2) {
+      document.getElementById('af-imagen2-url').value = p.imagen2;
+      const prev2 = document.getElementById('af-imagen2-preview');
+      prev2.src = p.imagen2;
+      prev2.classList.remove('oculto');
+      document.getElementById('btn-quitar-imagen2').style.display = 'inline-block';
+      document.getElementById('af-imagen2-estado').textContent = '✅ Imagen 2 cargada';
     }
   } else {
     titulo.textContent = '➕ Nueva pregunta';
@@ -273,7 +316,8 @@ function guardarPregunta(e) {
     explicacion:document.getElementById('af-explicacion').value.trim(),
     tiempo:     parseInt(document.getElementById('af-tiempo').value) || 30,
     origen:     document.getElementById('af-origen').value || 'normal',
-    imagen:     document.getElementById('af-imagen-url').value || null,
+    imagen:     document.getElementById('af-imagen-url').value  || null,
+    imagen2:    document.getElementById('af-imagen2-url').value || null,
     autor:      'admin',
     activa:     document.getElementById('af-activa').checked,
   };

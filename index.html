@@ -226,7 +226,6 @@
           <label for="inp-colegio">Institución educativa</label>
           <select id="inp-colegio" required>
             <option value="">-- Selecciona tu colegio --</option>
-            <option value="I.T.I. - Instituto Técnico Industrial">I. T. I. - Instituto Técnico Industrial</option>
             <option value="I.E.M Instituto Técnico Industrial">I. E. M Instituto Técnico Industrial</option>
             <option value="Integral del Sumapaz">I. E. M Integral del Sumapaz</option>
             <option value="Carlos Lozano y Lozano">I. E. M Carlos Lozano y Lozano</option>
@@ -286,6 +285,7 @@
       </div>
       <p class="enunciado" id="enunciado">Cargando pregunta...</p>
       <img id="img-pregunta" class="img-pregunta oculto" alt="Imagen de la pregunta" />
+      <img id="img-pregunta2" class="img-pregunta oculto" alt="Imagen 2 de la pregunta" />
       <div class="opciones-grid" id="opciones-grid"></div>
     </main>
   </section>
@@ -383,6 +383,7 @@
 
       <p class="enunciado" id="preview-enunciado" style="white-space:pre-wrap"></p>
       <img id="preview-img" class="img-pregunta oculto" alt="Imagen de la pregunta" />
+      <img id="preview-img2" class="img-pregunta oculto" alt="Imagen 2 de la pregunta" />
       <div id="preview-opciones" class="opciones-grid"></div>
 
       <div id="preview-feedback" class="preview-feedback oculto">
@@ -556,16 +557,30 @@
             </div>
 
             <div class="af-campo full">
-              <label>Imagen de la pregunta (opcional)</label>
+              <label>Imagen 1 de la pregunta (opcional)</label>
               <div class="af-imagen-area">
                 <input type="hidden" id="af-imagen-url" />
                 <img id="af-imagen-preview" class="af-imagen-preview oculto" alt="Vista previa" />
                 <div class="af-imagen-acciones">
-                  <label class="af-upload-btn" for="af-imagen-file">📁 Seleccionar imagen</label>
+                  <label class="af-upload-btn" for="af-imagen-file">📁 Seleccionar imagen 1</label>
                   <input type="file" id="af-imagen-file" accept="image/*" style="display:none" />
                   <button type="button" class="btn-accion rojo chico" id="btn-quitar-imagen" style="display:none">✕ Quitar</button>
                 </div>
                 <span id="af-imagen-estado" class="af-imagen-estado"></span>
+              </div>
+            </div>
+
+            <div class="af-campo full">
+              <label>Imagen 2 de la pregunta (opcional)</label>
+              <div class="af-imagen-area">
+                <input type="hidden" id="af-imagen2-url" />
+                <img id="af-imagen2-preview" class="af-imagen-preview oculto" alt="Vista previa 2" />
+                <div class="af-imagen-acciones">
+                  <label class="af-upload-btn" for="af-imagen2-file">📁 Seleccionar imagen 2</label>
+                  <input type="file" id="af-imagen2-file" accept="image/*" style="display:none" />
+                  <button type="button" class="btn-accion rojo chico" id="btn-quitar-imagen2" style="display:none">✕ Quitar</button>
+                </div>
+                <span id="af-imagen2-estado" class="af-imagen-estado"></span>
               </div>
             </div>
 
