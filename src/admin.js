@@ -113,7 +113,13 @@ function renderizarPreguntas() {
 
   let banco = getBanco();
   if (materia)        banco = banco.filter(p => p.materia === materia);
-  if (grado)          banco = banco.filter(p => String(p.grado) === grado || p.grado === 'todos');
+  if (grado) {
+    const g = Number(grado);
+    banco = banco.filter(p =>
+      p.grado === 'todos' ||
+      (Array.isArray(p.grado) ? p.grado.includes(g) : p.grado === g)
+    );
+  }
   if (activa === '1') banco = banco.filter(p =>  p.activa);
   if (activa === '0') banco = banco.filter(p => !p.activa);
   if (origen)         banco = banco.filter(p => (p.origen || 'normal') === origen);
@@ -136,12 +142,15 @@ function renderizarPreguntas() {
     const icfesTag = p.origen === 'icfes'
       ? '<span class="admin-badge icfes">📄 ICFES</span>'
       : '';
+    const gradoLabel = Array.isArray(p.grado)
+      ? p.grado.map(g => `${g}°`).join('/')
+      : (p.grado === 'todos' ? 'Todos' : `${p.grado}°`);
     return `
       <div class="admin-card">
         <div class="admin-card-head">
           <span class="admin-badge num">#${idx + 1}</span>
           <span class="admin-badge" style="color:${col}">${emo} ${p.materia}</span>
-          <span class="admin-badge grado">G${p.grado}</span>
+          <span class="admin-badge grado">G${gradoLabel}</span>
           <span class="admin-badge dif">D${p.dificultad}</span>
           ${icfesTag}
           <span class="admin-badge ${p.activa ? 'activo' : 'inactivo'}">${p.activa ? '✓ Activa' : '✗ Inactiva'}</span>
@@ -181,7 +190,10 @@ function abrirModal(id) {
     titulo.textContent = '✏️ Editar pregunta';
     document.getElementById('af-id').value         = p.id;
     document.getElementById('af-materia').value    = p.materia;
-    document.getElementById('af-grado').value      = String(p.grado);
+    document.querySelectorAll('.af-grado-cb').forEach(cb => {
+      const v = Number(cb.value);
+      cb.checked = p.grado === 'todos' || (Array.isArray(p.grado) ? p.grado.includes(v) : p.grado === v);
+    });
     document.getElementById('af-dificultad').value = String(p.dificultad);
     document.getElementById('af-tema').value       = p.tema || '';
     document.getElementById('af-enunciado').value  = p.enunciado;
@@ -238,6 +250,8 @@ function guardarPregunta(e) {
   const id = document.getElementById('af-id').value;
   const radioChecked = document.querySelector('input[name="af-correcta"]:checked');
   if (!radioChecked) { alert('Selecciona cuál opción es la correcta.'); return; }
+  const gradosSel = document.querySelectorAll('.af-grado-cb:checked');
+  if (!gradosSel.length) { alert('Selecciona al menos un grado.'); return; }
 
   // Base existente para preservar campos de tipos interactivos
   const base = id ? (getBanco().find(p => p.id === id) || {}) : {};
@@ -248,9 +262,12 @@ function guardarPregunta(e) {
     id:         id || `P-${Date.now()}`,
     materia:    document.getElementById('af-materia').value,
     tema:       document.getElementById('af-tema').value.trim(),
-    grado:      document.getElementById('af-grado').value === 'todos'
-                  ? 'todos'
-                  : parseInt(document.getElementById('af-grado').value),
+    grado:      (() => {
+                  const sel = Array.from(document.querySelectorAll('.af-grado-cb:checked')).map(cb => Number(cb.value));
+                  if (!sel.length) return null;
+                  if (sel.length === 3) return 'todos';
+                  return sel.length === 1 ? sel[0] : sel;
+                })(),
     dificultad: parseInt(document.getElementById('af-dificultad').value),
     enunciado:  document.getElementById('af-enunciado').value.trim(),
     explicacion:document.getElementById('af-explicacion').value.trim(),

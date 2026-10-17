@@ -5,6 +5,12 @@ import { getBanco } from './banco.js';
 
 const CLAVE_HISTORIAL = (nombre, grado) => `historial_${nombre}_${grado}`;
 
+function gradoMatch(grado, filtro) {
+  if (grado === 'todos') return true;
+  if (Array.isArray(grado)) return grado.includes(filtro);
+  return grado === filtro;
+}
+
 /**
  * Arma el examen de 29 preguntas filtradas por grado:
  *   - gradoSala: número (8/9/10) para sala de un grado específico
@@ -16,7 +22,7 @@ export function armarExamen(estudiante, gradoSala = null) {
     : Number(gradoSala);
 
   const banco = getBanco().filter(p =>
-    p.activa && (p.grado === gradoFiltro || p.grado === 'todos')
+    p.activa && gradoMatch(p.grado, gradoFiltro)
   );
 
   const claveHistorial = CLAVE_HISTORIAL(estudiante.nombre, gradoFiltro);

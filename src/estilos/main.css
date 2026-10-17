@@ -1141,6 +1141,9 @@ body {
 
 .af-check-label { display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 0.9rem; }
 .af-check-label input { width: 17px; height: 17px; accent-color: var(--verde); }
+.af-grados-check { display: flex; gap: 18px; flex-wrap: wrap; padding: 4px 0; }
+.af-grados-check label { display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 0.95rem; color: var(--blanco); }
+.af-grados-check input[type="checkbox"] { width: 17px; height: 17px; accent-color: var(--verde); }
 .af-botones { display: flex; gap: 12px; justify-content: flex-end; padding-top: 4px; }
 
 /* Exportar */
