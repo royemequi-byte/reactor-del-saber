@@ -1,49 +1,64 @@
-// banco.js — gestión del banco de preguntas (localStorage + JSON fallback)
+// banco.js — banco de preguntas sincronizado con Firebase Realtime Database
+import { ref, get, set, onValue } from 'firebase/database';
+import { db } from './firebase.js';
 import bancoBruto from '../data/banco-preguntas.json';
 
-const CLAVE = 'iti_banco';
+const RUTA = 'banco-preguntas';
+let cache = [];
+
+// Llamar al arrancar la app — carga desde Firebase y activa listener en tiempo real
+export async function initBanco() {
+  const snap = await get(ref(db, RUTA));
+  if (snap.exists()) {
+    cache = snap.val();
+  } else {
+    // Primera vez: subir el banco inicial desde el JSON
+    cache = JSON.parse(JSON.stringify(bancoBruto));
+    await set(ref(db, RUTA), cache);
+  }
+  // Mantener cache sincronizado con cambios de otros usuarios en tiempo real
+  onValue(ref(db, RUTA), snap => {
+    if (snap.exists()) cache = snap.val();
+  });
+}
 
 export function getBanco() {
-  const raw = localStorage.getItem(CLAVE);
-  if (raw) {
-    try { return JSON.parse(raw); } catch {}
-  }
-  return JSON.parse(JSON.stringify(bancoBruto));
+  return cache;
 }
 
 export function setBanco(arr) {
-  localStorage.setItem(CLAVE, JSON.stringify(arr));
+  cache = arr;
+  set(ref(db, RUTA), arr).catch(console.error);
 }
 
 export function resetBanco() {
-  localStorage.removeItem(CLAVE);
-  return JSON.parse(JSON.stringify(bancoBruto));
+  const inicial = JSON.parse(JSON.stringify(bancoBruto));
+  setBanco(inicial);
+  return inicial;
 }
 
 export function agregarPregunta(p) {
-  const banco = getBanco();
-  banco.push(p);
-  setBanco(banco);
+  setBanco([...cache, p]);
 }
 
 export function actualizarPregunta(id, cambios) {
-  const banco = getBanco();
-  const i = banco.findIndex(p => p.id === id);
+  const i = cache.findIndex(p => p.id === id);
   if (i === -1) return false;
-  banco[i] = { ...banco[i], ...cambios };
-  setBanco(banco);
+  const nuevo = [...cache];
+  nuevo[i] = { ...nuevo[i], ...cambios };
+  setBanco(nuevo);
   return true;
 }
 
 export function eliminarPregunta(id) {
-  setBanco(getBanco().filter(p => p.id !== id));
+  setBanco(cache.filter(p => p.id !== id));
 }
 
 export function toggleActiva(id) {
-  const banco = getBanco();
-  const i = banco.findIndex(p => p.id === id);
+  const i = cache.findIndex(p => p.id === id);
   if (i === -1) return null;
-  banco[i].activa = !banco[i].activa;
-  setBanco(banco);
-  return banco[i].activa;
+  const nuevo = [...cache];
+  nuevo[i].activa = !nuevo[i].activa;
+  setBanco(nuevo);
+  return nuevo[i].activa;
 }

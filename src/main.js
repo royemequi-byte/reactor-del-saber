@@ -5,6 +5,10 @@ import { iniciarAudio, setVolumen, toggleSilencio, setMateria, setRacha, setProg
 import { tocarAcierto, tocarError, tocarRacha, tocarPoder, tocarFanfarra, tocarIntro } from './audio/efectos.js';
 import confetti from 'canvas-confetti';
 import { adminInicializar } from './admin.js';
+import { initBanco } from './banco.js';
+
+// Cargar banco desde Firebase antes de que la app arranque
+await initBanco();
 import {
   crearSala, unirseASala, iniciarJuego,
   reportarResultado, escucharEstudiantes,
