@@ -37,8 +37,12 @@ export const estado = {
   // Nota final calculada (se llena al terminar)
   notaFinal: 0,
   aciertos: {
-    ciencias: 0,           // de 23 — 80 % del examen (ICFES + relleno si aplica)
-    razonamiento: 0        // de 6  — 20 % del examen
+    ciencias:     0,   // total ciencias (para calcular nota)
+    biologia:     0,
+    fisica:       0,
+    quimica:      0,
+    cts:          0,
+    razonamiento: 0,
   }
 };
 
@@ -58,7 +62,7 @@ export function resetearEstado() {
   estado.tiempoRestante = 30;
   estado.tiempoTotal   = 0;
   estado.notaFinal     = 0;
-  estado.aciertos      = { ciencias: 0, razonamiento: 0 };
+  estado.aciertos      = { ciencias: 0, biologia: 0, fisica: 0, quimica: 0, cts: 0, razonamiento: 0 };
 
   estado.volumen  = volGuardado;
   estado.silencio = silGuardado;

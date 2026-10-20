@@ -513,8 +513,24 @@
         <button class="admin-tab activo" data-tab="preguntas">
           📋 Preguntas (<span id="admin-count-preguntas">…</span>)
         </button>
+        <button class="admin-tab" data-tab="monitor">📡 Monitor</button>
+        <button class="admin-tab" data-tab="historial">📁 Historial</button>
         <button class="admin-tab" data-tab="ranking">🏆 Ranking</button>
         <button class="admin-tab" data-tab="exportar" style="display:none">📤 Exportar JSON</button>
+      </div>
+
+      <!-- ── TAB: MONITOR ── -->
+      <div id="admin-tab-monitor" class="admin-tabcontent oculto">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:14px">
+          <span id="monitor-contador" style="color:#8ab;font-size:0.9rem">Sin estudiantes aún</span>
+          <button class="btn-accion gris chico" id="btn-limpiar-monitor">🗑 Limpiar para nueva actividad</button>
+        </div>
+        <div id="monitor-lista"></div>
+      </div>
+
+      <!-- ── TAB: HISTORIAL ── -->
+      <div id="admin-tab-historial" class="admin-tabcontent oculto">
+        <div id="historial-lista"></div>
       </div>
 
       <!-- ── TAB: PREGUNTAS ── -->

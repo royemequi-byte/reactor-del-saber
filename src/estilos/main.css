@@ -1095,6 +1095,12 @@ body {
 .admin-card-enunciado { font-size: 0.86rem; color: #b0c4d4; line-height: 1.4; }
 .admin-card-acciones { display: flex; gap: 8px; flex-wrap: wrap; }
 
+/* Badges de estado — monitor */
+.estado-badge { display:inline-block; padding:2px 10px; border-radius:10px; font-size:0.78rem; font-weight:700; }
+.estado-badge.terminado { background:#003a18; color:#39ff14; }
+.estado-badge.jugando   { background:#001a3a; color:#00e5ff; }
+.estado-badge.inscrito  { background:#2a2000; color:#ffd600; }
+
 /* Modal */
 .admin-modal {
   position: fixed; inset: 0;

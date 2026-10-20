@@ -38,10 +38,40 @@ function iniciarControlAcceso() {
   });
 
   btnToggle.addEventListener('click', async () => {
-    const snap = await get(ref(db, 'config/habilitado'));
+    const snap  = await get(ref(db, 'config/habilitado'));
     const actual = snap.val() === true;
+    if (actual) {
+      const guardar = confirm(
+        '¿Guardar el historial de esta actividad?\n\n' +
+        'Aceptar  →  Cerrar y guardar historial\n' +
+        'Cancelar →  Solo deshabilitar sin guardar'
+      );
+      if (guardar) await guardarHistorialActividad();
+    }
     await set(ref(db, 'config/habilitado'), !actual);
   });
+}
+
+// ─── GUARDAR HISTORIAL DE ACTIVIDAD ────────────────────────────────────────
+async function guardarHistorialActividad() {
+  const [snapEst, snapCuotas] = await Promise.all([
+    get(ref(db, 'actividad-actual/estudiantes')),
+    get(ref(db, 'config/cuotas')),
+  ]);
+  const estudiantes = snapEst.val() || {};
+  const cuotas      = snapCuotas.val() || {};
+  const ahora       = new Date();
+  const key = ahora.toISOString().slice(0, 19).replace(/[T:]/g, '-');
+  await set(ref(db, `historial/${key}`), {
+    fecha:             ahora.toLocaleDateString('es-CO'),
+    hora:              ahora.toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' }),
+    timestamp:         ahora.getTime(),
+    totalEstudiantes:  Object.keys(estudiantes).length,
+    cuotas,
+    estudiantes,
+  });
+  // Limpiar monitor para la próxima sesión
+  await set(ref(db, 'actividad-actual/estudiantes'), null);
 }
 
 // ─── MOSTRAR RESPUESTAS (MODO OLIMPIADA) ──────────────────────────────────
@@ -263,8 +293,228 @@ function cambiarTab(tab) {
     .forEach(c => c.classList.add('oculto'));
   document.getElementById(`admin-tab-${tab}`).classList.remove('oculto');
 
-  if (tab === 'ranking')  renderizarRanking();
-  if (tab === 'exportar') renderizarExportar();
+  if (tab === 'ranking')   renderizarRanking();
+  if (tab === 'exportar')  renderizarExportar();
+  if (tab === 'monitor')   iniciarMonitorTab();
+  if (tab === 'historial') renderizarHistorial();
+}
+
+// ─── MONITOR EN TIEMPO REAL ────────────────────────────────────────────────
+let _monitorActivo = false;
+
+function iniciarMonitorTab() {
+  document.getElementById('btn-limpiar-monitor')
+    ?.addEventListener('click', async () => {
+      if (!confirm('¿Limpiar el monitor para empezar una nueva actividad?')) return;
+      await set(ref(db, 'actividad-actual/estudiantes'), null);
+    });
+
+  if (_monitorActivo) return;
+  _monitorActivo = true;
+  onValue(ref(db, 'actividad-actual/estudiantes'), snap => {
+    renderizarMonitor(snap.val() || {});
+  });
+}
+
+function fmtTiempo(s) {
+  if (!s) return '—';
+  return `${Math.floor(s / 60)}m ${String(s % 60).padStart(2, '0')}s`;
+}
+
+function renderizarMonitor(obj) {
+  const todos       = Object.values(obj);
+  const terminados  = todos.filter(e => e.estado === 'terminado')
+                          .sort((a, b) => (b.puntaje || 0) - (a.puntaje || 0));
+  const jugando     = todos.filter(e => e.estado === 'jugando');
+  const inscritos   = todos.filter(e => e.estado === 'inscrito');
+
+  const contEl = document.getElementById('monitor-contador');
+  if (contEl) contEl.textContent =
+    `${todos.length} inscritos · ${jugando.length} en examen · ${terminados.length} terminaron`;
+
+  const lista = document.getElementById('monitor-lista');
+  if (!lista) return;
+
+  if (!todos.length) {
+    lista.innerHTML = '<p class="admin-vacio">Sin estudiantes aún — esperando inscripciones…</p>';
+    return;
+  }
+
+  const meds = { 0: '🥇', 1: '🥈', 2: '🥉' };
+  const css  = { 0: 'top1', 1: 'top2', 2: 'top3' };
+
+  const fila = (e, i, badge) => `
+    <tr class="${css[i] || ''}">
+      <td>${badge ? (meds[i] || i + 1) : '—'}</td>
+      <td>${e.nombre}</td><td>${e.avatar}</td>
+      <td>${e.grado}°</td><td>${e.curso}</td>
+      <td><span class="estado-badge ${e.estado}">${
+        e.estado === 'terminado' ? '✅ Terminó' :
+        e.estado === 'jugando'   ? '🎯 En examen' : '⏳ Inscrito'
+      }</span></td>
+      <td>${badge && e.puntaje != null ? Number(e.puntaje).toLocaleString('es-CO') : '—'}</td>
+      <td>${badge && e.nota != null ? `${e.nota}/500` : '—'}</td>
+      <td>${badge ? fmtTiempo(e.tiempo) : '—'}</td>
+    </tr>`;
+
+  lista.innerHTML = `
+    <table class="ranking-tabla">
+      <thead><tr>
+        <th>#</th><th>Nombre</th><th>Avatar</th><th>Grado</th>
+        <th>Curso</th><th>Estado</th><th>Pts</th><th>Nota</th><th>Tiempo</th>
+      </tr></thead>
+      <tbody>
+        ${terminados.map((e, i) => fila(e, i, true)).join('')}
+        ${jugando.map(e   => fila(e, -1, false)).join('')}
+        ${inscritos.map(e => fila(e, -1, false)).join('')}
+      </tbody>
+    </table>`;
+}
+
+// ─── HISTORIAL DE ACTIVIDADES ──────────────────────────────────────────────
+let _historialData = {};
+
+function renderizarHistorial() {
+  const lista = document.getElementById('historial-lista');
+  if (!lista) return;
+  lista.innerHTML = '<p class="admin-vacio">Cargando…</p>';
+
+  get(ref(db, 'historial')).then(snap => {
+    if (!snap.exists()) {
+      lista.innerHTML = '<p class="admin-vacio">Aún no hay actividades guardadas.</p>';
+      return;
+    }
+    _historialData = {};
+    const entradas = Object.entries(snap.val())
+      .map(([key, val]) => ({ key, ...val }))
+      .sort((a, b) => b.timestamp - a.timestamp);
+
+    entradas.forEach(e => { _historialData[e.key] = e; });
+
+    lista.innerHTML = entradas.map((e, i) => {
+      const est      = Object.values(e.estudiantes || {});
+      const term     = est.filter(s => s.estado === 'terminado');
+      const notas    = term.map(s => Number(s.nota) || 0);
+      const promNota = notas.length ? Math.round(notas.reduce((a, b) => a + b, 0) / notas.length) : 0;
+      const maxNota  = notas.length ? Math.max(...notas) : 0;
+      return `
+        <div class="admin-card" style="margin-bottom:12px">
+          <div class="admin-card-head" style="cursor:pointer;flex-wrap:wrap;gap:6px"
+               onclick="window._toggleH('hi${i}')">
+            <span class="admin-badge num">📅 ${e.fecha}</span>
+            <span class="admin-badge" style="color:#00e5ff">🕐 ${e.hora}</span>
+            <span class="admin-badge grado">${e.totalEstudiantes} participantes</span>
+            <span class="admin-badge dif">${term.length} completaron</span>
+            <span class="admin-badge" style="color:#39ff14">Prom: ${promNota}/500</span>
+            <span class="admin-badge" style="color:#ffd600">Mejor: ${maxNota}/500</span>
+            <span style="margin-left:auto;color:#8ab;font-size:0.82rem">▼ Ver detalle</span>
+          </div>
+          <div id="hi${i}" class="oculto" style="margin-top:14px">
+            ${renderDetalleAct(e)}
+          </div>
+        </div>`;
+    }).join('');
+
+    window._toggleH = id => document.getElementById(id)?.classList.toggle('oculto');
+    window._xlsAct  = key => descargarXlsActividad(key);
+  });
+}
+
+function renderDetalleAct(act) {
+  const terminados = Object.values(act.estudiantes || {})
+    .filter(e => e.estado === 'terminado')
+    .sort((a, b) => (b.puntaje || 0) - (a.puntaje || 0));
+
+  const porGrado = [8, 9, 10].map(g => {
+    const grupo  = terminados.filter(e => e.grado === g);
+    if (!grupo.length) return '';
+    const notas  = grupo.map(e => Number(e.nota) || 0);
+    const cuotas = act.cuotas?.[`grado${g}`] || {};
+    const mats   = ['biologia', 'fisica', 'quimica', 'cts'];
+    const emojis = { biologia: '🌿', fisica: '⚡', quimica: '⚗️', cts: '🔬' };
+    const barras = mats.map(m => {
+      const total = cuotas[m] || 0;
+      if (!total) return '';
+      const prom = grupo.reduce((s, e) => s + (e.aciertos?.[m] || 0), 0) / grupo.length;
+      const pct  = Math.round((prom / total) * 100);
+      const col  = pct >= 70 ? '#39ff14' : pct >= 40 ? '#ffd600' : '#c0392b';
+      return `<div style="display:flex;align-items:center;gap:6px;margin-top:4px">
+        <span style="color:#ccc;font-size:0.78rem;width:56px">${emojis[m]} ${m}</span>
+        <div style="flex:1;background:#333;border-radius:4px;height:8px">
+          <div style="background:${col};width:${pct}%;height:8px;border-radius:4px"></div>
+        </div>
+        <span style="color:#fff;font-size:0.78rem;width:34px">${pct}%</span>
+      </div>`;
+    }).join('');
+    const promedio = Math.round(notas.reduce((a, b) => a + b, 0) / notas.length);
+    return `
+      <div style="background:#0d1117;border:1px solid #333;border-radius:8px;padding:12px;flex:1;min-width:180px">
+        <div style="color:#ffd600;font-weight:700;margin-bottom:8px">Grado ${g}° · ${grupo.length} estudiantes</div>
+        <div style="color:#8ab;font-size:0.82rem">Nota prom: <strong style="color:#fff">${promedio}/500</strong></div>
+        <div style="color:#8ab;font-size:0.82rem">Mejor nota: <strong style="color:#39ff14">${Math.max(...notas)}/500</strong></div>
+        <div style="color:#8ab;font-size:0.82rem">1° lugar: <strong style="color:#fff">${grupo[0]?.nombre || '—'}</strong></div>
+        <div style="margin-top:8px">${barras}</div>
+      </div>`;
+  }).join('');
+
+  const meds = { 0: '🥇', 1: '🥈', 2: '🥉' };
+  const css  = { 0: 'top1', 1: 'top2', 2: 'top3' };
+  const filas = terminados.map((e, i) => `
+    <tr class="${css[i] || ''}">
+      <td>${meds[i] || i + 1}</td>
+      <td>${e.nombre}</td><td>${e.avatar}</td><td>${e.grado}°</td><td>${e.curso}</td>
+      <td>${Number(e.puntaje || 0).toLocaleString('es-CO')}</td>
+      <td>${e.nota}/500</td><td>${fmtTiempo(e.tiempo)}</td>
+    </tr>`).join('');
+
+  return `
+    <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px">${porGrado}</div>
+    <table class="ranking-tabla">
+      <thead><tr>
+        <th>#</th><th>Nombre</th><th>Avatar</th><th>Grado</th>
+        <th>Curso</th><th>Pts</th><th>Nota</th><th>Tiempo</th>
+      </tr></thead>
+      <tbody>${filas}</tbody>
+    </table>
+    <div style="margin-top:12px">
+      <button class="btn-accion verde chico" onclick="window._xlsAct('${act.key}')">
+        📥 Descargar Excel
+      </button>
+    </div>`;
+}
+
+function descargarXlsActividad(key) {
+  const act = _historialData[key];
+  if (!act) return;
+  const terminados = Object.values(act.estudiantes || {})
+    .filter(e => e.estado === 'terminado')
+    .sort((a, b) => (b.puntaje || 0) - (a.puntaje || 0));
+
+  const filas = terminados.map((e, i) => ({
+    '#':          i + 1,
+    'Nombre':     e.nombre,
+    'Avatar':     e.avatar,
+    'Colegio':    e.colegio || '—',
+    'Grado':      e.grado + '°',
+    'Curso':      e.curso,
+    'Puntaje':    Number(e.puntaje) || 0,
+    'Nota /500':  Number(e.nota)    || 0,
+    'Tiempo (s)': e.tiempo          || 0,
+    'Bio ✓':      e.aciertos?.biologia  || 0,
+    'Fis ✓':      e.aciertos?.fisica    || 0,
+    'Qui ✓':      e.aciertos?.quimica   || 0,
+    'CTS ✓':      e.aciertos?.cts       || 0,
+  }));
+
+  const wb = XLSX.utils.book_new();
+  const ws = XLSX.utils.json_to_sheet(filas);
+  ws['!cols'] = [
+    {wch:4},{wch:22},{wch:8},{wch:28},{wch:7},{wch:8},
+    {wch:10},{wch:10},{wch:10},{wch:8},{wch:8},{wch:8},{wch:8}
+  ];
+  XLSX.utils.book_append_sheet(wb, ws, 'Resultados');
+  const nombre = `olimpiada-${act.fecha.replace(/\//g,'-')}-${act.hora.replace(/:/g,'h')}.xlsx`;
+  XLSX.writeFile(wb, nombre);
 }
 
 // ─── PREGUNTAS ─────────────────────────────────────────────────────────────

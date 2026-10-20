@@ -17,7 +17,7 @@ import { renderOrdenar }    from './tipos/ordenar.js';
 import { renderCrucigrama } from './tipos/crucigrama.js';
 import { renderClasifica }  from './tipos/clasifica.js';
 import { db } from './firebase.js';
-import { ref, get, onValue } from 'firebase/database';
+import { ref, get, set, update, onValue } from 'firebase/database';
 
 // ─── NAVEGACIÓN ────────────────────────────────────────────────────────────
 // Pantallas donde el alumno está en medio del examen — se bloquea recarga
@@ -68,12 +68,13 @@ export function irA(id) {
 
 // ─── ESTADO DE SALA ───────────────────────────────────────────────────────
 const sala = {
-  modo:      'solo',   // 'solo' | 'sala'
-  rol:       null,     // 'profesor' | 'estudiante'
-  codigo:    null,
-  uid:       null,     // Firebase key del estudiante
-  gradoSala: null,     // 8 | 9 | 10 | 'final'
-  unsub:     [],       // funciones de cleanup de listeners
+  modo:       'solo',   // 'solo' | 'sala'
+  rol:        null,     // 'profesor' | 'estudiante'
+  codigo:     null,
+  uid:        null,     // Firebase key del estudiante (modo sala)
+  monitorUid: null,     // Firebase key en /actividad-actual/estudiantes
+  gradoSala:  null,     // 8 | 9 | 10 | 'final'
+  unsub:      [],       // funciones de cleanup de listeners
 };
 
 function salaLimpiar() {
@@ -366,6 +367,16 @@ document.getElementById('form-registro').addEventListener('submit', async (e) =>
 
   estado.estudiante = { nombre, grado, colegio, curso, avatar };
 
+  // Registrar en monitor de actividad en tiempo real
+  const mUid = `${Date.now()}_${Math.random().toString(36).slice(2, 6)}`;
+  sala.monitorUid = mUid;
+  set(ref(db, `actividad-actual/estudiantes/${mUid}`), {
+    nombre, grado, curso, avatar,
+    colegio: colegio || '',
+    estado: 'inscrito',
+    timestamp: Date.now(),
+  }).catch(() => {});
+
   if (sala.modo === 'sala') {
     // Unirse a Firebase y esperar al profesor
     try {
@@ -398,11 +409,17 @@ document.getElementById('form-registro').addEventListener('submit', async (e) =>
 // ─── INICIO DEL EXAMEN ─────────────────────────────────────────────────────
 function iniciarExamen() {
   const estudianteGuardado = { ...estado.estudiante };
+  const mUid = sala.monitorUid;
   resetearEstado();
   estado.estudiante = estudianteGuardado;
-  estado.preguntas = armarExamen(estado.estudiante, sala.gradoSala);
+  sala.monitorUid   = mUid;
+  estado.preguntas  = armarExamen(estado.estudiante, sala.gradoSala);
   guardarHistorial(estado.estudiante, estado.preguntas);
   estado.preguntaActual = 0;
+
+  if (sala.monitorUid) {
+    set(ref(db, `actividad-actual/estudiantes/${sala.monitorUid}/estado`), 'jugando').catch(() => {});
+  }
 
   irA('pantalla-examen');
   tocarIntro();
@@ -539,8 +556,12 @@ function procesarRespuesta(esCorrecta) {
 
     setRacha(estado.racha);
 
-    if (p.materia === 'razonamiento') estado.aciertos.razonamiento++;
-    else estado.aciertos.ciencias++;
+    if (p.materia === 'razonamiento') {
+      estado.aciertos.razonamiento++;
+    } else {
+      estado.aciertos.ciencias++;
+      if (p.materia in estado.aciertos) estado.aciertos[p.materia]++;
+    }
   } else {
     tocarError();
     estado.racha = 0;
@@ -710,8 +731,18 @@ document.getElementById('ctrl-volumen').addEventListener('input', (e) => {
 function finalizarExamen() {
   detenerReloj();
   const nota = calcularNota();
-  guardarEnRanking(nota);       // primero guardar para que el badge lo lea
+  guardarEnRanking(nota);
   mostrarResultados(nota);
+
+  if (sala.monitorUid) {
+    update(ref(db), {
+      [`actividad-actual/estudiantes/${sala.monitorUid}/estado`]:   'terminado',
+      [`actividad-actual/estudiantes/${sala.monitorUid}/puntaje`]:  estado.puntaje,
+      [`actividad-actual/estudiantes/${sala.monitorUid}/nota`]:     nota,
+      [`actividad-actual/estudiantes/${sala.monitorUid}/aciertos`]: { ...estado.aciertos },
+      [`actividad-actual/estudiantes/${sala.monitorUid}/tiempo`]:   estado.tiempoTotal,
+    }).catch(() => {});
+  }
   const ranking = JSON.parse(localStorage.getItem('ranking') || '[]');
   const puesto = ranking.findIndex(r =>
     r.nombre === estado.estudiante.nombre && String(r.puntaje) === String(estado.puntaje)
