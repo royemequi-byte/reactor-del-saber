@@ -898,6 +898,11 @@ async function descargarExcel() {
     'Puntaje':     Number(r.puntaje),
     'Nota / 500':  Number(r.nota),
     'Tiempo (s)':  r.tiempo || '—',
+    'Bio ✓':       r.aciertos?.biologia     || 0,
+    'Fis ✓':       r.aciertos?.fisica       || 0,
+    'Qui ✓':       r.aciertos?.quimica      || 0,
+    'CTS ✓':       r.aciertos?.cts          || 0,
+    'Rzn ✓':       r.aciertos?.razonamiento || 0,
     'Fecha':       r.fechaAct || r.fecha || '—',
   });
 
@@ -924,8 +929,21 @@ async function descargarExcel() {
 function aplicarEstilos(ws, filas) {
   // Ancho de columnas
   ws['!cols'] = [
-    { wch: 4 }, { wch: 22 }, { wch: 8 }, { wch: 30 },
-    { wch: 7 }, { wch: 7 }, { wch: 10 }, { wch: 10 }, { wch: 10 }, { wch: 12 }
+    { wch: 4 },  // #
+    { wch: 22 }, // Nombre
+    { wch: 8 },  // Avatar
+    { wch: 30 }, // Colegio
+    { wch: 7 },  // Grado
+    { wch: 7 },  // Curso
+    { wch: 10 }, // Puntaje
+    { wch: 10 }, // Nota/500
+    { wch: 10 }, // Tiempo
+    { wch: 7 },  // Bio ✓
+    { wch: 7 },  // Fis ✓
+    { wch: 7 },  // Qui ✓
+    { wch: 7 },  // CTS ✓
+    { wch: 7 },  // Rzn ✓
+    { wch: 12 }, // Fecha
   ];
 }
 
