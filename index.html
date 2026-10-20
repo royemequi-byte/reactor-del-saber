@@ -10,15 +10,16 @@
 
   <!-- PANTALLA: BLOQUEADA (admin no ha habilitado el acceso) -->
   <section id="pantalla-bloqueada" class="pantalla">
-    <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;gap:24px;text-align:center;padding:20px">
-      <div style="font-size:4rem">🔒</div>
-      <h2 style="color:#ffd600;font-size:1.8rem;margin:0">Acceso no disponible</h2>
-      <p style="color:#a0c4ff;font-size:1.1rem;max-width:380px;margin:0;line-height:1.6">
+    <div id="burbujas-ciencia-cont"></div>
+    <div class="bloqueada-card">
+      <div class="bloqueada-lock">🔒</div>
+      <h2 class="bloqueada-titulo">Acceso no disponible</h2>
+      <p class="bloqueada-subtitulo">
         El docente aún no ha habilitado el ingreso.<br>
         Espera a que se habilite para continuar.
       </p>
-      <div id="bloqueada-spinner" style="width:40px;height:40px;border:4px solid #ffffff22;border-top-color:#ffd600;border-radius:50%;animation:girar 1s linear infinite"></div>
-      <p style="color:#556;font-size:0.85rem;margin:0">La página se desbloqueará automáticamente</p>
+      <div class="bloqueada-spinner"></div>
+      <p class="bloqueada-hint">La página se desbloqueará automáticamente</p>
     </div>
   </section>
 

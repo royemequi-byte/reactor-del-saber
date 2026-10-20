@@ -101,6 +101,54 @@ function salaLimpiar() {
   }
 })();
 
+// ─── BURBUJAS CIENTÍFICAS (pantalla de espera) ────────────────────────────
+(function generarBurbujas() {
+  const cont = document.getElementById('burbujas-ciencia-cont');
+  if (!cont) return;
+
+  const datos = [
+    { f: 'E = mc²',             l: 'Einstein · Relatividad' },
+    { f: 'F = m · a',           l: 'Newton · 2ª Ley' },
+    { f: 'pH = −log[H⁺]',      l: 'Escala de acidez' },
+    { f: 'λ = v / f',           l: 'Longitud de onda' },
+    { f: 'H₂O',                 l: 'Molécula polar' },
+    { f: '∑F = 0',              l: 'Equilibrio mecánico' },
+    { f: 'ADN → ARN → Proteína',l: 'Dogma central' },
+    { f: 'v = d / t',           l: 'Velocidad media' },
+    { f: 'Na → Sodio · Fe → Hierro', l: 'Tabla periódica' },
+    { f: '💡 Lee el enunciado completo', l: 'Tip de examen' },
+    { f: '💡 Descarta lo imposible', l: 'Estrategia ICFES' },
+    { f: 'P = F / A',           l: 'Presión' },
+    { f: 'ΔH < 0 → Exotérmica', l: 'Termodinámica' },
+    { f: '💡 Confía en tu preparación', l: 'Mentalidad' },
+  ];
+
+  const colores = ['color-cian', 'color-verde', 'color-amarillo', 'color-magenta'];
+
+  datos.forEach((d, i) => {
+    const el = document.createElement('div');
+    el.className = `burbuja-ciencia ${colores[i % colores.length]}`;
+
+    const dx = (Math.random() > 0.5 ? 1 : -1) * (60 + Math.random() * 140);
+    const dy = -(80 + Math.random() * 200);
+    const rot = (Math.random() > 0.5 ? 1 : -1) * (3 + Math.random() * 8);
+    const dur = 12 + Math.random() * 14;
+    const delay = Math.random() * -20;
+
+    el.style.cssText = `
+      left: ${5 + Math.random() * 85}%;
+      top:  ${10 + Math.random() * 80}%;
+      --float-end: translate(${dx}px, ${dy}px);
+      --float-rot: ${rot}deg;
+      animation-duration: ${dur}s;
+      animation-delay: ${delay}s;
+    `;
+
+    el.innerHTML = `<span class="b-formula">${d.f}</span><span class="b-label">${d.l}</span>`;
+    cont.appendChild(el);
+  });
+})();
+
 // ─── INICIALIZAR BANCO DESDE FIREBASE ─────────────────────────────────────
 await initBanco();
 
