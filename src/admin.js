@@ -1288,6 +1288,7 @@ async function renderIndicadores() {
     XLSX.writeFile(wb, `sesion-${act.fecha.replace(/\//g,'-')}-${act.hora.replace(/:/g,'h')}.xlsx`);
   });
 
+  document.getElementById('ind-sel-sesion').value = _indIdx;
   _actualizarSesion();
 }
 

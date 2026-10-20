@@ -799,7 +799,8 @@ function finalizarExamen() {
 }
 
 function calcularNota() {
-  const total = getTotalCuotas(estado.estudiante.grado);
+  const totalExamen = estado.preguntas.filter(p => p.materia !== 'razonamiento').length;
+  const total = totalExamen || getTotalCuotas(estado.estudiante.grado);
   const nota  = Math.round((estado.aciertos.ciencias / total) * 500);
   estado.notaFinal = nota;
   return nota;
@@ -813,7 +814,8 @@ function mostrarResultados(nota) {
   document.getElementById('res-puntaje').textContent = estado.puntaje.toLocaleString('es-CO');
   document.getElementById('res-nota').textContent = nota;
 
-  const total = getTotalCuotas(estado.estudiante.grado);
+  const totalExamen2 = estado.preguntas.filter(p => p.materia !== 'razonamiento').length;
+  const total = totalExamen2 || getTotalCuotas(estado.estudiante.grado);
   const pctC  = (estado.aciertos.ciencias / total) * 100;
   document.getElementById('barra-ciencias').style.width = pctC + '%';
   document.getElementById('txt-ciencias').textContent   = `${estado.aciertos.ciencias}/${total}`;
