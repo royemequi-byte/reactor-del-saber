@@ -333,18 +333,18 @@
       </div>
       <div class="detalle-bloques">
         <div class="bloque-item">
-          <span>Química, Física &amp; Biología (80%)</span>
+          <span>Ciencias (Biología, Física, Química, C.T.S.)</span>
           <div class="barra-resultado">
             <div class="barra-fill" id="barra-ciencias"></div>
           </div>
-          <span id="txt-ciencias">0/19</span>
+          <span id="txt-ciencias">0/39</span>
         </div>
-        <div class="bloque-item">
-          <span>Razonamiento (20%)</span>
+        <div class="bloque-item" id="bloque-razonamiento" style="display:none">
+          <span>Razonamiento</span>
           <div class="barra-resultado">
             <div class="barra-fill barra-razonamiento" id="barra-razon"></div>
           </div>
-          <span id="txt-razon">0/10</span>
+          <span id="txt-razon">0/0</span>
         </div>
       </div>
       <div id="tu-posicion-badge" class="tu-posicion-badge oculto"></div>
@@ -445,6 +445,67 @@
           <div id="acceso-estado-texto" style="font-size:0.85rem;color:#8ab;margin-top:2px">Cargando…</div>
         </div>
         <button id="btn-toggle-acceso" style="padding:10px 24px;border:none;border-radius:8px;font-size:1rem;font-weight:700;cursor:pointer;min-width:120px;transition:all 0.2s">…</button>
+      </div>
+
+      <!-- Modo olimpiada: mostrar/ocultar respuestas correctas -->
+      <div id="admin-control-respuestas" style="display:flex;align-items:center;gap:16px;padding:14px 20px;border-radius:12px;margin-bottom:12px;border:2px solid #333;background:#1a1a2e">
+        <div style="flex:1">
+          <div style="font-weight:700;font-size:1rem;color:#fff">Mostrar respuestas correctas</div>
+          <div id="respuestas-estado-texto" style="font-size:0.85rem;color:#8ab;margin-top:2px">Cargando…</div>
+        </div>
+        <button id="btn-toggle-respuestas" style="padding:10px 24px;border:none;border-radius:8px;font-size:1rem;font-weight:700;cursor:pointer;min-width:140px;transition:all 0.2s">…</button>
+      </div>
+
+      <!-- Cuotas de preguntas por materia y grado -->
+      <div id="admin-control-cuotas" style="padding:16px 20px;border-radius:12px;margin-bottom:20px;border:2px solid #333;background:#1a1a2e">
+        <div style="font-weight:700;font-size:1rem;color:#fff;margin-bottom:12px">Preguntas por materia</div>
+        <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap">
+          <button class="cuotas-tab" data-grado="8" style="padding:6px 16px;border:none;border-radius:6px;cursor:pointer;font-weight:700;background:#39ff14;color:#000">Grado 8°</button>
+          <button class="cuotas-tab" data-grado="9" style="padding:6px 16px;border:none;border-radius:6px;cursor:pointer;font-weight:600;background:#333;color:#ccc">Grado 9°</button>
+          <button class="cuotas-tab" data-grado="10" style="padding:6px 16px;border:none;border-radius:6px;cursor:pointer;font-weight:600;background:#333;color:#ccc">Grado 10°</button>
+        </div>
+        <!-- Panel Grado 8 -->
+        <div class="cuotas-panel" data-grado="8">
+          <table style="border-collapse:collapse;min-width:220px">
+            <tr><td style="color:#fff;padding:5px 12px 5px 0">🌿 Biología</td><td><input id="c8-biologia" type="number" min="0" max="60" style="width:64px;padding:4px 8px;background:#222;color:#fff;border:1px solid #555;border-radius:6px;text-align:center;font-size:1rem"></td></tr>
+            <tr><td style="color:#fff;padding:5px 12px 5px 0">⚡ Física</td><td><input id="c8-fisica" type="number" min="0" max="60" style="width:64px;padding:4px 8px;background:#222;color:#fff;border:1px solid #555;border-radius:6px;text-align:center;font-size:1rem"></td></tr>
+            <tr><td style="color:#fff;padding:5px 12px 5px 0">⚗️ Química</td><td><input id="c8-quimica" type="number" min="0" max="60" style="width:64px;padding:4px 8px;background:#222;color:#fff;border:1px solid #555;border-radius:6px;text-align:center;font-size:1rem"></td></tr>
+            <tr><td style="color:#fff;padding:5px 12px 5px 0">🔬 C.T.S.</td><td><input id="c8-cts" type="number" min="0" max="60" style="width:64px;padding:4px 8px;background:#222;color:#fff;border:1px solid #555;border-radius:6px;text-align:center;font-size:1rem"></td></tr>
+            <tr><td style="color:#aaa;padding:5px 12px 5px 0;font-size:0.85rem">Total</td><td id="c8-total" style="color:#ffd600;font-weight:700;padding:5px 8px">—</td></tr>
+          </table>
+          <div style="margin-top:10px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+            <button id="btn-guardar-cuotas-8" class="btn-accion verde chico">💾 Guardar grado 8°</button>
+            <span id="cuotas-8-estado" style="font-size:0.82rem;color:#8ab"></span>
+          </div>
+        </div>
+        <!-- Panel Grado 9 -->
+        <div class="cuotas-panel oculto" data-grado="9">
+          <table style="border-collapse:collapse;min-width:220px">
+            <tr><td style="color:#fff;padding:5px 12px 5px 0">🌿 Biología</td><td><input id="c9-biologia" type="number" min="0" max="60" style="width:64px;padding:4px 8px;background:#222;color:#fff;border:1px solid #555;border-radius:6px;text-align:center;font-size:1rem"></td></tr>
+            <tr><td style="color:#fff;padding:5px 12px 5px 0">⚡ Física</td><td><input id="c9-fisica" type="number" min="0" max="60" style="width:64px;padding:4px 8px;background:#222;color:#fff;border:1px solid #555;border-radius:6px;text-align:center;font-size:1rem"></td></tr>
+            <tr><td style="color:#fff;padding:5px 12px 5px 0">⚗️ Química</td><td><input id="c9-quimica" type="number" min="0" max="60" style="width:64px;padding:4px 8px;background:#222;color:#fff;border:1px solid #555;border-radius:6px;text-align:center;font-size:1rem"></td></tr>
+            <tr><td style="color:#fff;padding:5px 12px 5px 0">🔬 C.T.S.</td><td><input id="c9-cts" type="number" min="0" max="60" style="width:64px;padding:4px 8px;background:#222;color:#fff;border:1px solid #555;border-radius:6px;text-align:center;font-size:1rem"></td></tr>
+            <tr><td style="color:#aaa;padding:5px 12px 5px 0;font-size:0.85rem">Total</td><td id="c9-total" style="color:#ffd600;font-weight:700;padding:5px 8px">—</td></tr>
+          </table>
+          <div style="margin-top:10px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+            <button id="btn-guardar-cuotas-9" class="btn-accion verde chico">💾 Guardar grado 9°</button>
+            <span id="cuotas-9-estado" style="font-size:0.82rem;color:#8ab"></span>
+          </div>
+        </div>
+        <!-- Panel Grado 10 -->
+        <div class="cuotas-panel oculto" data-grado="10">
+          <table style="border-collapse:collapse;min-width:220px">
+            <tr><td style="color:#fff;padding:5px 12px 5px 0">⚗️ Química</td><td><input id="c10-quimica" type="number" min="0" max="60" style="width:64px;padding:4px 8px;background:#222;color:#fff;border:1px solid #555;border-radius:6px;text-align:center;font-size:1rem"></td></tr>
+            <tr><td style="color:#fff;padding:5px 12px 5px 0">⚡ Física</td><td><input id="c10-fisica" type="number" min="0" max="60" style="width:64px;padding:4px 8px;background:#222;color:#fff;border:1px solid #555;border-radius:6px;text-align:center;font-size:1rem"></td></tr>
+            <tr><td style="color:#fff;padding:5px 12px 5px 0">🌿 Biología</td><td><input id="c10-biologia" type="number" min="0" max="60" style="width:64px;padding:4px 8px;background:#222;color:#fff;border:1px solid #555;border-radius:6px;text-align:center;font-size:1rem"></td></tr>
+            <tr><td style="color:#fff;padding:5px 12px 5px 0">🔬 C.T.S.</td><td><input id="c10-cts" type="number" min="0" max="60" style="width:64px;padding:4px 8px;background:#222;color:#fff;border:1px solid #555;border-radius:6px;text-align:center;font-size:1rem"></td></tr>
+            <tr><td style="color:#aaa;padding:5px 12px 5px 0;font-size:0.85rem">Total</td><td id="c10-total" style="color:#ffd600;font-weight:700;padding:5px 8px">—</td></tr>
+          </table>
+          <div style="margin-top:10px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+            <button id="btn-guardar-cuotas-10" class="btn-accion verde chico">💾 Guardar grado 10°</button>
+            <span id="cuotas-10-estado" style="font-size:0.82rem;color:#8ab"></span>
+          </div>
+        </div>
       </div>
 
       <!-- Tabs de navegación -->

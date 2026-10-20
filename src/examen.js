@@ -1,9 +1,17 @@
-// examen.js — arma las 29 preguntas aleatorias de cada examen
+// examen.js — arma las preguntas del examen con cuotas por materia
 import { barajar, elegirN } from './azar.js';
-import { generarPreguntas10 } from './razonamiento/index.js';
 import { getBanco } from './banco.js';
+import { getConfig } from './config.js';
 
 const CLAVE_HISTORIAL = (nombre, grado) => `historial_${nombre}_${grado}`;
+
+const CUOTAS_DEFAULT = {
+  grado8:  { biologia: 27, fisica: 4, quimica: 4, cts: 4 },
+  grado9:  { biologia: 27, fisica: 4, quimica: 4, cts: 4 },
+  grado10: { quimica: 19, fisica: 7, biologia: 8, cts: 5 },
+};
+
+const MATERIAS = ['biologia', 'fisica', 'quimica', 'cts'];
 
 function gradoMatch(grado, filtro) {
   if (grado === 'todos') return true;
@@ -12,18 +20,19 @@ function gradoMatch(grado, filtro) {
 }
 
 /**
- * Arma el examen de 29 preguntas filtradas por grado:
- *   - gradoSala: número (8/9/10) para sala de un grado específico
- *   - gradoSala: 'final' o null → usa el grado propio del estudiante
+ * Arma el examen con cuotas fijas por materia leídas desde Firebase /config/cuotas.
+ * Dentro de cada materia: ICFES tiene prioridad, normales rellenan si faltan.
+ * Las preguntas se barajan al final para evitar copia.
  */
-const TOTAL_EXAMEN = 29;
-const N_CIENCIAS   = Math.round(TOTAL_EXAMEN * 0.8); // 23 — 80 % ICFES
-const N_RAZ        = TOTAL_EXAMEN - N_CIENCIAS;       // 6  — 20 % razonamiento
-
 export function armarExamen(estudiante, gradoSala = null) {
   const gradoFiltro = (gradoSala === null || gradoSala === 'final')
     ? Number(estudiante.grado)
     : Number(gradoSala);
+
+  const config = getConfig();
+  const cuotas = config.cuotas?.[`grado${gradoFiltro}`]
+    || CUOTAS_DEFAULT[`grado${gradoFiltro}`]
+    || CUOTAS_DEFAULT.grado8;
 
   const banco = getBanco().filter(p =>
     p.activa && gradoMatch(p.grado, gradoFiltro)
@@ -32,38 +41,32 @@ export function armarExamen(estudiante, gradoSala = null) {
   const claveHistorial = CLAVE_HISTORIAL(estudiante.nombre, gradoFiltro);
   const historial = JSON.parse(localStorage.getItem(claveHistorial) || '[]');
 
-  // ── Ciencias (química + física + biología) — ICFES primero, normales de relleno ──
-  const ciencias  = banco.filter(p => ['quimica','fisica','biologia','cts'].includes(p.materia));
-  const sinVer    = ciencias.filter(p => !historial.includes(p.id));
-  const fuente    = sinVer.length >= N_CIENCIAS ? sinVer : ciencias;
+  const seleccionadas = [];
 
-  const icfes     = fuente.filter(p => p.origen === 'icfes');
-  const normales  = fuente.filter(p => p.origen !== 'icfes');
+  for (const materia of MATERIAS) {
+    const n = Number(cuotas[materia]) || 0;
+    if (!n) continue;
 
-  const selICFES   = elegirN(icfes, Math.min(N_CIENCIAS, icfes.length));
-  const restantes  = N_CIENCIAS - selICFES.length;
-  const selNormales = elegirN(normales, restantes);
+    const pool   = banco.filter(p => p.materia === materia);
+    const sinVer = pool.filter(p => !historial.includes(p.id));
+    const fuente = sinVer.length >= n ? sinVer : pool;
 
-  const cienciasFinal = barajar([...selICFES, ...selNormales]).slice(0, N_CIENCIAS);
+    const icfes    = fuente.filter(p => p.origen === 'icfes');
+    const normales = fuente.filter(p => p.origen !== 'icfes');
 
-  // ── Razonamiento: del banco si hay suficientes, sino código generado ──
-  const razBanco  = banco.filter(p => p.materia === 'razonamiento');
-  const razSinVer = razBanco.filter(p => !historial.includes(p.id));
-  const razFuente = razSinVer.length >= N_RAZ ? razSinVer : razBanco;
-  const razonamiento = razFuente.length >= N_RAZ
-    ? elegirN(razFuente, N_RAZ)
-    : generarPreguntas10().slice(0, N_RAZ);
+    const selICFES = elegirN(icfes, Math.min(n, icfes.length));
+    const selNorm  = elegirN(normales, n - selICFES.length);
+    seleccionadas.push(...selICFES, ...selNorm);
+  }
 
-  const todas = barajar([...cienciasFinal, ...razonamiento]);
-  return todas.map(p => barajarOpciones(p));
+  return barajar(seleccionadas).map(p => barajarOpciones(p));
 }
 
 function barajarOpciones(pregunta) {
-  // Los tipos interactivos no usan opciones/correcta clásicos
   if (!pregunta.opciones || (pregunta.tipo && pregunta.tipo !== 'seleccion')) {
     return pregunta;
   }
-  const opcionCorrecta   = pregunta.opciones[pregunta.correcta];
+  const opcionCorrecta    = pregunta.opciones[pregunta.correcta];
   const opcionesBarajadas = barajar(pregunta.opciones);
   return {
     ...pregunta,
@@ -77,6 +80,12 @@ export function guardarHistorial(estudiante, preguntas) {
   const clave = CLAVE_HISTORIAL(estudiante.nombre, gradoFiltro);
   const ids = preguntas.filter(p => p.id).map(p => p.id);
   const historialPrevio = JSON.parse(localStorage.getItem(clave) || '[]');
-  const nuevo = [...historialPrevio, ...ids].slice(-38);
+  const total = getTotalLocal(gradoFiltro);
+  const nuevo = [...historialPrevio, ...ids].slice(-Math.round(total * 1.3));
   localStorage.setItem(clave, JSON.stringify(nuevo));
+}
+
+function getTotalLocal(grado) {
+  const c = getConfig().cuotas?.[`grado${grado}`] || CUOTAS_DEFAULT[`grado${grado}`] || {};
+  return Object.values(c).reduce((s, n) => s + (Number(n) || 0), 0) || 39;
 }

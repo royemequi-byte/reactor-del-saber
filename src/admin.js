@@ -44,11 +44,115 @@ function iniciarControlAcceso() {
   });
 }
 
+// ─── MOSTRAR RESPUESTAS (MODO OLIMPIADA) ──────────────────────────────────
+function iniciarMostrarRespuestas() {
+  const btnToggle = document.getElementById('btn-toggle-respuestas');
+  const textoEl   = document.getElementById('respuestas-estado-texto');
+
+  function aplicar(mostrar) {
+    if (mostrar) {
+      btnToggle.textContent      = '🟢 Ocultar respuestas';
+      btnToggle.style.background = '#c0392b';
+      btnToggle.style.color      = '#fff';
+      textoEl.textContent        = '✅ Los estudiantes ven si acertaron o fallaron';
+      textoEl.style.color        = '#39ff14';
+    } else {
+      btnToggle.textContent      = '🔴 Mostrar respuestas';
+      btnToggle.style.background = '#27ae60';
+      btnToggle.style.color      = '#fff';
+      textoEl.textContent        = '🏆 Modo olimpiada — sin retroalimentación';
+      textoEl.style.color        = '#ffd600';
+    }
+  }
+
+  onValue(ref(db, 'config/mostrarRespuestas'), snap => {
+    aplicar(snap.val() !== false);
+  });
+
+  btnToggle.addEventListener('click', async () => {
+    const snap  = await get(ref(db, 'config/mostrarRespuestas'));
+    const actual = snap.val() !== false;
+    await set(ref(db, 'config/mostrarRespuestas'), !actual);
+  });
+}
+
+// ─── CUOTAS POR MATERIA ────────────────────────────────────────────────────
+const MATERIAS_POR_GRADO = {
+  8:  ['biologia', 'fisica', 'quimica', 'cts'],
+  9:  ['biologia', 'fisica', 'quimica', 'cts'],
+  10: ['quimica', 'fisica', 'biologia', 'cts'],
+};
+
+function actualizarTotal(grado) {
+  const total = MATERIAS_POR_GRADO[grado].reduce((s, m) => {
+    return s + (parseInt(document.getElementById(`c${grado}-${m}`)?.value) || 0);
+  }, 0);
+  const el = document.getElementById(`c${grado}-total`);
+  if (el) el.textContent = total;
+}
+
+function iniciarCuotas() {
+  // Tabs de grado
+  document.querySelectorAll('.cuotas-tab').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const grado = btn.dataset.grado;
+      document.querySelectorAll('.cuotas-tab').forEach(b => {
+        b.style.background = b === btn ? '#39ff14' : '#333';
+        b.style.color      = b === btn ? '#000'    : '#ccc';
+        b.style.fontWeight = b === btn ? '700'     : '600';
+      });
+      document.querySelectorAll('.cuotas-panel').forEach(p => {
+        p.classList.toggle('oculto', p.dataset.grado !== grado);
+      });
+    });
+  });
+
+  // Cargar valores desde Firebase y mantener sincronizados
+  onValue(ref(db, 'config/cuotas'), snap => {
+    const cuotas = snap.val() || {};
+    [8, 9, 10].forEach(g => {
+      const c = cuotas[`grado${g}`] || {};
+      MATERIAS_POR_GRADO[g].forEach(m => {
+        const inp = document.getElementById(`c${g}-${m}`);
+        if (inp && c[m] !== undefined) inp.value = c[m];
+      });
+      actualizarTotal(g);
+    });
+  });
+
+  // Inputs → actualizar total en tiempo real
+  [8, 9, 10].forEach(g => {
+    MATERIAS_POR_GRADO[g].forEach(m => {
+      document.getElementById(`c${g}-${m}`)
+        ?.addEventListener('input', () => actualizarTotal(g));
+    });
+
+    // Botón guardar
+    document.getElementById(`btn-guardar-cuotas-${g}`)
+      ?.addEventListener('click', async () => {
+        const estadoEl = document.getElementById(`cuotas-${g}-estado`);
+        const cuota    = {};
+        MATERIAS_POR_GRADO[g].forEach(m => {
+          cuota[m] = parseInt(document.getElementById(`c${g}-${m}`)?.value) || 0;
+        });
+        try {
+          await set(ref(db, `config/cuotas/grado${g}`), cuota);
+          estadoEl.textContent = '✅ Guardado';
+          setTimeout(() => { estadoEl.textContent = ''; }, 2500);
+        } catch (err) {
+          estadoEl.textContent = '❌ ' + err.message;
+        }
+      });
+  });
+}
+
 // ─── PUNTO DE ENTRADA ──────────────────────────────────────────────────────
 export function adminInicializar() {
   actualizarContador();
   renderizarPreguntas();
   iniciarControlAcceso();
+  iniciarMostrarRespuestas();
+  iniciarCuotas();
 
   if (listo) return;
   listo = true;

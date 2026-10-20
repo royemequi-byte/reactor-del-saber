@@ -6,6 +6,7 @@ import { iniciarAudio, setVolumen, toggleSilencio, setMateria, setRacha, setProg
 import { tocarAcierto, tocarError, tocarRacha, tocarPoder, tocarFanfarra, tocarIntro } from './audio/efectos.js';
 import confetti from 'canvas-confetti';
 import { adminInicializar } from './admin.js';
+import { initConfig, getConfig, getTotalCuotas } from './config.js';
 import {
   crearSala, unirseASala, iniciarJuego,
   reportarResultado, escucharEstudiantes,
@@ -149,8 +150,9 @@ function salaLimpiar() {
   });
 })();
 
-// ─── INICIALIZAR BANCO DESDE FIREBASE ─────────────────────────────────────
+// ─── INICIALIZAR BANCO Y CONFIG DESDE FIREBASE ────────────────────────────
 await initBanco();
+await initConfig();
 
 // ─── PORTADA ───────────────────────────────────────────────────────────────
 document.getElementById('btn-entrar').addEventListener('click', async () => {
@@ -480,7 +482,8 @@ function mostrarPregunta() {
   }
 
   // Barra del reactor
-  const progreso = (estado.preguntaActual / 29) * 100;
+  const _total = getTotalCuotas(estado.estudiante.grado);
+  const progreso = (estado.preguntaActual / _total) * 100;
   document.getElementById('reactor-bar').style.width = progreso + '%';
 
   setMateria(p.materia);
@@ -492,13 +495,16 @@ function mostrarPregunta() {
 // ─── RESPONDER (selección múltiple) ────────────────────────────────────────
 function responder(indiceElegido) {
   detenerReloj();
-  const p = estado.preguntas[estado.preguntaActual];
-  const correcta = indiceElegido === p.correcta;
+  const p         = estado.preguntas[estado.preguntaActual];
+  const correcta  = indiceElegido === p.correcta;
+  const olimpiada = !getConfig().mostrarRespuestas;
 
   document.querySelectorAll('.opcion-btn').forEach((btn, i) => {
     btn.disabled = true;
-    if (i === p.correcta)    btn.classList.add('correcta');
-    if (i === indiceElegido && !correcta) btn.classList.add('incorrecta');
+    if (!olimpiada) {
+      if (i === p.correcta)                 btn.classList.add('correcta');
+      if (i === indiceElegido && !correcta) btn.classList.add('incorrecta');
+    }
   });
 
   procesarRespuesta(correcta);
@@ -515,7 +521,7 @@ function procesarRespuesta(esCorrecta) {
     pts = 100;
     // Bonus de velocidad solo en selección múltiple
     if (tipo === 'seleccion') {
-      const tiempoBase = p?.tiempo || 30;
+      const tiempoBase = p?.origen === 'icfes' ? 90 : 60;
       pts += Math.round((estado.tiempoRestante / tiempoBase) * 50);
     }
     pts = Math.round(pts * estado.multiplicador);
@@ -552,7 +558,16 @@ function procesarRespuesta(esCorrecta) {
     respCorrecta = p.opciones[p.correcta];
   }
 
-  // Más tiempo para ver la correcta resaltada antes de pasar a retro
+  // Modo olimpiada: sin retroalimentación, avanzar directo a la siguiente pregunta
+  if (!getConfig().mostrarRespuestas) {
+    setTimeout(() => {
+      estado.preguntaActual++;
+      irA('pantalla-examen');
+      mostrarPregunta();
+    }, 400);
+    return;
+  }
+
   const demora = esCorrecta ? 600 : 1400;
   setTimeout(() => mostrarRetro(esCorrecta, pts, p?.explicacion || '', respCorrecta), demora);
 }
@@ -598,7 +613,7 @@ function iniciarReloj() {
 function reiniciarReloj() {
   detenerReloj();
   const p = estado.preguntas[estado.preguntaActual];
-  estado.tiempoRestante = p?.tiempo || 30;
+  estado.tiempoRestante = p?.origen === 'icfes' ? 90 : 60;
   actualizarDisplayReloj();
   intervaloReloj = setInterval(() => {
     estado.tiempoRestante--;
@@ -712,10 +727,8 @@ function finalizarExamen() {
 }
 
 function calcularNota() {
-  const pctC = estado.aciertos.ciencias / 23;
-  const pctR = estado.aciertos.razonamiento / 6;
-  // Escala ICFES: máximo 500 puntos (ciencias 80 %, razonamiento 20 %)
-  const nota = Math.round((pctC * 0.8 + pctR * 0.2) * 500);
+  const total = getTotalCuotas(estado.estudiante.grado);
+  const nota  = Math.round((estado.aciertos.ciencias / total) * 500);
   estado.notaFinal = nota;
   return nota;
 }
@@ -728,12 +741,14 @@ function mostrarResultados(nota) {
   document.getElementById('res-puntaje').textContent = estado.puntaje.toLocaleString('es-CO');
   document.getElementById('res-nota').textContent = nota;
 
-  const pctC = (estado.aciertos.ciencias / 23) * 100;
-  const pctR = (estado.aciertos.razonamiento / 6) * 100;
+  const total = getTotalCuotas(estado.estudiante.grado);
+  const pctC  = (estado.aciertos.ciencias / total) * 100;
   document.getElementById('barra-ciencias').style.width = pctC + '%';
-  document.getElementById('barra-razon').style.width    = pctR + '%';
-  document.getElementById('txt-ciencias').textContent   = `${estado.aciertos.ciencias}/23`;
-  document.getElementById('txt-razon').textContent      = `${estado.aciertos.razonamiento}/6`;
+  document.getElementById('txt-ciencias').textContent   = `${estado.aciertos.ciencias}/${total}`;
+
+  // Razonamiento eliminado del examen — ocultar bloque
+  const bloqueRaz = document.getElementById('bloque-razonamiento');
+  if (bloqueRaz) bloqueRaz.style.display = 'none';
 
   // Badge de posición en el ranking
   const badge = document.getElementById('tu-posicion-badge');
