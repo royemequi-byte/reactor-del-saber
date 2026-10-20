@@ -6,12 +6,12 @@ import { getConfig } from './config.js';
 const CLAVE_HISTORIAL = (nombre, grado) => `historial_${nombre}_${grado}`;
 
 const CUOTAS_DEFAULT = {
-  grado8:  { biologia: 27, fisica: 4, quimica: 4, cts: 4 },
-  grado9:  { biologia: 27, fisica: 4, quimica: 4, cts: 4 },
-  grado10: { quimica: 19, fisica: 7, biologia: 8, cts: 5 },
+  grado8:  { biologia: 27, fisica: 4, quimica: 4, razonamiento: 4 },
+  grado9:  { biologia: 27, fisica: 4, quimica: 4, razonamiento: 4 },
+  grado10: { quimica: 19, fisica: 7, biologia: 8, razonamiento: 5 },
 };
 
-const MATERIAS = ['biologia', 'fisica', 'quimica', 'cts'];
+const MATERIAS = ['biologia', 'fisica', 'quimica', 'razonamiento'];
 
 function gradoMatch(grado, filtro) {
   if (grado === 'todos') return true;
