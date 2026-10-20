@@ -754,6 +754,7 @@ body {
 
 .enunciado {
   font-family: 'SuperGolden', sans-serif;
+  font-weight: normal;
   font-size: clamp(1rem, 2.5vw, 1.25rem);
   line-height: 1.6;
   color: var(--blanco);
@@ -769,6 +770,7 @@ body {
 
 .opcion-btn {
   font-family: 'SuperGolden', sans-serif;
+  font-weight: normal;
   background: var(--gris);
   border: 2px solid #3a5070;
   border-radius: var(--radio);
@@ -780,6 +782,7 @@ body {
   transition: border-color 0.15s, background 0.15s;
   line-height: 1.4;
 }
+.opcion-btn strong { font-weight: normal; }
 .opcion-btn:hover { border-color: var(--cian); background: #0d2a40; }
 .opcion-btn.correcta { border-color: var(--verde); background: #0d2a14; box-shadow: var(--sombra-verde); }
 .opcion-btn.incorrecta { border-color: var(--error); background: #2a0d0d; }
@@ -1101,7 +1104,7 @@ body {
 .admin-badge.icfes   { color: #ff9f1c; background: #2a1800; }
 .admin-badge.num     { color: #7ba7d4; font-weight: 700; min-width: 2.2rem; text-align: center; }
 .admin-card-tema { font-size: 0.75rem; color: #6a8aaa; margin-left: auto; }
-.admin-card-enunciado { font-family: 'SuperGolden', sans-serif; font-size: 0.86rem; color: #b0c4d4; line-height: 1.4; }
+.admin-card-enunciado { font-family: 'SuperGolden', sans-serif; font-weight: normal; font-size: 0.86rem; color: #b0c4d4; line-height: 1.4; }
 .admin-card-acciones { display: flex; gap: 8px; flex-wrap: wrap; }
 
 /* Badges de estado — monitor */
