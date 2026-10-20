@@ -1,14 +1,11 @@
 // main.js — arranque, navegación y lógica de pantallas
 import { estado, resetearEstado } from './estado.js';
 import { armarExamen, guardarHistorial } from './examen.js';
+import { initBanco } from './banco.js';
 import { iniciarAudio, setVolumen, toggleSilencio, setMateria, setRacha, setProgreso, setTiempoRestante } from './audio/motor-audio.js';
 import { tocarAcierto, tocarError, tocarRacha, tocarPoder, tocarFanfarra, tocarIntro } from './audio/efectos.js';
 import confetti from 'canvas-confetti';
 import { adminInicializar } from './admin.js';
-import { initBanco } from './banco.js';
-
-// Cargar banco desde Firebase antes de que la app arranque
-await initBanco();
 import {
   crearSala, unirseASala, iniciarJuego,
   reportarResultado, escucharEstudiantes,
@@ -64,6 +61,9 @@ function salaLimpiar() {
     cont.appendChild(p);
   }
 })();
+
+// ─── INICIALIZAR BANCO DESDE FIREBASE ─────────────────────────────────────
+await initBanco();
 
 // ─── PORTADA ───────────────────────────────────────────────────────────────
 document.getElementById('btn-entrar').addEventListener('click', () => {
