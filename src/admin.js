@@ -302,7 +302,7 @@ export function adminInicializar() {
 
   // Restaurar banco original
   document.getElementById('btn-reset-banco').addEventListener('click', () => {
-    if (!confirm('¿Restaurar el banco a los valores originales? Se perderán todos los cambios.')) return;
+    if (!confirm('¿Sincronizar banco? Se agregarán las preguntas base que falten. Las preguntas existentes NO se eliminan.')) return;
     resetBanco();
     actualizarContador();
     renderizarPreguntas();

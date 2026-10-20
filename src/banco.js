@@ -32,9 +32,11 @@ export function setBanco(arr) {
 }
 
 export function resetBanco() {
-  const inicial = JSON.parse(JSON.stringify(bancoBruto));
-  setBanco(inicial);
-  return inicial;
+  const idsActuales = new Set(cache.map(p => p.id));
+  const faltantes = bancoBruto.filter(p => !idsActuales.has(p.id));
+  const merged = [...cache, ...faltantes];
+  setBanco(merged);
+  return merged;
 }
 
 export function agregarPregunta(p) {
