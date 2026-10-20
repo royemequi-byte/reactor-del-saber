@@ -106,6 +106,38 @@ function iniciarMostrarRespuestas() {
   });
 }
 
+// ─── DESHABILITAR AYUDAS ──────────────────────────────────────────────────
+function iniciarAyudas() {
+  const btnToggle = document.getElementById('btn-toggle-ayudas');
+  const textoEl   = document.getElementById('ayudas-estado-texto');
+
+  function aplicar(activas) {
+    if (activas) {
+      btnToggle.textContent      = '🟢 Deshabilitar ayudas';
+      btnToggle.style.background = '#c0392b';
+      btnToggle.style.color      = '#fff';
+      textoEl.textContent        = '✅ Los estudiantes pueden usar 🧬 ⏸️ 🔄 durante el examen';
+      textoEl.style.color        = '#39ff14';
+    } else {
+      btnToggle.textContent      = '🔴 Habilitar ayudas';
+      btnToggle.style.background = '#27ae60';
+      btnToggle.style.color      = '#fff';
+      textoEl.textContent        = '🏆 Modo concurso — sin ayudas ni poderes';
+      textoEl.style.color        = '#ffd600';
+    }
+  }
+
+  onValue(ref(db, 'config/ayudasActivas'), snap => {
+    aplicar(snap.val() !== false);
+  });
+
+  btnToggle.addEventListener('click', async () => {
+    const snap   = await get(ref(db, 'config/ayudasActivas'));
+    const actual = snap.val() !== false;
+    await set(ref(db, 'config/ayudasActivas'), !actual);
+  });
+}
+
 // ─── CUOTAS POR MATERIA ────────────────────────────────────────────────────
 const MATERIAS_POR_GRADO = {
   8:  ['biologia', 'fisica', 'quimica', 'cts'],
@@ -182,6 +214,7 @@ export function adminInicializar() {
   renderizarPreguntas();
   iniciarControlAcceso();
   iniciarMostrarRespuestas();
+  iniciarAyudas();
   iniciarCuotas();
 
   if (listo) return;

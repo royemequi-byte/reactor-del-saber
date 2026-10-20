@@ -421,6 +421,9 @@ function iniciarExamen() {
     set(ref(db, `actividad-actual/estudiantes/${sala.monitorUid}/estado`), 'jugando').catch(() => {});
   }
 
+  const poderesCont = document.querySelector('.poderes-container');
+  if (poderesCont) poderesCont.style.display = getConfig().ayudasActivas !== false ? 'flex' : 'none';
+
   irA('pantalla-examen');
   tocarIntro();
   mostrarPregunta();

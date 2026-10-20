@@ -11,6 +11,7 @@ const CUOTAS_DEFAULT = {
 let cache = {
   habilitado:        false,
   mostrarRespuestas: true,
+  ayudasActivas:     true,
   cuotas:            CUOTAS_DEFAULT,
 };
 
@@ -21,6 +22,7 @@ export async function initConfig() {
     cache = {
       habilitado:        val.habilitado        ?? false,
       mostrarRespuestas: val.mostrarRespuestas  ?? true,
+      ayudasActivas:     val.ayudasActivas      ?? true,
       cuotas:            val.cuotas             ?? CUOTAS_DEFAULT,
     };
   }
@@ -30,6 +32,7 @@ export async function initConfig() {
       cache = {
         habilitado:        val.habilitado        ?? false,
         mostrarRespuestas: val.mostrarRespuestas  ?? true,
+        ayudasActivas:     val.ayudasActivas      ?? true,
         cuotas:            val.cuotas             ?? CUOTAS_DEFAULT,
       };
     }
