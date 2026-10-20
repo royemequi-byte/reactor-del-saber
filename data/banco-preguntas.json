@@ -4961,5 +4961,405 @@
       "La especie X sobrevivió más porque las hojas delgadas impiden completamente la salida de agua."
     ],
     "correcta": 1
+  },
+  {
+    "id": "RZN-8-021",
+    "materia": "razonamiento",
+    "tema": "energia renovable cts",
+    "grado": 8,
+    "dificultad": 1,
+    "enunciado": "Un municipio depende del carbón para generar electricidad. El alcalde propone instalar paneles solares. ¿Cuál argumento científico respalda mejor esa decisión?",
+    "opciones": [
+      "El sol es una fuente inagotable a escala humana y no produce gases de efecto invernadero al generar electricidad.",
+      "Los paneles solares generan más electricidad que el carbón en cualquier condición climática.",
+      "El carbón produce energía limpia si se quema a temperaturas suficientemente altas.",
+      "La energía solar solo puede usarse durante el día y no sirve para hogares."
+    ],
+    "correcta": 0,
+    "explicacion": "La energía solar es renovable y su generación no emite CO₂, a diferencia de la combustión de carbón que libera gases de efecto invernadero.",
+    "imagen": null,
+    "autor": "ia",
+    "activa": true,
+    "origen": "normal"
+  },
+  {
+    "id": "RZN-8-022",
+    "materia": "razonamiento",
+    "tema": "agua y salud cts",
+    "grado": 8,
+    "dificultad": 1,
+    "enunciado": "En un barrio con agua sin tratamiento aumentan los casos de diarrea. ¿Cuál medida tiene mayor base científica para reducir el problema?",
+    "opciones": [
+      "Hervir el agua antes de beberla destruye microorganismos patógenos.",
+      "Agregar azúcar al agua elimina las bacterias causantes de enfermedades.",
+      "Guardar el agua en botellas plásticas garantiza que sea segura.",
+      "El agua de pozo siempre es segura porque viene del subsuelo."
+    ],
+    "correcta": 0,
+    "explicacion": "Hervir el agua a 100°C destruye bacterias, virus y parásitos. Es la medida más efectiva y accesible para potabilizar agua en casa.",
+    "imagen": null,
+    "autor": "ia",
+    "activa": true,
+    "origen": "normal"
+  },
+  {
+    "id": "RZN-8-023",
+    "materia": "razonamiento",
+    "tema": "contaminacion del aire cts",
+    "grado": 8,
+    "dificultad": 1,
+    "enunciado": "Una fábrica libera humo negro cerca de un colegio y los estudiantes reportan más tos y asma. ¿Qué relación existe entre el humo y esos problemas de salud?",
+    "opciones": [
+      "El humo contiene partículas y gases irritantes que dañan las vías respiratorias.",
+      "El humo solo es peligroso si supera 500 metros de altura sobre el colegio.",
+      "El asma es causada únicamente por factores hereditarios, no por el entorno.",
+      "Las partículas del humo son demasiado grandes para entrar al sistema respiratorio."
+    ],
+    "correcta": 0,
+    "explicacion": "Las partículas finas y compuestos del humo industrial penetran el sistema respiratorio y provocan inflamación, agravando enfermedades como el asma.",
+    "imagen": null,
+    "autor": "ia",
+    "activa": true,
+    "origen": "normal"
+  },
+  {
+    "id": "RZN-8-024",
+    "materia": "razonamiento",
+    "tema": "alimentacion y nutricion cts",
+    "grado": 8,
+    "dificultad": 1,
+    "enunciado": "Un estudio muestra que estudiantes que desayunan concentran mejor en clase. ¿Cuál explicación científica sostiene este resultado?",
+    "opciones": [
+      "El desayuno aporta glucosa, el principal combustible del cerebro para funcionar.",
+      "Desayunar aumenta la estatura y eso mejora la concentración.",
+      "El cerebro no necesita energía; solo la necesitan los músculos.",
+      "Concentrarse mejor depende únicamente de cuántas horas se duerme."
+    ],
+    "correcta": 0,
+    "explicacion": "Las neuronas dependen de glucosa para obtener energía. Saltarse el desayuno reduce la glucosa disponible y afecta atención, memoria y rendimiento cognitivo.",
+    "imagen": null,
+    "autor": "ia",
+    "activa": true,
+    "origen": "normal"
+  },
+  {
+    "id": "RZN-8-025",
+    "materia": "razonamiento",
+    "tema": "deforestacion cts",
+    "grado": 8,
+    "dificultad": 1,
+    "enunciado": "Se tala un bosque para construir potreros. Años después el suelo es árido y el caudal del río cercano disminuye. ¿Qué proceso explica estos cambios?",
+    "opciones": [
+      "Los árboles retienen suelo y regulan el ciclo del agua; su tala causa erosión y menor recarga hídrica.",
+      "Los potreros absorben más agua que los bosques, por eso el río baja.",
+      "La tala solo afecta a los animales; el suelo y el agua no se afectan.",
+      "El caudal baja por el calor que producen los animales del potrero."
+    ],
+    "correcta": 0,
+    "explicacion": "Los bosques protegen el suelo y regulan la infiltración del agua. Al talarlos, el agua escurre rápido sin recargarse en el suelo, disminuyendo el caudal de ríos.",
+    "imagen": null,
+    "autor": "ia",
+    "activa": true,
+    "origen": "normal"
+  },
+  {
+    "id": "RZN-8-026",
+    "materia": "razonamiento",
+    "tema": "tecnologia y sueño cts",
+    "grado": 8,
+    "dificultad": 1,
+    "enunciado": "Un joven usa el celular 6 horas diarias antes de dormir y presenta insomnio y bajo rendimiento escolar. ¿Qué explicación científica relaciona el uso del celular con el sueño?",
+    "opciones": [
+      "La luz azul de las pantallas inhibe la melatonina, la hormona que regula el sueño.",
+      "El celular emite radiaciones que calientan el cerebro e impiden dormir bien.",
+      "El problema es que el joven no tiene aplicaciones de relajación instaladas.",
+      "La pantalla aumenta la melatonina, pero el ruido interrumpe el sueño."
+    ],
+    "correcta": 0,
+    "explicacion": "La luz azul de las pantallas inhibe la producción de melatonina, haciendo que el cerebro crea que aún es de día, dificultando conciliar y mantener el sueño.",
+    "imagen": null,
+    "autor": "ia",
+    "activa": true,
+    "origen": "normal"
+  },
+  {
+    "id": "RZN-8-027",
+    "materia": "razonamiento",
+    "tema": "reciclaje y residuos cts",
+    "grado": 8,
+    "dificultad": 1,
+    "enunciado": "Un colegio separa papel, plástico y restos de comida en canecas diferentes. ¿Cuál es la ventaja ambiental más importante de esta práctica?",
+    "opciones": [
+      "Facilita aprovechar materiales y reduce residuos enviados a rellenos sanitarios.",
+      "Separar residuos elimina completamente la producción de basura en la institución.",
+      "El papel y plástico separados se descomponen solos sin ningún tratamiento.",
+      "La separación de residuos solo es útil en grandes empresas, no en colegios."
+    ],
+    "correcta": 0,
+    "explicacion": "Separar residuos permite reciclar materiales y compostar orgánicos, reduciendo el volumen de basura y el impacto sobre rellenos sanitarios.",
+    "imagen": null,
+    "autor": "ia",
+    "activa": true,
+    "origen": "normal"
+  },
+  {
+    "id": "RZN-8-028",
+    "materia": "razonamiento",
+    "tema": "glaciares y agua cts",
+    "grado": 8,
+    "dificultad": 1,
+    "enunciado": "Los glaciares de los Andes colombianos están disminuyendo. ¿Qué consecuencia directa tiene esto para la población de las ciudades cercanas?",
+    "opciones": [
+      "Puede reducir el suministro de agua dulce en temporadas secas, afectando el abastecimiento.",
+      "El deshielo aumenta la cantidad de nieve en las ciudades cercanas.",
+      "La disminución de glaciares solo afecta a los animales de la montaña.",
+      "Los glaciares no aportan agua a las ciudades porque están demasiado alto."
+    ],
+    "correcta": 0,
+    "explicacion": "Los glaciares son reservorios de agua dulce. Al derretirse, esa reserva se pierde y en épocas de sequía habrá menos agua disponible para consumo humano, riego y generación eléctrica.",
+    "imagen": null,
+    "autor": "ia",
+    "activa": true,
+    "origen": "normal"
+  },
+  {
+    "id": "RZN-8-029",
+    "materia": "razonamiento",
+    "tema": "microorganismos y salud cts",
+    "grado": 8,
+    "dificultad": 1,
+    "enunciado": "En una escuela muchos estudiantes se enferman de gripa en pocos días. ¿Qué condición favorece principalmente la propagación del virus?",
+    "opciones": [
+      "El contacto frecuente en espacios cerrados facilita la transmisión de partículas virales por el aire.",
+      "Los virus de gripa solo se propagan cuando la temperatura supera los 30°C.",
+      "La gripa se transmite únicamente por tocar superficies metálicas como puertas y sillas.",
+      "Los estudiantes con buena nota en ciencias no pueden contagiarse de gripa."
+    ],
+    "correcta": 0,
+    "explicacion": "Los virus respiratorios se transmiten por gotículas al hablar, toser o estornudar. Los espacios cerrados con muchas personas concentran esas partículas en el aire.",
+    "imagen": null,
+    "autor": "ia",
+    "activa": true,
+    "origen": "normal"
+  },
+  {
+    "id": "RZN-8-030",
+    "materia": "razonamiento",
+    "tema": "suelo y agricultura cts",
+    "grado": 8,
+    "dificultad": 1,
+    "enunciado": "Un agricultor usa el mismo terreno 10 años sin rotar cultivos y cada año obtiene menos producción. ¿Qué proceso científico explica esto?",
+    "opciones": [
+      "El monocultivo agota los nutrientes del suelo y favorece plagas especializadas, reduciendo la productividad.",
+      "El suelo se vuelve tóxico porque acumula demasiada agua con el tiempo.",
+      "Los cultivos repetidos enfrían el suelo e impiden el crecimiento de las raíces.",
+      "La producción baja solo porque usa semillas de menor calidad cada año."
+    ],
+    "correcta": 0,
+    "explicacion": "El monocultivo extrae siempre los mismos nutrientes sin tiempo de recuperación y concentra plagas adaptadas. La rotación de cultivos mantiene la fertilidad del suelo.",
+    "imagen": null,
+    "autor": "ia",
+    "activa": true,
+    "origen": "normal"
+  },
+  {
+    "id": "RZN-9-022",
+    "materia": "razonamiento",
+    "tema": "biotecnologia cts",
+    "grado": 9,
+    "dificultad": 2,
+    "enunciado": "Científicos modifican genéticamente una semilla para resistir sequías. Algunos agricultores la adoptan; otros la rechazan por desconocer sus efectos en el ecosistema. ¿Qué actitud científica es más adecuada ante esta situación?",
+    "opciones": [
+      "Prohibir toda investigación genética porque sus riesgos siempre superan los beneficios.",
+      "Evaluar con estudios rigurosos los efectos ambientales y socioeconómicos antes de aplicarla masivamente.",
+      "Adoptarla de inmediato porque viene de científicos y es completamente segura.",
+      "Rechazarla sin revisarla porque los cultivos tradicionales siempre son mejores."
+    ],
+    "correcta": 1,
+    "explicacion": "La biotecnología puede ofrecer soluciones, pero requiere evaluación científica de impactos ecológicos, socioeconómicos y de biodiversidad antes del uso generalizado.",
+    "imagen": null,
+    "autor": "ia",
+    "activa": true,
+    "origen": "normal"
+  },
+  {
+    "id": "RZN-9-023",
+    "materia": "razonamiento",
+    "tema": "antibioticos y resistencia cts",
+    "grado": 9,
+    "dificultad": 2,
+    "enunciado": "Un médico advierte que el uso excesivo de antibióticos está creando bacterias resistentes. ¿Qué explicación biológica justifica esa preocupación?",
+    "opciones": [
+      "Las bacterias aprenden a escapar del antibiótico cuando lo reconocen por primera vez.",
+      "Las bacterias con mutaciones resistentes sobreviven y se reproducen, propagando esa resistencia.",
+      "Los antibióticos se vuelven químicamente más débiles con el paso del tiempo.",
+      "La resistencia solo ocurre en hospitales, no en infecciones comunes de la comunidad."
+    ],
+    "correcta": 1,
+    "explicacion": "Por selección natural, los antibióticos eliminan bacterias sensibles y dejan sobrevivir las resistentes. Estas se reproducen transmitiendo la resistencia, haciendo los tratamientos menos efectivos.",
+    "imagen": null,
+    "autor": "ia",
+    "activa": true,
+    "origen": "normal"
+  },
+  {
+    "id": "RZN-9-024",
+    "materia": "razonamiento",
+    "tema": "mineria y ambiente cts",
+    "grado": 9,
+    "dificultad": 2,
+    "enunciado": "Una empresa usa mercurio para extraer oro cerca de un río. Pescadores reportan peces muertos y problemas de salud. ¿Cuál proceso explica el daño en la cadena trófica?",
+    "opciones": [
+      "El mercurio se acumula en organismos y su concentración aumenta en cada nivel de la cadena trófica.",
+      "El mercurio solo afecta peces grandes porque los pequeños lo metabolizan completamente.",
+      "El daño es temporal porque el mercurio se diluye y desaparece en el agua del río.",
+      "Solo los adultos pueden verse afectados por el mercurio presente en los peces."
+    ],
+    "correcta": 0,
+    "explicacion": "La bioacumulación concentra el mercurio a lo largo de la cadena trófica. Los depredadores tope acumulan concentraciones muy altas, poniendo en riesgo a quienes los consumen.",
+    "imagen": null,
+    "autor": "ia",
+    "activa": true,
+    "origen": "normal"
+  },
+  {
+    "id": "RZN-9-025",
+    "materia": "razonamiento",
+    "tema": "epidemias y ciencia cts",
+    "grado": 9,
+    "dificultad": 2,
+    "enunciado": "Durante una epidemia, las autoridades aplican cuarentena y rastreo de contactos. ¿Qué principio científico justifica estas medidas?",
+    "opciones": [
+      "Reducir el contacto entre personas disminuye la tasa de contagio y el número de casos simultáneos.",
+      "La cuarentena elimina el virus del ambiente en menos de 24 horas.",
+      "El rastreo de contactos solo es útil cuando ya hay vacuna disponible.",
+      "Las cuarentenas son medidas políticas sin fundamento en epidemiología."
+    ],
+    "correcta": 0,
+    "explicacion": "Reducir el contacto baja el número reproductivo del virus por debajo de 1, controlando la epidemia y evitando el colapso del sistema de salud.",
+    "imagen": null,
+    "autor": "ia",
+    "activa": true,
+    "origen": "normal"
+  },
+  {
+    "id": "RZN-9-026",
+    "materia": "razonamiento",
+    "tema": "huella de carbono cts",
+    "grado": 9,
+    "dificultad": 2,
+    "enunciado": "Una familia decide usar bicicleta en vez de carro para trayectos cortos. ¿Qué impacto ambiental concreto tiene esta decisión?",
+    "opciones": [
+      "Reduce la emisión de CO₂ y otros contaminantes asociados a la quema de combustibles fósiles.",
+      "No tiene impacto porque un carro individual emite muy poca cantidad de CO₂.",
+      "Solo tiene impacto si toda la ciudad toma la misma decisión simultáneamente.",
+      "La bicicleta produce más emisiones porque el ciclista exhala más CO₂."
+    ],
+    "correcta": 0,
+    "explicacion": "Cada kilómetro en carro emite en promedio 120-150 g de CO₂. Sustituirlo por bicicleta elimina esas emisiones, reduciendo la huella de carbono individual y colectiva.",
+    "imagen": null,
+    "autor": "ia",
+    "activa": true,
+    "origen": "normal"
+  },
+  {
+    "id": "RZN-9-027",
+    "materia": "razonamiento",
+    "tema": "privacidad digital cts",
+    "grado": 9,
+    "dificultad": 2,
+    "enunciado": "Una app gratuita solicita acceso a la cámara, micrófono y ubicación del celular. ¿Qué riesgo implica aceptar todos los permisos sin revisarlos?",
+    "opciones": [
+      "La app podría recopilar datos personales y usarlos o venderlos sin conocimiento del usuario.",
+      "Las apps gratuitas no pueden acceder a datos personales por ley en ningún caso.",
+      "Solo las apps de redes sociales recopilan datos; las demás son completamente seguras.",
+      "Solo hay riesgo si el celular tiene menos de 4 GB de RAM."
+    ],
+    "correcta": 0,
+    "explicacion": "Muchas apps gratuitas se financian recopilando y vendiendo datos del usuario. Aceptar permisos sin revisión puede comprometer información privada y sensible.",
+    "imagen": null,
+    "autor": "ia",
+    "activa": true,
+    "origen": "normal"
+  },
+  {
+    "id": "RZN-9-028",
+    "materia": "razonamiento",
+    "tema": "plastico en oceanos cts",
+    "grado": 9,
+    "dificultad": 2,
+    "enunciado": "Investigadores encuentran microplásticos en peces del Pacífico. ¿Qué implicación tiene este hallazgo para la salud humana?",
+    "opciones": [
+      "Los microplásticos pueden entrar a la cadena alimentaria y llegar al organismo humano al consumir esos peces.",
+      "Los microplásticos solo afectan peces; el sistema digestivo humano los elimina sin consecuencias.",
+      "Solo los pescadores que viven en la costa están expuestos a microplásticos en los peces.",
+      "El problema desaparecerá cuando los peces se adapten evolutivamente a los microplásticos."
+    ],
+    "correcta": 0,
+    "explicacion": "Los microplásticos se bioacumulan en tejidos de peces. Al consumirlos, los humanos pueden ingerir esas partículas y los contaminantes adsorbidos en ellas.",
+    "imagen": null,
+    "autor": "ia",
+    "activa": true,
+    "origen": "normal"
+  },
+  {
+    "id": "RZN-9-029",
+    "materia": "razonamiento",
+    "tema": "genetica y sociedad cts",
+    "grado": 9,
+    "dificultad": 2,
+    "enunciado": "Una empresa ofrece pruebas de ADN para conocer predisposición a enfermedades. ¿Qué consideración científica y ética es importante al usar este servicio?",
+    "opciones": [
+      "Los resultados son probabilísticos, no deterministas, y los datos genéticos son privados y sensibles.",
+      "Si la prueba no encuentra mutaciones, la persona no enfermará de ninguna enfermedad en su vida.",
+      "Las pruebas de ADN solo sirven para médicos; las empresas comerciales no dan resultados confiables.",
+      "Conocer la predisposición genética a enfermedades no tiene ninguna utilidad práctica."
+    ],
+    "correcta": 0,
+    "explicacion": "Tener un gen de riesgo no garantiza desarrollar la enfermedad. Además, los datos genéticos son muy sensibles y su manejo indebido puede afectar seguros, empleo o privacidad.",
+    "imagen": null,
+    "autor": "ia",
+    "activa": true,
+    "origen": "normal"
+  },
+  {
+    "id": "RZN-9-030",
+    "materia": "razonamiento",
+    "tema": "automatizacion y empleo cts",
+    "grado": 9,
+    "dificultad": 2,
+    "enunciado": "Una fábrica reemplaza 50 obreros con robots que trabajan 24 horas. ¿Qué perspectiva CTS permite analizar este hecho de forma más completa?",
+    "opciones": [
+      "La automatización genera eficiencia productiva, pero también impactos sociales como desempleo que requieren políticas públicas.",
+      "La automatización es siempre positiva porque los robots no cometen errores humanos.",
+      "El desempleo tecnológico es temporal y los trabajadores siempre encuentran rápidamente trabajo equivalente.",
+      "La tecnología no afecta el empleo; el desempleo se debe solo a falta de educación."
+    ],
+    "correcta": 0,
+    "explicacion": "La perspectiva CTS reconoce que la tecnología tiene dimensiones sociales y éticas. La automatización puede aumentar la productividad pero requiere políticas de reconversión laboral.",
+    "imagen": null,
+    "autor": "ia",
+    "activa": true,
+    "origen": "normal"
+  },
+  {
+    "id": "RZN-9-031",
+    "materia": "razonamiento",
+    "tema": "transicion energetica cts",
+    "grado": 9,
+    "dificultad": 2,
+    "enunciado": "Un país cierra sus plantas de carbón y las reemplaza con energía eólica. Miles de mineros perderán sus empleos. ¿Cómo debe analizarse esta transición desde la perspectiva CTS?",
+    "opciones": [
+      "Considerando el beneficio ambiental junto con los impactos económicos y sociales en las comunidades mineras.",
+      "Solo importa el beneficio ambiental; el impacto social es un asunto secundario.",
+      "La transición solo debe hacerse cuando los mineros ya hayan encontrado nuevos empleos por su cuenta.",
+      "Las plantas de carbón deben mantenerse para preservar empleos, sin importar el impacto climático."
+    ],
+    "correcta": 0,
+    "explicacion": "La perspectiva CTS exige analizar cambios tecnológicos considerando sus dimensiones ambientales, económicas y sociales para buscar soluciones justas para todos.",
+    "imagen": null,
+    "autor": "ia",
+    "activa": true,
+    "origen": "normal"
   }
 ]
