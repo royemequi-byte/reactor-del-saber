@@ -338,6 +338,24 @@ document.getElementById('btn-validar-codigo').addEventListener('click', async ()
 const inpAvatar     = document.getElementById('inp-avatar');
 const avatarPreview = document.getElementById('avatar-preview');
 
+const CURSOS_POR_GRADO = {
+  8:  ['801','802','803','804','805','806','807','808'],
+  9:  ['901','902','903','904','905','906','907','908'],
+  10: ['1001','1002','1003','1004','1005','1006','1007','1008'],
+};
+
+function actualizarCursos() {
+  const grado = parseInt(document.getElementById('inp-grado').value);
+  const sel   = document.getElementById('inp-curso');
+  const opts  = CURSOS_POR_GRADO[grado] || [];
+  sel.innerHTML = opts.length
+    ? '<option value="">-- Selecciona tu curso --</option>' +
+      opts.map(c => `<option value="${c}">${c}</option>`).join('')
+    : '<option value="">-- Selecciona primero el grado --</option>';
+}
+
+document.getElementById('inp-grado').addEventListener('change', actualizarCursos);
+
 inpAvatar.addEventListener('input', () => {
   inpAvatar.value = inpAvatar.value.toUpperCase();
   avatarPreview.textContent = inpAvatar.value.slice(0, 3) || '⚗️';
