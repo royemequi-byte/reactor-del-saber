@@ -1,280 +1,410 @@
-/* ══ INDICADORES PANEL ════════════════════════════════════════════════════
-   Scoped bajo #admin-tab-indicadores para no pisar el resto del admin
+/* ══ INDICADORES PANEL v2 ══════════════════════════════════════════════════
+   Scoped bajo #admin-tab-indicadores
    ═══════════════════════════════════════════════════════════════════════ */
 
 #admin-tab-indicadores {
   font-family: 'LiberationMono', monospace !important;
   color: #e8e8f0;
-  padding: 4px 0;
+  padding: 4px 0 40px;
 }
 
-/* ── FILTROS DE GRADO ── */
-#admin-tab-indicadores .ind-filtros {
+/* ── VARS ── */
+#admin-tab-indicadores {
+  --bio2:#39ff14; --fis2:#00e5ff; --qui2:#ff9f1c;
+  --cts2:#ff69b4; --rzn2:#a78bfa; --gold2:#ffd600;
+  --bg2:#0a0a0f; --card2:#12121e; --card3:#1a1a2e;
+  --border2:#2a2a45; --txt2:#e8e8f0; --muted2:#6b7280;
+}
+
+/* ── HEADER ── */
+#admin-tab-indicadores .ind-header2 {
   display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+#admin-tab-indicadores .ind-title2 {
+  font-family: 'LiberationMono', monospace;
+  font-size: 1.6rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #39ff14, #00e5ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1.1;
+}
+#admin-tab-indicadores .ind-subtitle2 {
+  font-size: .78rem;
+  color: #6b7280;
+  margin-top: 3px;
+}
+
+/* ── NAV SESIÓN ── */
+#admin-tab-indicadores .ind-nav2 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+#admin-tab-indicadores .ind-nav2-label {
+  color: #6b7280;
+  font-size: .82rem;
+  white-space: nowrap;
+}
+#admin-tab-indicadores .ind-btn-nav {
+  font-family: 'LiberationMono', monospace;
+  background: #1a1a2e;
+  border: 1px solid #2a2a45;
+  color: #e8e8f0;
+  width: 34px; height: 34px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  display: flex; align-items: center; justify-content: center;
+  transition: all .15s;
+  flex-shrink: 0;
+}
+#admin-tab-indicadores .ind-btn-nav:hover:not(:disabled) {
+  border-color: #39ff14;
+  color: #39ff14;
+  box-shadow: 0 0 10px rgba(57,255,20,.3);
+}
+#admin-tab-indicadores .ind-btn-nav:disabled { opacity: .3; cursor: default; }
+
+#admin-tab-indicadores .ind-sel-sesion {
+  font-family: 'LiberationMono', monospace;
+  font-size: .82rem;
+  background: #1a1a2e;
+  color: #e8e8f0;
+  border: 1px solid #2a2a45;
+  border-radius: 8px;
+  padding: 7px 12px;
+  cursor: pointer;
+  outline: none;
+  min-width: 240px;
+}
+#admin-tab-indicadores .ind-sel-sesion:focus { border-color: #39ff14; }
+
+#admin-tab-indicadores .ind-chip-live {
+  font-family: 'LiberationMono', monospace;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: .72rem;
+  font-weight: 700;
+  border: 1px solid;
+  background: rgba(255,255,255,.04);
+  transition: all .2s;
+}
+
+/* ── BADGE SESIÓN ── */
+#admin-tab-indicadores .ind-ses-badge {
+  font-family: 'LiberationMono', monospace;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, rgba(57,255,20,.1), rgba(0,229,255,.07));
+  border: 1px solid rgba(57,255,20,.28);
+  border-radius: 10px;
+  padding: 7px 16px;
+  font-size: .82rem;
+  font-weight: 700;
+  color: #39ff14;
+  margin-bottom: 18px;
+}
+
+/* ── FILTROS GRADO ── */
+#admin-tab-indicadores .ind-filtros2 {
+  display: flex;
+  align-items: center;
   gap: 8px;
   flex-wrap: wrap;
   margin-bottom: 18px;
-  align-items: center;
 }
-#admin-tab-indicadores .ind-filtros-label {
+#admin-tab-indicadores .ind-filtros2-label {
   color: #6b7280;
   font-size: .75rem;
   text-transform: uppercase;
   letter-spacing: .5px;
-  margin-right: 4px;
+  margin-right: 2px;
 }
-#admin-tab-indicadores .ind-fg {
+#admin-tab-indicadores .ind-fg2 {
   font-family: 'LiberationMono', monospace;
   font-size: .8rem;
   font-weight: 700;
-  padding: 6px 16px;
+  padding: 5px 14px;
   border-radius: 8px;
   border: 1px solid #2a2a45;
-  background: #141425;
+  background: #12121e;
   color: #8ab0c8;
   cursor: pointer;
   transition: all .15s;
-  letter-spacing: .3px;
 }
-#admin-tab-indicadores .ind-fg:hover {
-  border-color: #39ff14;
-  color: #39ff14;
-}
-#admin-tab-indicadores .ind-fg.activo {
-  background: #39ff1420;
-  border-color: #39ff14;
-  color: #39ff14;
-  box-shadow: 0 0 10px #39ff1430;
-}
-#admin-tab-indicadores .ind-fg[data-g="8"].activo  { background:#00e5ff18;border-color:#00e5ff;color:#00e5ff;box-shadow:0 0 10px #00e5ff30; }
-#admin-tab-indicadores .ind-fg[data-g="9"].activo  { background:#ff9f1c18;border-color:#ff9f1c;color:#ff9f1c;box-shadow:0 0 10px #ff9f1c30; }
-#admin-tab-indicadores .ind-fg[data-g="10"].activo { background:#39ff1418;border-color:#39ff14;color:#39ff14;box-shadow:0 0 10px #39ff1430; }
+#admin-tab-indicadores .ind-fg2:hover { border-color: #39ff14; color: #39ff14; }
+#admin-tab-indicadores .ind-fg2.activo { background: rgba(57,255,20,.12); border-color: #39ff14; color: #39ff14; box-shadow: 0 0 10px rgba(57,255,20,.25); }
+#admin-tab-indicadores .ind-fg2[data-g="8"].activo  { background: rgba(0,229,255,.1); border-color: #00e5ff; color: #00e5ff; box-shadow: 0 0 10px rgba(0,229,255,.25); }
+#admin-tab-indicadores .ind-fg2[data-g="9"].activo  { background: rgba(255,159,28,.1); border-color: #ff9f1c; color: #ff9f1c; box-shadow: 0 0 10px rgba(255,159,28,.25); }
+#admin-tab-indicadores .ind-fg2[data-g="10"].activo { background: rgba(57,255,20,.12); border-color: #39ff14; color: #39ff14; box-shadow: 0 0 10px rgba(57,255,20,.25); }
 
-/* ── EVOLUCIÓN GLOBAL ── */
-#admin-tab-indicadores .ind-evol-card {
-  background: #141425;
+/* ── KPI GRID ── */
+#admin-tab-indicadores .ind-kpi-grid2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px;
+  margin-bottom: 22px;
+}
+#admin-tab-indicadores .ind-kpi2 {
+  background: #1a1a2e;
   border: 1px solid #2a2a45;
   border-radius: 14px;
-  padding: 16px 20px;
+  padding: 16px 18px;
+  position: relative;
+  overflow: hidden;
+  transition: transform .2s, box-shadow .2s;
+}
+#admin-tab-indicadores .ind-kpi2:hover { transform: translateY(-3px); box-shadow: 0 8px 28px rgba(0,0,0,.4); }
+#admin-tab-indicadores .ind-kpi2::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 3px;
+  background: var(--c, #39ff14);
+}
+#admin-tab-indicadores .ind-kpi2-icon { font-size: 1.4rem; margin-bottom: 6px; }
+#admin-tab-indicadores .ind-kpi2-val {
+  font-family: 'LiberationMono', monospace;
+  font-size: 1.85rem;
+  font-weight: 800;
+  color: var(--c, #39ff14);
+  line-height: 1;
+  margin-bottom: 3px;
+  text-shadow: 0 0 18px var(--c, #39ff14);
+}
+#admin-tab-indicadores .ind-kpi2-lbl {
+  color: #6b7280;
+  font-size: .72rem;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+}
+#admin-tab-indicadores .ind-kpi2-delta {
+  font-size: .74rem;
+  margin-top: 5px;
+}
+#admin-tab-indicadores .ind-kpi2-delta.du { color: #39ff14; }
+#admin-tab-indicadores .ind-kpi2-delta.dd { color: #ff4d4d; }
+#admin-tab-indicadores .ind-kpi2-delta.de { color: #6b7280; }
+
+/* ── SECTION TITLE ── */
+#admin-tab-indicadores .ind-st {
+  font-family: 'LiberationMono', monospace;
+  font-size: .72rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #6b7280;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+#admin-tab-indicadores .ind-st::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: #2a2a45;
+}
+
+/* ── GRID 2 COLS ── */
+#admin-tab-indicadores .ind-grid2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
   margin-bottom: 14px;
 }
-#admin-tab-indicadores .ind-evol-head {
+
+/* ── CARD ── */
+#admin-tab-indicadores .ind-cc2 {
+  background: #1a1a2e;
+  border: 1px solid #2a2a45;
+  border-radius: 16px;
+  padding: 18px 20px;
+  transition: box-shadow .2s;
+}
+#admin-tab-indicadores .ind-cc2:hover { box-shadow: 0 6px 28px rgba(0,0,0,.35); }
+#admin-tab-indicadores .ind-cc2-full { grid-column: 1 / -1; }
+
+#admin-tab-indicadores .ind-ch2 {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
   margin-bottom: 14px;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-#admin-tab-indicadores .ind-evol-title {
-  font-family: 'LiberationMono', monospace;
-  font-weight: bold;
-  font-size: .9rem;
-  color: #39ff14;
-}
-#admin-tab-indicadores .ind-evol-sub {
-  font-size: .72rem;
-  color: #6b7280;
-  margin-top: 3px;
-}
-#admin-tab-indicadores .ind-evol-wrap {
-  position: relative;
-  height: 170px;
-}
-
-/* ── ACORDEÓN POR SESIÓN ── */
-#admin-tab-indicadores .ind-card {
-  background: #141425;
-  border: 1px solid #2a2a45;
-  border-radius: 14px;
-  overflow: hidden;
-  margin-bottom: 12px;
-  transition: box-shadow .2s;
-}
-#admin-tab-indicadores .ind-card:hover {
-  box-shadow: 0 4px 20px rgba(0,0,0,.4);
-}
-#admin-tab-indicadores .ind-card-head {
-  display: flex !important;
-  align-items: center !important;
-  padding: 12px 16px !important;
-  cursor: pointer !important;
-  background: #0f0f1e !important;
-  border-bottom: 1px solid #2a2a45 !important;
-  gap: 8px !important;
-  flex-wrap: wrap !important;
-  transition: background .15s !important;
-  font-family: 'LiberationMono', monospace !important;
-}
-#admin-tab-indicadores .ind-card-head:hover { background: #1a1a30 !important; }
-#admin-tab-indicadores .ind-card-body {
-  padding: 16px;
-}
-
-/* ── KPI FILA INTERNA ── */
-#admin-tab-indicadores .ind-kpi-row {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
   gap: 10px;
-  margin-bottom: 14px;
+  flex-wrap: wrap;
 }
-#admin-tab-indicadores .ind-kpi {
-  background: #0f0f1e;
-  border: 1px solid #2a2a45;
-  border-radius: 10px;
-  padding: 10px 14px;
-  position: relative;
-  overflow: hidden;
-}
-#admin-tab-indicadores .ind-kpi::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 2px;
-  background: var(--ind-kpi-color, #39ff14);
-}
-#admin-tab-indicadores .ind-kpi-val {
+#admin-tab-indicadores .ind-ct2 {
   font-family: 'LiberationMono', monospace;
-  font-weight: bold;
-  font-size: 1.4rem;
-  color: var(--ind-kpi-color, #39ff14);
-  line-height: 1;
-  text-shadow: 0 0 14px var(--ind-kpi-color, #39ff1440);
+  font-size: .9rem;
+  font-weight: 700;
+  color: #c8d8e8;
 }
-#admin-tab-indicadores .ind-kpi-lbl {
-  font-size: .68rem;
+#admin-tab-indicadores .ind-cs2 {
   color: #6b7280;
-  text-transform: uppercase;
-  letter-spacing: .4px;
-  margin-top: 4px;
+  font-size: .74rem;
+  margin-top: 2px;
 }
 
-/* ── GRID DE GRÁFICOS ── */
-#admin-tab-indicadores .ind-charts-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 12px;
-  margin-bottom: 12px;
-}
-#admin-tab-indicadores .ind-charts-grid-2 {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin-bottom: 0;
-}
-#admin-tab-indicadores .ind-chart-card {
-  background: #0f0f1e;
-  border: 1px solid #2a2a45;
-  border-radius: 10px;
-  padding: 12px 14px;
-}
-#admin-tab-indicadores .ind-chart-title {
-  font-family: 'LiberationMono', monospace;
-  font-weight: bold;
-  font-size: .78rem;
-  color: #c8d8e8;
-  margin-bottom: 10px;
-  letter-spacing: .2px;
-}
-#admin-tab-indicadores .ind-chart-wrap {
+/* ── CHART WRAPPERS ── */
+#admin-tab-indicadores .ind-cw2 {
   position: relative;
-  height: 190px;
+  height: 210px;
 }
-#admin-tab-indicadores .ind-chart-wrap-sm {
-  position: relative;
-  height: 155px;
+#admin-tab-indicadores .ind-cw2-tall {
+  height: 270px;
 }
 
 /* ── PODIO ── */
-#admin-tab-indicadores .ind-podio {
+#admin-tab-indicadores .ind-podio2 {
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  gap: 8px;
-  padding: 8px 4px 0;
-  height: 190px;
+  gap: 10px;
+  padding: 16px 8px 6px;
+  height: 210px;
 }
-#admin-tab-indicadores .ind-pcol {
+#admin-tab-indicadores .ind-pcol2 {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
   flex: 1;
-  max-width: 95px;
+  max-width: 110px;
 }
-#admin-tab-indicadores .ind-pav {
-  width: 44px; height: 44px;
+#admin-tab-indicadores .ind-pav2 {
   border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
+  font-weight: 900;
+  border: 3px solid;
+  background: rgba(255,255,255,.06);
+}
+#admin-tab-indicadores .ind-pname2 {
   font-family: 'LiberationMono', monospace;
-  font-weight: 900; font-size: .9rem;
-  border: 2px solid;
-  background: rgba(255,255,255,.05);
+  font-size: .68rem;
+  font-weight: 700;
+  text-align: center;
+  color: #e8e8f0;
+  word-break: break-word;
+  line-height: 1.2;
 }
-#admin-tab-indicadores .ind-pname {
+#admin-tab-indicadores .ind-pnota2 {
   font-family: 'LiberationMono', monospace;
-  font-size: .62rem; font-weight: 700;
-  text-align: center; color: #e8e8f0;
-  word-break: break-word; line-height: 1.2;
+  font-size: .8rem;
+  font-weight: 800;
 }
-#admin-tab-indicadores .ind-pnota {
-  font-family: 'LiberationMono', monospace;
-  font-size: .78rem; font-weight: 800;
+#admin-tab-indicadores .ind-pcurso2 {
+  font-size: .62rem;
+  color: #6b7280;
 }
-#admin-tab-indicadores .ind-pcurso {
-  font-size: .58rem; color: #6b7280;
-}
-#admin-tab-indicadores .ind-pbase {
-  border-radius: 6px 6px 0 0;
+#admin-tab-indicadores .ind-pbase2 {
+  border-radius: 8px 8px 0 0;
   width: 100%;
   display: flex; align-items: center; justify-content: center;
-  font-size: 1.3rem; font-weight: 900;
+  font-weight: 900;
   border: 1px solid; border-bottom: none;
   background: linear-gradient(180deg, rgba(255,255,255,.08), transparent);
   text-shadow: 0 0 10px currentColor;
 }
 
-/* ── BADGE EXCEL ── */
-#admin-tab-indicadores .ind-btn-xls {
+/* ── ANÁLISIS ── */
+#admin-tab-indicadores .ind-an {
+  margin-top: 12px;
+  padding: 9px 12px;
+  background: rgba(57,255,20,.05);
+  border-left: 3px solid #39ff14;
+  border-radius: 0 7px 7px 0;
+  font-size: .76rem;
+  color: #9ab;
+  line-height: 1.5;
+}
+#admin-tab-indicadores .ind-an strong { color: #39ff14; }
+#admin-tab-indicadores .ind-an.c { background: rgba(0,229,255,.05); border-color: #00e5ff; }
+#admin-tab-indicadores .ind-an.c strong { color: #00e5ff; }
+#admin-tab-indicadores .ind-an.g { background: rgba(255,214,0,.05); border-color: #ffd600; }
+#admin-tab-indicadores .ind-an.g strong { color: #ffd600; }
+#admin-tab-indicadores .ind-an.v { background: rgba(167,139,250,.05); border-color: #a78bfa; }
+#admin-tab-indicadores .ind-an.v strong { color: #a78bfa; }
+#admin-tab-indicadores .ind-an.p { background: rgba(255,105,180,.05); border-color: #ff69b4; }
+#admin-tab-indicadores .ind-an.p strong { color: #ff69b4; }
+
+/* ── CHIPS ── */
+#admin-tab-indicadores .ind-chip2 {
   font-family: 'LiberationMono', monospace;
-  font-size: .72rem; font-weight: 700;
-  padding: 5px 12px;
-  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: .7rem;
+  font-weight: 700;
+  border: 1px solid;
+  background: rgba(255,255,255,.04);
+}
+
+/* ── TOP 10 TABLE ── */
+#admin-tab-indicadores .ind-mt {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: .76rem;
+  font-family: 'LiberationMono', monospace;
+}
+#admin-tab-indicadores .ind-mt th {
+  color: #6b7280;
+  text-transform: uppercase;
+  font-size: .64rem;
+  letter-spacing: .5px;
+  padding: 5px 8px;
+  border-bottom: 1px solid #2a2a45;
+  text-align: left;
+}
+#admin-tab-indicadores .ind-mt td {
+  padding: 5px 8px;
+  border-bottom: 1px solid rgba(255,255,255,.04);
+}
+#admin-tab-indicadores .ind-mt tr:last-child td { border-bottom: none; }
+#admin-tab-indicadores .ind-bm {
+  display: inline-block;
+  padding: 2px 7px;
+  border-radius: 4px;
+  font-size: .68rem;
+  font-weight: 700;
+  background: rgba(255,255,255,.08);
+}
+
+/* ── EXCEL BUTTON ── */
+#admin-tab-indicadores .ind-btn-xls2 {
+  font-family: 'LiberationMono', monospace;
+  font-size: .8rem;
+  font-weight: 700;
+  padding: 8px 18px;
+  border-radius: 8px;
   border: 1px solid #39ff14;
-  background: #39ff1415;
+  background: rgba(57,255,20,.1);
   color: #39ff14;
   cursor: pointer;
   transition: all .15s;
-  white-space: nowrap;
 }
-#admin-tab-indicadores .ind-btn-xls:hover {
-  background: #39ff1430;
-  box-shadow: 0 0 8px #39ff1440;
-}
-#admin-tab-indicadores .ind-arr {
-  color: #6b7280;
-  font-size: .8rem;
-  margin-left: 4px;
-  transition: transform .2s;
-}
-#admin-tab-indicadores .ind-arr.open { transform: rotate(180deg); }
-
-/* ── BADGE INFO ── */
-#admin-tab-indicadores .ind-badge {
-  font-family: 'LiberationMono', monospace;
-  font-size: .72rem; font-weight: 700;
-  padding: 2px 8px;
-  border-radius: 5px;
-  background: rgba(255,255,255,.06);
-  border: 1px solid rgba(255,255,255,.1);
+#admin-tab-indicadores .ind-btn-xls2:hover {
+  background: rgba(57,255,20,.22);
+  box-shadow: 0 0 12px rgba(57,255,20,.3);
 }
 
 /* ── RESPONSIVE ── */
 @media (max-width: 900px) {
-  #admin-tab-indicadores .ind-charts-grid { grid-template-columns: 1fr 1fr; }
+  #admin-tab-indicadores .ind-grid2 { grid-template-columns: 1fr; }
+  #admin-tab-indicadores .ind-kpi-grid2 { grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); }
 }
 @media (max-width: 600px) {
-  #admin-tab-indicadores .ind-charts-grid,
-  #admin-tab-indicadores .ind-charts-grid-2 { grid-template-columns: 1fr; }
-  #admin-tab-indicadores .ind-kpi-row { grid-template-columns: 1fr 1fr; }
+  #admin-tab-indicadores .ind-kpi-grid2 { grid-template-columns: 1fr 1fr; }
+  #admin-tab-indicadores .ind-sel-sesion { min-width: 160px; }
 }
