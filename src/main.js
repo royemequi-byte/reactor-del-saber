@@ -474,7 +474,8 @@ function mostrarPregunta() {
   if (!p) { finalizarExamen(); return; }
 
   // Contador
-  document.getElementById('num-pregunta').textContent = estado.preguntaActual + 1;
+  document.getElementById('num-pregunta').textContent    = estado.preguntaActual + 1;
+  document.getElementById('total-preguntas').textContent = estado.preguntas.length;
 
   // Etiqueta de tipo
   const etiquetas = { quimica: '⚗️ Química', fisica: '⚡ Física', biologia: '🌿 Biología', cts: '🔬 C.T.S.', razonamiento: '🧠 Razonamiento' };
