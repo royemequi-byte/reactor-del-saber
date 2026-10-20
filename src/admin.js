@@ -9,6 +9,7 @@ import * as XLSX from 'xlsx';
 import { db } from './firebase.js';
 import { ref, get, set, onValue } from 'firebase/database';
 import Chart from 'chart.js/auto';
+import './estilos/indicadores.css';
 
 let listo = false; // evitar listeners duplicados en re-login
 
@@ -978,63 +979,75 @@ window._adminBorrarEntrada = (idx) => {
 };
 
 // ─── INDICADORES ───────────────────────────────────────────────────────────
-const _indCharts = {};   // key → [Chart, Chart, ...]
+// Paleta fluorescente/metálica
 const C_IND = {
-  bio: '#39ff14', fis: '#00e5ff', qui: '#ff9f1c',
-  cts: '#ff69b4', rzn: '#a78bfa', gold: '#ffd600',
+  bio:'#39ff14', fis:'#00e5ff', qui:'#ff9f1c',
+  cts:'#ff69b4', rzn:'#a78bfa', gold:'#ffd600',
 };
+Chart.defaults.font.family = "'LiberationMono', monospace";
+Chart.defaults.color       = '#6b7280';
+Chart.defaults.borderColor = 'rgba(255,255,255,0.06)';
+
+const _indCharts  = {};  // key → Chart[]
+let   _indDatos   = [];  // cache de datos calculados
+let   _indFiltro  = 0;   // 0=todos, 8, 9, 10
 
 function _killCharts(key) {
   (_indCharts[key] || []).forEach(c => c?.destroy());
   delete _indCharts[key];
 }
 
-function _calcAct(act) {
-  const term   = Object.values(act.estudiantes || {}).filter(e => e.estado === 'terminado');
+// Calcula métricas de una actividad, con filtro de grado opcional
+function _calcAct(act, gradoFiltro = 0) {
+  const todos  = Object.values(act.estudiantes || {}).filter(e => e.estado === 'terminado');
+  const term   = gradoFiltro ? todos.filter(e => +e.grado === gradoFiltro) : todos;
   const cuotas = act.cuotas || {};
   const mats   = ['biologia', 'fisica', 'quimica', 'cts', 'razonamiento'];
 
   // % aciertos por materia
   const pctMat = {};
   mats.forEach(m => {
-    const total = [8, 9, 10].reduce((s, g) => s + (cuotas[`grado${g}`]?.[m] || 0), 0) / 3;
+    const gradesPresent = [...new Set(todos.map(e => +e.grado))];
+    let total;
+    if (gradoFiltro) {
+      total = cuotas[`grado${gradoFiltro}`]?.[m] || 0;
+    } else {
+      const gtot = gradesPresent.reduce((s, g) => s + (cuotas[`grado${g}`]?.[m] || 0), 0);
+      total = gradesPresent.length ? gtot / gradesPresent.length : 0;
+    }
     if (!total) { pctMat[m] = 0; return; }
     const prom = term.length ? term.reduce((s, e) => s + (e.aciertos?.[m] || 0), 0) / term.length : 0;
     pctMat[m] = Math.round((prom / total) * 100);
   });
 
-  // notas
-  const notas = term.map(e => Number(e.nota) || 0);
+  const notas    = term.map(e => Number(e.nota) || 0);
   const promNota = notas.length ? Math.round(notas.reduce((a, b) => a + b, 0) / notas.length) : 0;
+  const maxNota  = notas.length ? Math.max(...notas) : 0;
 
-  // histograma 8 bins (0-500)
+  // histograma 8 bins 0-500
   const bins = [0, 0, 0, 0, 0, 0, 0, 0];
-  notas.forEach(n => {
-    const i = Math.min(7, Math.floor(n / 62.5));
-    bins[i]++;
-  });
+  notas.forEach(n => { bins[Math.min(7, Math.floor(n / 62.5))]++; });
 
-  // por grado
+  // por grado (siempre calcula los 3, útil para el chart comparativo)
   const porGrado = [8, 9, 10].map(g => {
-    const grupo = term.filter(e => +e.grado === g);
+    const grupo = todos.filter(e => +e.grado === g);
     if (!grupo.length) return null;
     const ns = grupo.map(e => Number(e.nota) || 0);
     const pctG = {};
     mats.forEach(m => {
       const tot = cuotas[`grado${g}`]?.[m] || 0;
-      pctG[m] = tot ? Math.round((grupo.reduce((s, e) => s + (e.aciertos?.[m] || 0), 0) / grupo.length / tot) * 100) : 0;
+      pctG[m] = tot ? Math.round(grupo.reduce((s, e) => s + (e.aciertos?.[m] || 0), 0) / grupo.length / tot * 100) : 0;
     });
     return { g, n: grupo.length, prom: Math.round(ns.reduce((a, b) => a + b, 0) / ns.length), pctMat: pctG };
   }).filter(Boolean);
 
-  // top 3
   const top3 = term.slice().sort((a, b) => Number(b.nota) - Number(a.nota)).slice(0, 3);
 
-  return { term, notas, promNota, pctMat, bins, porGrado, top3 };
+  return { term, notas, promNota, maxNota, pctMat, bins, porGrado, top3 };
 }
 
 function _podioHTML(top3) {
-  if (!top3.length) return '<p style="color:#6b7280;text-align:center;padding:20px">Sin datos</p>';
+  if (!top3.length) return '<p style="color:#6b7280;text-align:center;padding:24px 0">Sin datos para este filtro</p>';
   const pc = ['#ffd600', '#c0c0d0', '#cd7f32'];
   const em = ['🥇', '🥈', '🥉'];
   const h  = [110, 80, 60];
@@ -1052,72 +1065,92 @@ function _podioHTML(top3) {
 }
 
 function _renderActCharts(key, d) {
+  _killCharts(key);
   const charts = [];
-  const mats = ['biologia', 'fisica', 'quimica', 'cts', 'razonamiento'];
+  const mats   = ['biologia', 'fisica', 'quimica', 'cts', 'razonamiento'];
   const matLbl = ['🌿 Bio', '⚡ Fís', '⚗️ Qui', '🔬 CTS', '🧠 Rzn'];
   const matCol = [C_IND.bio, C_IND.fis, C_IND.qui, C_IND.cts, C_IND.rzn];
 
-  // Chart 1: barras materias
+  // Actualizar podio con datos filtrados
+  const podioEl = document.getElementById(`ind-podio-${key}`);
+  if (podioEl) podioEl.innerHTML = _podioHTML(d.top3);
+
+  // Actualizar KPIs
+  const elProm = document.getElementById(`ind-kv-prom-${key}`);
+  const elMejor = document.getElementById(`ind-kv-mejor-${key}`);
+  const elN = document.getElementById(`ind-kv-n-${key}`);
+  if (elProm)  elProm.textContent  = d.promNota;
+  if (elMejor) elMejor.textContent = d.maxNota;
+  if (elN)     elN.textContent     = d.term.length;
+
+  // Chart: barras materias
   const cMat = document.getElementById(`ind-ch-mat-${key}`);
   if (cMat) charts.push(new Chart(cMat, {
     type: 'bar',
     data: {
       labels: matLbl,
       datasets: [{ data: mats.map(m => d.pctMat[m]),
-        backgroundColor: matCol.map(c => c + 'bb'),
+        backgroundColor: matCol.map(c => c + 'aa'),
         borderColor: matCol, borderWidth: 2, borderRadius: 6, borderSkipped: false }]
     },
     options: {
       indexAxis: 'y', responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => ` ${c.raw}%` } } },
-      scales: { x: { max: 100, ticks: { callback: v => v + '%' }, grid: { color: 'rgba(255,255,255,.06)' } }, y: { grid: { display: false } } }
+      plugins: { legend: { display: false },
+        tooltip: { callbacks: { label: c => ` ${c.raw}%` } } },
+      scales: {
+        x: { max: 100, ticks: { callback: v => v + '%', font: { size: 10 } },
+          grid: { color: 'rgba(255,255,255,.06)' } },
+        y: { grid: { display: false }, ticks: { font: { size: 11 } } }
+      }
     }
   }));
 
-  // Chart 2: histograma notas
+  // Chart: histograma
   const cHisto = document.getElementById(`ind-ch-histo-${key}`);
-  const hLbl = ['0-62', '63-125', '126-187', '188-250', '251-312', '313-375', '376-437', '438-500'];
+  const hLbl   = ['0-62','63-125','126-187','188-250','251-312','313-375','376-437','438-500'];
   if (cHisto) charts.push(new Chart(cHisto, {
     type: 'bar',
     data: {
       labels: hLbl,
-      datasets: [{ label: 'Estudiantes', data: d.bins,
+      datasets: [{ data: d.bins,
         backgroundColor: d.bins.map((_, i) => `hsla(${200 - i / 7 * 160},100%,55%,.75)`),
-        borderColor: d.bins.map((_, i) => `hsl(${200 - i / 7 * 160},100%,65%)`),
+        borderColor:      d.bins.map((_, i) => `hsl(${200 - i / 7 * 160},100%,65%)`),
         borderWidth: 2, borderRadius: 5, borderSkipped: false }]
     },
     options: {
       responsive: true, maintainAspectRatio: false,
       plugins: { legend: { display: false } },
-      scales: { x: { grid: { display: false } }, y: { grid: { color: 'rgba(255,255,255,.06)' }, ticks: { stepSize: 1 } } }
+      scales: {
+        x: { grid: { display: false }, ticks: { font: { size: 9 } } },
+        y: { grid: { color: 'rgba(255,255,255,.06)' }, ticks: { stepSize: 1, font: { size: 10 } } }
+      }
     }
   }));
 
-  // Chart 3: comparativo grados
+  // Chart: grados
   const cGrados = document.getElementById(`ind-ch-grados-${key}`);
   if (cGrados && d.porGrado.length) {
-    const gColors = { 8: C_IND.fis, 9: C_IND.qui, 10: C_IND.bio };
+    const gC = { 8: C_IND.fis, 9: C_IND.qui, 10: C_IND.bio };
     charts.push(new Chart(cGrados, {
       type: 'bar',
       data: {
-        labels: d.porGrado.map(g => `Grado ${g.g}° (${g.n})`),
+        labels: d.porGrado.map(g => `G${g.g}° (${g.n})`),
         datasets: [
-          { label: 'Nota prom.', data: d.porGrado.map(g => g.prom), yAxisID: 'y',
-            backgroundColor: d.porGrado.map(g => gColors[g.g] + 'bb'),
-            borderColor: d.porGrado.map(g => gColors[g.g]),
+          { label: 'Prom.', data: d.porGrado.map(g => g.prom), yAxisID: 'y',
+            backgroundColor: d.porGrado.map(g => gC[g.g] + 'aa'),
+            borderColor: d.porGrado.map(g => gC[g.g]),
             borderWidth: 2, borderRadius: 8, borderSkipped: false },
-          { label: 'Estudiantes', data: d.porGrado.map(g => g.n),
-            type: 'line', yAxisID: 'y2',
-            borderColor: C_IND.gold, backgroundColor: C_IND.gold + '18',
-            pointBackgroundColor: C_IND.gold, pointRadius: 6, borderWidth: 2, tension: .3, fill: false }
+          { label: 'Est.', data: d.porGrado.map(g => g.n), type: 'line', yAxisID: 'y2',
+            borderColor: C_IND.gold, pointBackgroundColor: C_IND.gold,
+            pointRadius: 5, borderWidth: 2, tension: .3, fill: false }
         ]
       },
       options: {
         responsive: true, maintainAspectRatio: false,
-        plugins: { legend: { labels: { color: '#8ab', boxWidth: 12, font: { family: 'LiberationMono' } } } },
+        plugins: { legend: { labels: { color: '#8ab', boxWidth: 10, font: { size: 10 } } } },
         scales: {
-          y:  { position: 'left',  max: 500, grid: { color: 'rgba(255,255,255,.06)' } },
-          y2: { position: 'right', grid: { display: false }, ticks: { color: C_IND.gold } }
+          y:  { position: 'left',  max: 500, grid: { color: 'rgba(255,255,255,.06)' }, ticks: { font: { size: 10 } } },
+          y2: { position: 'right', grid: { display: false }, ticks: { color: C_IND.gold, font: { size: 10 } } }
         }
       }
     }));
@@ -1127,55 +1160,63 @@ function _renderActCharts(key, d) {
 }
 
 function _actCardHTML(act, i, d) {
-  const maxNota = d.notas.length ? Math.max(...d.notas) : 0;
-  const term    = d.term.length;
+  const k = act.key;
   return `
-    <div class="ind-card" style="margin-bottom:12px">
-      <div class="ind-card-head" onclick="window._togInd('${act.key}')">
-        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;flex:1">
-          <span style="font-family:'LiberationMono',monospace;font-weight:bold;color:#ffd600;font-size:.95rem">📅 ${act.fecha}</span>
-          <span style="color:#00e5ff;font-size:.82rem">🕐 ${act.hora}</span>
-          <span class="admin-badge grado">${act.totalEstudiantes} participantes</span>
-          <span class="admin-badge dif">${term} completaron</span>
-          <span class="admin-badge" style="color:#39ff14">Prom: ${d.promNota}/500</span>
-          <span class="admin-badge" style="color:#ffd600">Mejor: ${maxNota}/500</span>
+<div class="ind-card">
+  <div class="ind-card-head" onclick="window._togInd('${k}')">
+    <span style="color:#ffd600;font-weight:bold">📅 ${act.fecha}</span>
+    <span style="color:#00e5ff;font-size:.8rem">🕐 ${act.hora}</span>
+    <span class="ind-badge">${act.totalEstudiantes} participantes</span>
+    <span class="ind-badge" style="color:#39ff14">Prom: ${d.promNota}/500</span>
+    <span class="ind-badge" style="color:#ffd600">Mejor: ${d.maxNota}/500</span>
+    <button class="ind-btn-xls" onclick="event.stopPropagation();window._xlsActInd('${k}')">📥 Excel</button>
+    <span class="ind-arr${i === 0 ? ' open' : ''}" id="ind-arr-${k}">▼</span>
+  </div>
+  <div id="ind-panel-${k}" class="${i === 0 ? '' : 'oculto'}">
+    <div class="ind-card-body">
+
+      <div class="ind-kpi-row">
+        <div class="ind-kpi" style="--ind-kpi-color:#00e5ff">
+          <div class="ind-kpi-val" id="ind-kv-n-${k}">${d.term.length}</div>
+          <div class="ind-kpi-lbl">Completaron</div>
         </div>
-        <div style="display:flex;align-items:center;gap:8px;margin-left:auto">
-          <button class="btn-accion verde chico" style="font-size:.75rem;padding:5px 10px;font-family:'LiberationMono',monospace"
-            onclick="event.stopPropagation();window._xlsActInd('${act.key}')">📥 Excel</button>
-          <span id="ind-arr-${act.key}" style="color:#8ab;font-size:.82rem">▼</span>
+        <div class="ind-kpi" style="--ind-kpi-color:#ffd600">
+          <div class="ind-kpi-val" id="ind-kv-prom-${k}">${d.promNota}</div>
+          <div class="ind-kpi-lbl">Promedio /500</div>
         </div>
-      </div>
-      <div id="ind-panel-${act.key}" class="${i === 0 ? '' : 'oculto'}" style="margin-top:14px">
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:16px">
-
-          <!-- Podio -->
-          <div class="ind-chart-card" style="display:flex;flex-direction:column">
-            <div class="ind-chart-title">🏅 Podio · Top 3</div>
-            ${_podioHTML(d.top3)}
-          </div>
-
-          <!-- Materias -->
-          <div class="ind-chart-card">
-            <div class="ind-chart-title">📚 Aciertos por materia</div>
-            <div style="position:relative;height:170px"><canvas id="ind-ch-mat-${act.key}"></canvas></div>
-          </div>
-
-          <!-- Grados -->
-          <div class="ind-chart-card">
-            <div class="ind-chart-title">🎓 Por grado</div>
-            <div style="position:relative;height:170px"><canvas id="ind-ch-grados-${act.key}"></canvas></div>
-          </div>
-
+        <div class="ind-kpi" style="--ind-kpi-color:#39ff14">
+          <div class="ind-kpi-val" id="ind-kv-mejor-${k}">${d.maxNota}</div>
+          <div class="ind-kpi-lbl">Mejor nota /500</div>
         </div>
-
-        <!-- Histograma full width -->
-        <div class="ind-chart-card" style="margin-bottom:0">
-          <div class="ind-chart-title">🎯 Distribución de notas</div>
-          <div style="position:relative;height:150px"><canvas id="ind-ch-histo-${act.key}"></canvas></div>
+        <div class="ind-kpi" style="--ind-kpi-color:#a78bfa">
+          <div class="ind-kpi-val">${d.porGrado.length}</div>
+          <div class="ind-kpi-lbl">Grados activos</div>
         </div>
       </div>
-    </div>`;
+
+      <div class="ind-charts-grid">
+        <div class="ind-chart-card">
+          <div class="ind-chart-title">🏅 Podio · Top 3</div>
+          <div id="ind-podio-${k}">${_podioHTML(d.top3)}</div>
+        </div>
+        <div class="ind-chart-card">
+          <div class="ind-chart-title">📚 % Aciertos por materia</div>
+          <div class="ind-chart-wrap"><canvas id="ind-ch-mat-${k}"></canvas></div>
+        </div>
+        <div class="ind-chart-card">
+          <div class="ind-chart-title">🎓 Comparativo por grado</div>
+          <div class="ind-chart-wrap"><canvas id="ind-ch-grados-${k}"></canvas></div>
+        </div>
+      </div>
+
+      <div class="ind-chart-card">
+        <div class="ind-chart-title">🎯 Distribución de notas (0 → 500)</div>
+        <div class="ind-chart-wrap-sm"><canvas id="ind-ch-histo-${k}"></canvas></div>
+      </div>
+
+    </div>
+  </div>
+</div>`;
 }
 
 async function renderIndicadores() {
@@ -1185,7 +1226,7 @@ async function renderIndicadores() {
 
   const snap = await get(ref(db, 'historial'));
   if (!snap.exists()) {
-    cont.innerHTML = '<p class="admin-vacio">No hay actividades guardadas aún. Guarda una actividad desde el panel de control.</p>';
+    cont.innerHTML = '<p class="admin-vacio">No hay actividades guardadas aún.</p>';
     return;
   }
 
@@ -1193,87 +1234,78 @@ async function renderIndicadores() {
     .map(([key, val]) => ({ key, ...val }))
     .sort((a, b) => b.timestamp - a.timestamp);
 
-  // calcular datos de cada actividad
-  const datos = actividades.map(a => ({ act: a, d: _calcAct(a) }));
+  _indFiltro = 0;
+  _indDatos  = actividades.map(a => ({ act: a }));
 
-  // Gráfico evolución global (promedio por sesión)
-  const evolLabels = actividades.map(a => a.fecha + '\n' + a.hora).reverse();
-  const evolData   = datos.map(({ d }) => d.promNota).reverse();
+  // HTML base
+  const evolHTML = actividades.length > 1 ? `
+    <div class="ind-evol-card">
+      <div class="ind-evol-head">
+        <div>
+          <div class="ind-evol-title">📈 Evolución del promedio</div>
+          <div class="ind-evol-sub">${actividades.length} sesiones guardadas · promedio /500</div>
+        </div>
+      </div>
+      <div class="ind-evol-wrap"><canvas id="ind-ch-evol"></canvas></div>
+    </div>` : '';
 
   cont.innerHTML = `
-    <style>
-      #ind-contenido { font-family: 'LiberationMono', monospace; }
-      .ind-card { background:#1a1a2e; border:1px solid #2a2a45; border-radius:14px; overflow:hidden; }
-      .ind-card-head { display:flex; align-items:center; padding:12px 16px; cursor:pointer;
-        background:#12121e; border-bottom:1px solid #2a2a45; gap:8px;
-        transition:background .15s; }
-      .ind-card-head:hover { background:#1e1e38; }
-      .ind-chart-card { background:#12121e; border:1px solid #2a2a45; border-radius:10px;
-        padding:14px 16px; }
-      .ind-chart-title { font-family:'LiberationMono',monospace; font-weight:bold;
-        font-size:.82rem; color:#e8e8f0; margin-bottom:10px; }
-      .ind-podio { display:flex; align-items:flex-end; justify-content:center;
-        gap:8px; padding:10px 4px 4px; height:160px; }
-      .ind-pcol { display:flex; flex-direction:column; align-items:center; gap:4px;
-        flex:1; max-width:90px; }
-      .ind-pav { width:42px; height:42px; border-radius:50%; display:flex;
-        align-items:center; justify-content:center; font-weight:900; font-size:.85rem;
-        border:2px solid; background:rgba(255,255,255,.05); }
-      .ind-pname { font-size:.65rem; font-weight:700; text-align:center; color:#e8e8f0;
-        font-family:'LiberationMono',monospace; }
-      .ind-pnota { font-size:.75rem; font-weight:800; font-family:'LiberationMono',monospace; }
-      .ind-pcurso { font-size:.6rem; color:#6b7280; }
-      .ind-pbase { border-radius:6px 6px 0 0; width:100%; display:flex;
-        align-items:center; justify-content:center; font-size:1.2rem; font-weight:900;
-        border:1px solid; border-bottom:none;
-        background:linear-gradient(180deg,rgba(255,255,255,.08),transparent); }
-      .ind-evol-card { background:#1a1a2e; border:1px solid #2a2a45; border-radius:14px;
-        padding:16px 18px; margin-bottom:14px; }
-      .ind-evol-title { font-family:'LiberationMono',monospace; font-weight:bold;
-        font-size:.9rem; color:#39ff14; margin-bottom:6px; }
-      .ind-evol-sub { font-size:.75rem; color:#6b7280; margin-bottom:12px; }
-      @media(max-width:800px){
-        #ind-contenido [style*="grid-template-columns:1fr 1fr 1fr"]{
-          grid-template-columns:1fr !important; }
-      }
-    </style>
+    <div class="ind-filtros">
+      <span class="ind-filtros-label">Filtrar por grado:</span>
+      <button class="ind-fg activo" data-g="0">Todos</button>
+      <button class="ind-fg" data-g="8">🎓 Grado 8°</button>
+      <button class="ind-fg" data-g="9">🎓 Grado 9°</button>
+      <button class="ind-fg" data-g="10">🎓 Grado 10°</button>
+    </div>
+    ${evolHTML}
+    <div id="ind-sesiones"></div>`;
 
-    ${actividades.length > 1 ? `
-    <div class="ind-evol-card">
-      <div class="ind-evol-title">📈 Evolución del promedio general</div>
-      <div class="ind-evol-sub">${actividades.length} sesión(es) guardadas · nota promedio /500</div>
-      <div style="position:relative;height:160px"><canvas id="ind-ch-evol"></canvas></div>
-    </div>` : ''}
+  // Renderizar sesiones iniciales (filtro=0)
+  _renderSesiones(actividades);
 
-    ${datos.map(({ act, d }, i) => _actCardHTML(act, i, d)).join('')}
-  `;
-
-  // Render evolución
+  // Gráfico evolución
   if (actividades.length > 1) {
     const evolEl = document.getElementById('ind-ch-evol');
-    if (evolEl) new Chart(evolEl, {
-      type: 'line',
-      data: {
-        labels: evolLabels,
-        datasets: [{ label: 'Nota prom.', data: evolData,
-          borderColor: C_IND.bio, backgroundColor: C_IND.bio + '18',
-          pointBackgroundColor: C_IND.bio, pointRadius: 5, borderWidth: 2, tension: .4, fill: true }]
-      },
-      options: {
-        responsive: true, maintainAspectRatio: false,
-        plugins: { legend: { display: false },
-          tooltip: { callbacks: { label: c => ` Prom: ${c.raw}/500` } } },
-        scales: {
-          x: { grid: { color: 'rgba(255,255,255,.04)' }, ticks: { font: { family: 'LiberationMono', size: 10 } } },
-          y: { min: 0, max: 500, grid: { color: 'rgba(255,255,255,.06)' },
-            ticks: { font: { family: 'LiberationMono' } } }
+    if (evolEl) {
+      const evolLabels = [...actividades].reverse().map(a => a.fecha);
+      const evolData   = [...actividades].reverse().map(a => {
+        const t = Object.values(a.estudiantes || {}).filter(e => e.estado === 'terminado');
+        const ns = t.map(e => Number(e.nota) || 0);
+        return ns.length ? Math.round(ns.reduce((a, b) => a + b, 0) / ns.length) : 0;
+      });
+      new Chart(evolEl, {
+        type: 'line',
+        data: {
+          labels: evolLabels,
+          datasets: [{ label: 'Prom. /500', data: evolData,
+            borderColor: C_IND.bio, backgroundColor: C_IND.bio + '18',
+            pointBackgroundColor: C_IND.bio, pointRadius: 5,
+            borderWidth: 2, tension: .4, fill: true }]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          plugins: { legend: { display: false },
+            tooltip: { callbacks: { label: c => ` ${c.raw}/500` } } },
+          scales: {
+            x: { grid: { color: 'rgba(255,255,255,.04)' }, ticks: { font: { size: 10 } } },
+            y: { min: 0, max: 500, grid: { color: 'rgba(255,255,255,.06)' } }
+          }
         }
-      }
-    });
+      });
+    }
   }
 
-  // Render charts de la primera actividad abierta
-  if (datos.length) _renderActCharts(datos[0].act.key, datos[0].d);
+  // Filtros de grado
+  cont.querySelectorAll('.ind-fg').forEach(btn => {
+    btn.addEventListener('click', () => {
+      cont.querySelectorAll('.ind-fg').forEach(b => b.classList.remove('activo'));
+      btn.classList.add('activo');
+      _indFiltro = +btn.dataset.g;
+      // Matar todos los charts abiertos y re-renderizar con nuevo filtro
+      Object.keys(_indCharts).forEach(k => _killCharts(k));
+      _renderSesiones(actividades);
+    });
+  });
 
   // Toggle acordeón
   window._togInd = key => {
@@ -1282,18 +1314,30 @@ async function renderIndicadores() {
     const open  = !panel.classList.contains('oculto');
     if (open) {
       panel.classList.add('oculto');
-      arr && (arr.textContent = '▼');
+      arr?.classList.remove('open');
       _killCharts(key);
     } else {
       panel.classList.remove('oculto');
-      arr && (arr.textContent = '▲');
-      const d = datos.find(x => x.act.key === key)?.d;
-      if (d) _renderActCharts(key, d);
+      arr?.classList.add('open');
+      const act = actividades.find(a => a.key === key);
+      if (act) _renderActCharts(key, _calcAct(act, _indFiltro));
     }
   };
 
-  // Excel por actividad
   window._xlsActInd = key => descargarXlsActividad(key);
+}
+
+function _renderSesiones(actividades) {
+  const cont = document.getElementById('ind-sesiones');
+  if (!cont) return;
+  cont.innerHTML = actividades.map((act, i) => {
+    const d = _calcAct(act, _indFiltro);
+    return _actCardHTML(act, i, d);
+  }).join('');
+  // Render charts de la primera
+  if (actividades.length) {
+    _renderActCharts(actividades[0].key, _calcAct(actividades[0], _indFiltro));
+  }
 }
 
 // ─── EXPORTAR ──────────────────────────────────────────────────────────────

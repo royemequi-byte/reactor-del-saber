@@ -1,0 +1,280 @@
+/* ══ INDICADORES PANEL ════════════════════════════════════════════════════
+   Scoped bajo #admin-tab-indicadores para no pisar el resto del admin
+   ═══════════════════════════════════════════════════════════════════════ */
+
+#admin-tab-indicadores {
+  font-family: 'LiberationMono', monospace !important;
+  color: #e8e8f0;
+  padding: 4px 0;
+}
+
+/* ── FILTROS DE GRADO ── */
+#admin-tab-indicadores .ind-filtros {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+  align-items: center;
+}
+#admin-tab-indicadores .ind-filtros-label {
+  color: #6b7280;
+  font-size: .75rem;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  margin-right: 4px;
+}
+#admin-tab-indicadores .ind-fg {
+  font-family: 'LiberationMono', monospace;
+  font-size: .8rem;
+  font-weight: 700;
+  padding: 6px 16px;
+  border-radius: 8px;
+  border: 1px solid #2a2a45;
+  background: #141425;
+  color: #8ab0c8;
+  cursor: pointer;
+  transition: all .15s;
+  letter-spacing: .3px;
+}
+#admin-tab-indicadores .ind-fg:hover {
+  border-color: #39ff14;
+  color: #39ff14;
+}
+#admin-tab-indicadores .ind-fg.activo {
+  background: #39ff1420;
+  border-color: #39ff14;
+  color: #39ff14;
+  box-shadow: 0 0 10px #39ff1430;
+}
+#admin-tab-indicadores .ind-fg[data-g="8"].activo  { background:#00e5ff18;border-color:#00e5ff;color:#00e5ff;box-shadow:0 0 10px #00e5ff30; }
+#admin-tab-indicadores .ind-fg[data-g="9"].activo  { background:#ff9f1c18;border-color:#ff9f1c;color:#ff9f1c;box-shadow:0 0 10px #ff9f1c30; }
+#admin-tab-indicadores .ind-fg[data-g="10"].activo { background:#39ff1418;border-color:#39ff14;color:#39ff14;box-shadow:0 0 10px #39ff1430; }
+
+/* ── EVOLUCIÓN GLOBAL ── */
+#admin-tab-indicadores .ind-evol-card {
+  background: #141425;
+  border: 1px solid #2a2a45;
+  border-radius: 14px;
+  padding: 16px 20px;
+  margin-bottom: 14px;
+}
+#admin-tab-indicadores .ind-evol-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+#admin-tab-indicadores .ind-evol-title {
+  font-family: 'LiberationMono', monospace;
+  font-weight: bold;
+  font-size: .9rem;
+  color: #39ff14;
+}
+#admin-tab-indicadores .ind-evol-sub {
+  font-size: .72rem;
+  color: #6b7280;
+  margin-top: 3px;
+}
+#admin-tab-indicadores .ind-evol-wrap {
+  position: relative;
+  height: 170px;
+}
+
+/* ── ACORDEÓN POR SESIÓN ── */
+#admin-tab-indicadores .ind-card {
+  background: #141425;
+  border: 1px solid #2a2a45;
+  border-radius: 14px;
+  overflow: hidden;
+  margin-bottom: 12px;
+  transition: box-shadow .2s;
+}
+#admin-tab-indicadores .ind-card:hover {
+  box-shadow: 0 4px 20px rgba(0,0,0,.4);
+}
+#admin-tab-indicadores .ind-card-head {
+  display: flex !important;
+  align-items: center !important;
+  padding: 12px 16px !important;
+  cursor: pointer !important;
+  background: #0f0f1e !important;
+  border-bottom: 1px solid #2a2a45 !important;
+  gap: 8px !important;
+  flex-wrap: wrap !important;
+  transition: background .15s !important;
+  font-family: 'LiberationMono', monospace !important;
+}
+#admin-tab-indicadores .ind-card-head:hover { background: #1a1a30 !important; }
+#admin-tab-indicadores .ind-card-body {
+  padding: 16px;
+}
+
+/* ── KPI FILA INTERNA ── */
+#admin-tab-indicadores .ind-kpi-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 10px;
+  margin-bottom: 14px;
+}
+#admin-tab-indicadores .ind-kpi {
+  background: #0f0f1e;
+  border: 1px solid #2a2a45;
+  border-radius: 10px;
+  padding: 10px 14px;
+  position: relative;
+  overflow: hidden;
+}
+#admin-tab-indicadores .ind-kpi::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--ind-kpi-color, #39ff14);
+}
+#admin-tab-indicadores .ind-kpi-val {
+  font-family: 'LiberationMono', monospace;
+  font-weight: bold;
+  font-size: 1.4rem;
+  color: var(--ind-kpi-color, #39ff14);
+  line-height: 1;
+  text-shadow: 0 0 14px var(--ind-kpi-color, #39ff1440);
+}
+#admin-tab-indicadores .ind-kpi-lbl {
+  font-size: .68rem;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: .4px;
+  margin-top: 4px;
+}
+
+/* ── GRID DE GRÁFICOS ── */
+#admin-tab-indicadores .ind-charts-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+#admin-tab-indicadores .ind-charts-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 0;
+}
+#admin-tab-indicadores .ind-chart-card {
+  background: #0f0f1e;
+  border: 1px solid #2a2a45;
+  border-radius: 10px;
+  padding: 12px 14px;
+}
+#admin-tab-indicadores .ind-chart-title {
+  font-family: 'LiberationMono', monospace;
+  font-weight: bold;
+  font-size: .78rem;
+  color: #c8d8e8;
+  margin-bottom: 10px;
+  letter-spacing: .2px;
+}
+#admin-tab-indicadores .ind-chart-wrap {
+  position: relative;
+  height: 190px;
+}
+#admin-tab-indicadores .ind-chart-wrap-sm {
+  position: relative;
+  height: 155px;
+}
+
+/* ── PODIO ── */
+#admin-tab-indicadores .ind-podio {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 4px 0;
+  height: 190px;
+}
+#admin-tab-indicadores .ind-pcol {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  flex: 1;
+  max-width: 95px;
+}
+#admin-tab-indicadores .ind-pav {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'LiberationMono', monospace;
+  font-weight: 900; font-size: .9rem;
+  border: 2px solid;
+  background: rgba(255,255,255,.05);
+}
+#admin-tab-indicadores .ind-pname {
+  font-family: 'LiberationMono', monospace;
+  font-size: .62rem; font-weight: 700;
+  text-align: center; color: #e8e8f0;
+  word-break: break-word; line-height: 1.2;
+}
+#admin-tab-indicadores .ind-pnota {
+  font-family: 'LiberationMono', monospace;
+  font-size: .78rem; font-weight: 800;
+}
+#admin-tab-indicadores .ind-pcurso {
+  font-size: .58rem; color: #6b7280;
+}
+#admin-tab-indicadores .ind-pbase {
+  border-radius: 6px 6px 0 0;
+  width: 100%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.3rem; font-weight: 900;
+  border: 1px solid; border-bottom: none;
+  background: linear-gradient(180deg, rgba(255,255,255,.08), transparent);
+  text-shadow: 0 0 10px currentColor;
+}
+
+/* ── BADGE EXCEL ── */
+#admin-tab-indicadores .ind-btn-xls {
+  font-family: 'LiberationMono', monospace;
+  font-size: .72rem; font-weight: 700;
+  padding: 5px 12px;
+  border-radius: 6px;
+  border: 1px solid #39ff14;
+  background: #39ff1415;
+  color: #39ff14;
+  cursor: pointer;
+  transition: all .15s;
+  white-space: nowrap;
+}
+#admin-tab-indicadores .ind-btn-xls:hover {
+  background: #39ff1430;
+  box-shadow: 0 0 8px #39ff1440;
+}
+#admin-tab-indicadores .ind-arr {
+  color: #6b7280;
+  font-size: .8rem;
+  margin-left: 4px;
+  transition: transform .2s;
+}
+#admin-tab-indicadores .ind-arr.open { transform: rotate(180deg); }
+
+/* ── BADGE INFO ── */
+#admin-tab-indicadores .ind-badge {
+  font-family: 'LiberationMono', monospace;
+  font-size: .72rem; font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 5px;
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.1);
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  #admin-tab-indicadores .ind-charts-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 600px) {
+  #admin-tab-indicadores .ind-charts-grid,
+  #admin-tab-indicadores .ind-charts-grid-2 { grid-template-columns: 1fr; }
+  #admin-tab-indicadores .ind-kpi-row { grid-template-columns: 1fr 1fr; }
+}
