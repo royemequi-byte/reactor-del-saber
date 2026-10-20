@@ -6,13 +6,49 @@ import {
 } from './banco.js';
 import { subirImagenPregunta } from './storage.js';
 import * as XLSX from 'xlsx';
+import { db } from './firebase.js';
+import { ref, get, set, onValue } from 'firebase/database';
 
 let listo = false; // evitar listeners duplicados en re-login
+
+// ─── CONTROL DE ACCESO ─────────────────────────────────────────────────────
+function iniciarControlAcceso() {
+  const btnToggle  = document.getElementById('btn-toggle-acceso');
+  const textoEstado = document.getElementById('acceso-estado-texto');
+
+  function aplicarEstado(habilitado) {
+    if (habilitado) {
+      btnToggle.textContent  = '🔴 Deshabilitar';
+      btnToggle.style.background = '#c0392b';
+      btnToggle.style.color  = '#fff';
+      textoEstado.textContent = '✅ Los estudiantes pueden ingresar ahora';
+      textoEstado.style.color = '#39ff14';
+    } else {
+      btnToggle.textContent  = '🟢 Habilitar acceso';
+      btnToggle.style.background = '#27ae60';
+      btnToggle.style.color  = '#fff';
+      textoEstado.textContent = '🔒 Bloqueado — los estudiantes no pueden entrar';
+      textoEstado.style.color = '#ffd600';
+    }
+  }
+
+  // Leer estado actual y escuchar cambios
+  onValue(ref(db, 'config/habilitado'), snap => {
+    aplicarEstado(snap.val() === true);
+  });
+
+  btnToggle.addEventListener('click', async () => {
+    const snap = await get(ref(db, 'config/habilitado'));
+    const actual = snap.val() === true;
+    await set(ref(db, 'config/habilitado'), !actual);
+  });
+}
 
 // ─── PUNTO DE ENTRADA ──────────────────────────────────────────────────────
 export function adminInicializar() {
   actualizarContador();
   renderizarPreguntas();
+  iniciarControlAcceso();
 
   if (listo) return;
   listo = true;

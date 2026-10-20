@@ -15,6 +15,8 @@ import { renderRelacionar } from './tipos/relacionar.js';
 import { renderOrdenar }    from './tipos/ordenar.js';
 import { renderCrucigrama } from './tipos/crucigrama.js';
 import { renderClasifica }  from './tipos/clasifica.js';
+import { db } from './firebase.js';
+import { ref, onValue } from 'firebase/database';
 
 // ─── NAVEGACIÓN ────────────────────────────────────────────────────────────
 export function irA(id) {
@@ -64,6 +66,33 @@ function salaLimpiar() {
 
 // ─── INICIALIZAR BANCO DESDE FIREBASE ─────────────────────────────────────
 await initBanco();
+
+// ─── GATE DE ACCESO (controlado por el admin desde Firebase) ───────────────
+// El admin activa/desactiva en /config/habilitado.
+// Si está deshabilitado, se muestra pantalla de bloqueo. Cuando el admin
+// lo habilite, la pantalla de bloqueo desaparece en tiempo real.
+let accesoHabilitado = false;
+
+onValue(ref(db, 'config/habilitado'), snap => {
+  accesoHabilitado = snap.val() === true;
+  const bloqueada = document.getElementById('pantalla-bloqueada');
+  const portada   = document.getElementById('pantalla-portada');
+  if (accesoHabilitado) {
+    // Desbloquear: si el usuario está en la pantalla bloqueada, enviarlo a portada
+    if (bloqueada.classList.contains('activa')) {
+      irA('pantalla-portada');
+    }
+  } else {
+    // Bloquear: solo si el usuario está en portada o aún no entró al examen
+    const pantallaActiva = document.querySelector('.pantalla.activa');
+    const id = pantallaActiva?.id;
+    const enExamen = ['pantalla-examen','pantalla-retro','pantalla-resultados','pantalla-podio','pantalla-espera'].includes(id);
+    const esAdmin   = ['pantalla-admin','pantalla-preview'].includes(id);
+    if (!enExamen && !esAdmin) {
+      irA('pantalla-bloqueada');
+    }
+  }
+});
 
 // ─── PORTADA ───────────────────────────────────────────────────────────────
 document.getElementById('btn-entrar').addEventListener('click', () => {
