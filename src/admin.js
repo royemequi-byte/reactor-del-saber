@@ -140,9 +140,9 @@ function iniciarAyudas() {
 
 // ─── CUOTAS POR MATERIA ────────────────────────────────────────────────────
 const MATERIAS_POR_GRADO = {
-  8:  ['biologia', 'fisica', 'quimica', 'cts'],
-  9:  ['biologia', 'fisica', 'quimica', 'cts'],
-  10: ['quimica', 'fisica', 'biologia', 'cts'],
+  8:  ['biologia', 'fisica', 'quimica', 'cts', 'razonamiento'],
+  9:  ['biologia', 'fisica', 'quimica', 'cts', 'razonamiento'],
+  10: ['quimica', 'fisica', 'biologia', 'cts', 'razonamiento'],
 };
 
 function actualizarTotal(grado) {
@@ -480,8 +480,8 @@ function renderDetalleAct(act) {
   const terminados = Object.values(act.estudiantes || {})
     .filter(e => e.estado === 'terminado');
 
-  const mats   = ['biologia', 'fisica', 'quimica', 'cts'];
-  const emojis = { biologia: '🌿', fisica: '⚡', quimica: '⚗️', cts: '🔬' };
+  const mats   = ['biologia', 'fisica', 'quimica', 'cts', 'razonamiento'];
+  const emojis = { biologia: '🌿', fisica: '⚡', quimica: '⚗️', cts: '🔬', razonamiento: '🧠' };
   const meds   = { 0: '🥇', 1: '🥈', 2: '🥉' };
   const css    = { 0: 'top1', 1: 'top2', 2: 'top3' };
 
@@ -579,7 +579,8 @@ function descargarXlsActividad(key) {
     'Bio ✓':      e.aciertos?.biologia  || 0,
     'Fis ✓':      e.aciertos?.fisica    || 0,
     'Qui ✓':      e.aciertos?.quimica   || 0,
-    'CTS ✓':      e.aciertos?.cts       || 0,
+    'CTS ✓':      e.aciertos?.cts          || 0,
+    'Rzn ✓':      e.aciertos?.razonamiento || 0,
   }));
 
   const wb = XLSX.utils.book_new();
@@ -619,8 +620,8 @@ function renderizarPreguntas() {
   if (activa === '0') banco = banco.filter(p => !p.activa);
   if (origen)         banco = banco.filter(p => (p.origen || 'normal') === origen);
 
-  const colores = { quimica: '#39ff14', fisica: '#00e5ff', biologia: '#ff9f1c', cts: '#ff69b4' };
-  const emojis  = { quimica: '⚗️', fisica: '⚡', biologia: '🌿', cts: '🔬' };
+  const colores = { quimica: '#39ff14', fisica: '#00e5ff', biologia: '#ff9f1c', cts: '#ff69b4', razonamiento: '#a78bfa' };
+  const emojis  = { quimica: '⚗️', fisica: '⚡', biologia: '🌿', cts: '🔬', razonamiento: '🧠' };
 
   const lista = document.getElementById('admin-lista');
   if (!banco.length) {
