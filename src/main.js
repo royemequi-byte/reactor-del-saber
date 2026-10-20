@@ -155,31 +155,51 @@ function salaLimpiar() {
 await initBanco();
 await initConfig();
 
-// ─── PORTADA ───────────────────────────────────────────────────────────────
-document.getElementById('btn-entrar').addEventListener('click', async () => {
+// ─── CONTROL DE ACCESO ─────────────────────────────────────────────────────
+let _accesoUnsub = null;
+
+function _cancelarEsperaAcceso() {
+  if (_accesoUnsub) { _accesoUnsub(); _accesoUnsub = null; }
+}
+
+async function _verificarAccesoYProceder(callback) {
   const snap = await get(ref(db, 'config/habilitado'));
   if (snap.val() !== true) {
     irA('pantalla-bloqueada');
-    // Escuchar hasta que el admin habilite, luego volver a portada
-    const unsub = onValue(ref(db, 'config/habilitado'), s => {
+    _cancelarEsperaAcceso(); // evitar listeners duplicados
+    _accesoUnsub = onValue(ref(db, 'config/habilitado'), s => {
       if (s.val() === true) {
-        unsub();
+        _cancelarEsperaAcceso();
         irA('pantalla-portada');
       }
     });
     return;
   }
-  iniciarAudio();
-  setTimeout(() => tocarIntro(), 120);
-  sala.modo      = 'solo';
-  sala.gradoSala = null;
-  document.getElementById('aviso-grado-sala').classList.add('oculto');
-  irA('pantalla-registro');
+  callback();
+}
+
+document.getElementById('btn-bloqueada-volver').addEventListener('click', () => {
+  _cancelarEsperaAcceso();
+  irA('pantalla-portada');
+});
+
+// ─── PORTADA ───────────────────────────────────────────────────────────────
+document.getElementById('btn-entrar').addEventListener('click', () => {
+  _verificarAccesoYProceder(() => {
+    iniciarAudio();
+    setTimeout(() => tocarIntro(), 120);
+    sala.modo      = 'solo';
+    sala.gradoSala = null;
+    document.getElementById('aviso-grado-sala').classList.add('oculto');
+    irA('pantalla-registro');
+  });
 });
 
 document.getElementById('btn-sala').addEventListener('click', () => {
-  iniciarAudio();
-  irA('pantalla-sala-rol');
+  _verificarAccesoYProceder(() => {
+    iniciarAudio();
+    irA('pantalla-sala-rol');
+  });
 });
 
 // ─── VOLVER AL INICIO (registro y admin login) ─────────────────────────────
