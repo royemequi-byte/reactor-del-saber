@@ -829,21 +829,40 @@ window._adminBorrar = (id) => {
 };
 
 // ─── RANKING ───────────────────────────────────────────────────────────────
-function renderizarRanking() {
-  const datos = JSON.parse(localStorage.getItem('ranking') || '[]');
+async function renderizarRanking() {
   const lista = document.getElementById('admin-ranking-lista');
+  lista.innerHTML = '<p class="admin-vacio">Cargando…</p>';
+
+  const snap = await get(ref(db, 'historial'));
+  let datos = [];
+
+  if (snap.exists()) {
+    Object.entries(snap.val()).forEach(([key, act]) => {
+      Object.values(act.estudiantes || {}).forEach(e => {
+        if (e.estado === 'terminado') {
+          datos.push({ ...e, fechaAct: act.fecha, horaAct: act.hora });
+        }
+      });
+    });
+  }
 
   if (!datos.length) {
-    lista.innerHTML = '<p class="admin-vacio">El ranking está vacío.</p>';
+    lista.innerHTML = '<p class="admin-vacio">No hay actividades guardadas aún.</p>';
     return;
   }
 
+  datos.sort((a, b) => Number(b.nota) - Number(a.nota));
+
   lista.innerHTML = `
-    <table class="ranking-tabla" style="margin-top:14px">
+    <p style="color:#8ab;font-size:0.85rem;margin-bottom:8px">
+      ${datos.length} estudiantes en ${snap.exists() ? Object.keys(snap.val()).length : 0} actividad(es) guardada(s)
+    </p>
+    <table class="ranking-tabla" style="margin-top:4px">
       <thead>
         <tr>
           <th>#</th><th>Nombre</th><th>Avatar</th>
-          <th>Colegio</th><th>Grado</th><th>Curso</th><th>Pts</th><th>Nota</th><th>Fecha</th><th></th>
+          <th>Colegio</th><th>Grado</th><th>Curso</th>
+          <th>Pts</th><th>Nota</th><th>Fecha</th><th>Hora</th>
         </tr>
       </thead>
       <tbody>
@@ -857,8 +876,8 @@ function renderizarRanking() {
             <td>${r.curso}</td>
             <td>${Number(r.puntaje).toLocaleString('es-CO')}</td>
             <td>${r.nota}</td>
-            <td>${r.fecha || '—'}</td>
-            <td><button class="btn-accion rojo chico" onclick="window._adminBorrarEntrada(${i})">🗑</button></td>
+            <td>${r.fechaAct || '—'}</td>
+            <td>${r.horaAct || '—'}</td>
           </tr>`).join('')}
       </tbody>
     </table>`;
