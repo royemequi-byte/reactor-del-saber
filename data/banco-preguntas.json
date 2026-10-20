@@ -3192,5 +3192,485 @@
     "autor": "iti-docente",
     "activa": true,
     "origen": "normal"
+  },
+  {
+    "id": "FIS-8-012",
+    "materia": "fisica",
+    "tema": "magnetismo",
+    "grado": 8,
+    "dificultad": 1,
+    "enunciado": "Si acercas dos imanes por sus polos iguales, ¿qué sucederá entre ellos?",
+    "opciones": [
+      "Se atraerán con fuerza.",
+      "Se repelerán (se rechazarán).",
+      "Se convertirán en un solo imán.",
+      "Perderán su magnetismo inmediatamente."
+    ],
+    "correcta": 1,
+    "explicacion": "Los polos iguales se repelen: norte-norte y sur-sur generan fuerzas de repulsión. Solo polos opuestos (norte-sur) se atraen.",
+    "imagen": null,
+    "autor": "profe",
+    "activa": true,
+    "origen": "normal"
+  },
+  {
+    "id": "FIS-8-013",
+    "materia": "fisica",
+    "tema": "magnetismo",
+    "grado": 8,
+    "dificultad": 1,
+    "enunciado": "Un estudiante tiene varios objetos sobre su mesa y quiere saber cuáles son atraídos por un imán. ¿Cuál grupo será atraído?",
+    "opciones": [
+      "Una moneda de plástico, un borrador de goma y un clip de madera.",
+      "Una hoja de papel, un lápiz de grafito y un vaso de vidrio.",
+      "Un clip de hierro, un clavo de acero y una puntilla de metal.",
+      "Un trozo de lana, una regla de plástico y un hilo de algodón."
+    ],
+    "correcta": 2,
+    "explicacion": "Los imanes atraen materiales ferromagnéticos como el hierro y el acero. El clip de hierro, el clavo de acero y la puntilla son los únicos materiales magnéticos del grupo.",
+    "imagen": null,
+    "autor": "profe",
+    "activa": true,
+    "origen": "normal"
+  },
+  {
+    "id": "FIS-8-014",
+    "materia": "fisica",
+    "tema": "circuitos electricos",
+    "grado": 8,
+    "dificultad": 1,
+    "enunciado": "Para que una pequeña bombilla encienda dentro de un circuito eléctrico escolar, es indispensable contar con:",
+    "opciones": [
+      "Un trozo de madera, un imán y un hilo de seda.",
+      "Una fuente de energía (pila), un trozo de cable conductor y el receptor (bombilla).",
+      "Solamente un cable muy largo conectado al bombillo.",
+      "Dos trozos de cables conductores, una fuente de energía y la bombilla."
+    ],
+    "correcta": 3,
+    "explicacion": "Un circuito cerrado necesita una fuente de energía y dos conductores que conecten sus terminales al receptor, formando un camino completo para el flujo de corriente.",
+    "imagen": null,
+    "autor": "profe",
+    "activa": true,
+    "origen": "normal"
+  },
+  {
+    "id": "FIS-8-015",
+    "materia": "fisica",
+    "tema": "conductores y aislantes",
+    "grado": 8,
+    "dificultad": 1,
+    "enunciado": "Se necesita cubrir un cable de cobre para que nadie reciba una descarga al tocarlo. ¿Qué material se debe usar como aislante?",
+    "opciones": [
+      "Un alambre extra de cobre.",
+      "Un trozo de aluminio.",
+      "Una lámina delgada de hierro.",
+      "Plástico o cinta plástica."
+    ],
+    "correcta": 3,
+    "explicacion": "El plástico es un aislante eléctrico que impide el paso de corriente. Los metales como el cobre, aluminio y hierro son conductores.",
+    "imagen": null,
+    "autor": "profe",
+    "activa": true,
+    "origen": "normal"
+  },
+  {
+    "id": "FIS-9-013",
+    "materia": "fisica",
+    "tema": "electromagnetismo",
+    "grado": 9,
+    "dificultad": 2,
+    "enunciado": "Estudiantes enrollan un alambre conductor alrededor de un clavo de hierro y lo conectan a una batería. Al cerrar el circuito el clavo atrae clips; al desconectar la batería deja de atraerlos. ¿Cuál explicación es correcta?",
+    "opciones": [
+      "La corriente transforma permanentemente el hierro en otro elemento capaz de atraer metales.",
+      "La corriente que circula por el alambre genera un campo magnético que magnetiza temporalmente el clavo.",
+      "La batería calienta el clavo hasta convertirlo en imán permanente.",
+      "La corriente elimina el peso de los clips y permite que se adhieran al clavo."
+    ],
+    "correcta": 1,
+    "explicacion": "La corriente genera un campo magnético que magnetiza temporalmente el núcleo de hierro. Al abrir el circuito, el campo desaparece y el clavo pierde el magnetismo inducido.",
+    "imagen": null,
+    "autor": "profe",
+    "activa": true,
+    "origen": "normal"
+  },
+  {
+    "id": "QUI-8-016",
+    "materia": "quimica",
+    "tema": "masa volumen densidad",
+    "grado": 8,
+    "dificultad": 1,
+    "enunciado": "Un estudiante mide tres muestras: P (masa 20 g, volumen 10 mL), Q (masa 40 g, volumen 20 mL) y R (masa 60 g, volumen 20 mL). ¿Cuál muestra tiene mayor densidad?",
+    "opciones": [
+      "P, porque tiene el menor volumen.",
+      "Q, porque su masa es el doble de P.",
+      "R, porque tiene mayor masa para el mismo volumen que Q.",
+      "Las tres tienen la misma densidad."
+    ],
+    "correcta": 2,
+    "explicacion": "Densidad = masa/volumen. P: 20/10 = 2 g/mL; Q: 40/20 = 2 g/mL; R: 60/20 = 3 g/mL. La muestra R tiene la mayor densidad.",
+    "imagen": null,
+    "autor": "profe",
+    "activa": true,
+    "origen": "normal"
+  },
+  {
+    "id": "QUI-8-017",
+    "materia": "quimica",
+    "tema": "tabla periodica",
+    "grado": 8,
+    "dificultad": 1,
+    "enunciado": "El número atómico del sodio (Na) es 11. Si es un átomo eléctricamente neutro, ¿cuál afirmación es correcta?",
+    "opciones": [
+      "Todos los elementos tienen igual número de protones y neutrones.",
+      "Un átomo de sodio tiene 11 protones y, si es eléctricamente neutro, también tiene 11 neutrones y 11 electrones.",
+      "Un átomo de cloro (Z=17) tiene 17 neutrones y necesariamente 17 electrones.",
+      "El oxígeno tiene menos protones que el carbono porque su símbolo aparece antes en la tabla."
+    ],
+    "correcta": 1,
+    "explicacion": "En un átomo neutro, el número de electrones iguala al de protones. El sodio tiene 11 protones y, siendo neutro, tiene 11 electrones.",
+    "imagen": null,
+    "autor": "profe",
+    "activa": true,
+    "origen": "normal"
+  },
+  {
+    "id": "QUI-8-018",
+    "materia": "quimica",
+    "tema": "estados de la materia",
+    "grado": 8,
+    "dificultad": 1,
+    "enunciado": "Hielo a temperatura ambiente se convierte en agua líquida y al seguir calentando en vapor. ¿Cuál explicación científica es correcta?",
+    "opciones": [
+      "La materia desaparece cuando el agua hierve.",
+      "Las partículas de agua se convierten en otra sustancia al aumentar la temperatura.",
+      "Al recibir energía, las partículas aumentan su movimiento y cambian su organización, produciendo cambios de estado.",
+      "El agua líquida tiene partículas diferentes del hielo, con distinta composición química."
+    ],
+    "correcta": 2,
+    "explicacion": "Los cambios de estado son físicos: las partículas de H₂O son siempre las mismas. Al ganar energía térmica, aumentan su movimiento y se reorganizan sin cambiar composición química.",
+    "imagen": null,
+    "autor": "profe",
+    "activa": true,
+    "origen": "normal"
+  },
+  {
+    "id": "QUI-8-019",
+    "materia": "quimica",
+    "tema": "medicion y volumen",
+    "grado": 8,
+    "dificultad": 1,
+    "enunciado": "Una estudiante usa una probeta para medir el volumen de una piedra irregular: nivel inicial 40 mL, nivel final (con la piedra sumergida) 57 mL. ¿Cuál es el volumen de la piedra?",
+    "opciones": [
+      "97 mL, porque se suman los dos valores.",
+      "40 mL, porque es el volumen de agua inicial.",
+      "57 mL, porque es el volumen total registrado.",
+      "17 mL, porque es la diferencia entre el volumen final y el inicial."
+    ],
+    "correcta": 3,
+    "explicacion": "V sólido = V final − V inicial = 57 − 40 = 17 mL. El sólido desplaza exactamente su propio volumen de agua.",
+    "imagen": null,
+    "autor": "profe",
+    "activa": true,
+    "origen": "normal"
+  },
+  {
+    "id": "QUI-9-013",
+    "materia": "quimica",
+    "tema": "separacion de mezclas",
+    "grado": 9,
+    "dificultad": 1,
+    "enunciado": "Un estudiante recibe una mezcla de agua, arena y sal disuelta. Necesita recuperar la arena y obtener la sal sólida. ¿Cuál procedimiento es el más adecuado?",
+    "opciones": [
+      "Usar un imán para retirar la arena y luego decantación para recuperar la sal.",
+      "Filtrar la mezcla para retener la arena y después evaporar el agua del filtrado para obtener la sal.",
+      "Tamizar la mezcla para separar la sal del agua y usar un imán para recuperar la arena.",
+      "Aplicar destilación directamente para retener la arena y dejar la sal en forma de vapor."
+    ],
+    "correcta": 1,
+    "explicacion": "La arena no se disuelve y queda retenida en el filtro. La sal pasa con el agua; para recuperarla se evapora el agua del filtrado, dejando la sal sólida.",
+    "imagen": null,
+    "autor": "profe",
+    "activa": true,
+    "origen": "normal"
+  },
+  {
+    "id": "QUI-9-014",
+    "materia": "quimica",
+    "tema": "indagacion experimental",
+    "grado": 9,
+    "dificultad": 2,
+    "enunciado": "Un grupo quiere comparar evaporación vs filtración para recuperar sal disuelta en agua. ¿Cuál procedimiento garantiza que la comparación sea válida?",
+    "opciones": [
+      "Usar cantidades diferentes de agua salada y comparar cuál método termina primero.",
+      "Filtrar una muestra y evaporar la otra con cantidades iguales de mezcla y mismas condiciones; después comparar la masa de sal recuperada.",
+      "Calentar una muestra y filtrar la otra después de agregarle arena.",
+      "Usar agua pura en una muestra y agua salada en la otra con métodos iguales."
+    ],
+    "correcta": 1,
+    "explicacion": "Para comparar dos métodos se deben controlar las variables: misma cantidad de mezcla, misma concentración y condiciones equivalentes. Solo así la diferencia en resultados se puede atribuir al método.",
+    "imagen": null,
+    "autor": "profe",
+    "activa": true,
+    "origen": "normal"
+  },
+  {
+    "id": "RZN-8-017",
+    "materia": "razonamiento",
+    "tema": "impacto ambiental cts",
+    "grado": 8,
+    "dificultad": 1,
+    "enunciado": "Una comunidad usa bolsas plásticas de un solo uso. Los desagües se tapan y hay fragmentos plásticos en una quebrada cercana. La alcaldía propone reemplazarlas por bolsas reutilizables y hacer campañas educativas. ¿Cuál es la principal justificación científica de esta propuesta?",
+    "opciones": [
+      "Las bolsas reutilizables se descomponen de inmediato al entrar en contacto con el agua.",
+      "Reducir los plásticos desechables disminuye residuos y sus efectos sobre los ecosistemas.",
+      "Los plásticos dejan de contaminar cuando llegan a una quebrada cercana.",
+      "La contaminación plástica afecta solo a los organismos que viven en el agua."
+    ],
+    "correcta": 1,
+    "explicacion": "Los plásticos de un solo uso son resistentes a la degradación y se acumulan en el ambiente. Reducir su uso disminuye la cantidad de residuos que llegan a ecosistemas acuáticos y terrestres.",
+    "imagen": null,
+    "autor": "profe",
+    "activa": true,
+    "origen": "normal"
+  },
+  {
+    "id": "RZN-8-018",
+    "materia": "razonamiento",
+    "tema": "salud publica cts",
+    "grado": 8,
+    "dificultad": 1,
+    "enunciado": "Autoridades hacen una campaña de vacunación. Algunas personas no participan porque creen que la vacuna solo beneficia a quien la recibe. ¿Cuál argumento científico cuestiona esa afirmación?",
+    "opciones": [
+      "Las vacunas impiden que todos los microorganismos entren al cuerpo.",
+      "Las vacunas hacen innecesario mantener hábitos de higiene en la comunidad.",
+      "Una alta vacunación puede reducir contagios y proteger a personas vulnerables que no pueden vacunarse.",
+      "Las vacunas producen exactamente el mismo efecto en todas las personas."
+    ],
+    "correcta": 2,
+    "explicacion": "La inmunidad colectiva protege indirectamente a quienes no pueden vacunarse (bebés, inmunocomprometidos) al reducir la circulación del patógeno en la comunidad.",
+    "imagen": null,
+    "autor": "profe",
+    "activa": true,
+    "origen": "normal"
+  },
+  {
+    "id": "RZN-8-019",
+    "materia": "razonamiento",
+    "tema": "tecnologia y medio ambiente cts",
+    "grado": 8,
+    "dificultad": 1,
+    "enunciado": "Un agricultor aplica pesticidas para controlar insectos dañinos. Con el tiempo observa que disminuyen insectos beneficiosos y necesita más producto para obtener resultados similares. ¿Cuál explicación es la más adecuada?",
+    "opciones": [
+      "Todos los insectos del cultivo son perjudiciales para la producción agrícola.",
+      "El pesticida afecta organismos no objetivo y puede favorecer el surgimiento de insectos resistentes.",
+      "Aumentar la dosis garantiza que nunca aparecerán insectos resistentes.",
+      "Los insectos beneficiosos no cumplen funciones importantes en los cultivos."
+    ],
+    "correcta": 1,
+    "explicacion": "Los pesticidas no son selectivos: pueden afectar polinizadores y depredadores naturales. Los individuos que sobreviven al producto son más resistentes y se reproducen, aumentando la resistencia con el tiempo.",
+    "imagen": null,
+    "autor": "profe",
+    "activa": true,
+    "origen": "normal"
+  },
+  {
+    "id": "RZN-8-020",
+    "materia": "razonamiento",
+    "tema": "residuos electronicos cts",
+    "grado": 8,
+    "dificultad": 1,
+    "enunciado": "Una institución almacena computadores viejos que terminan en un botadero informal donde pueden liberar sustancias contaminantes. ¿Cuál alternativa de gestión es más responsable?",
+    "opciones": [
+      "Quemar los computadores para reducir rápidamente su volumen de residuos.",
+      "Mezclar los residuos electrónicos con los residuos orgánicos domésticos.",
+      "Reparar o reutilizar equipos y entregar los inservibles a gestores autorizados de reciclaje.",
+      "Enterrar los equipos para evitar que las personas los manipulen."
+    ],
+    "correcta": 2,
+    "explicacion": "Los residuos electrónicos contienen metales pesados y sustancias tóxicas. La gestión responsable implica reutilizar o entregarlos a gestores certificados que los reciclen sin contaminar el ambiente.",
+    "imagen": null,
+    "autor": "profe",
+    "activa": true,
+    "origen": "normal"
+  },
+  {
+    "id": "RZN-9-017",
+    "materia": "razonamiento",
+    "tema": "energia renovable cts",
+    "grado": 9,
+    "dificultad": 1,
+    "enunciado": "Una institución compara tres fuentes de energía: Solar (bajas emisiones, depende de radiación), Carbón (altas emisiones), Eólica (bajas emisiones, depende del viento). Si tiene buena radiación solar y quiere reducir emisiones, ¿cuál decisión es mejor?",
+    "opciones": [
+      "Instalar paneles solares y evaluar su viabilidad técnica y económica local.",
+      "Usar solo carbón porque genera energía continua sin depender del clima.",
+      "Descartar las renovables porque dependen de condiciones naturales variables.",
+      "Elegir una fuente sin estudiar las condiciones del lugar."
+    ],
+    "correcta": 0,
+    "explicacion": "Con buena radiación solar y objetivo de reducir emisiones, la energía solar es la opción más coherente. Evaluar la viabilidad técnica y económica garantiza una decisión informada.",
+    "imagen": null,
+    "autor": "profe",
+    "activa": true,
+    "origen": "normal"
+  },
+  {
+    "id": "RZN-9-018",
+    "materia": "razonamiento",
+    "tema": "ia y tecnologia cts",
+    "grado": 9,
+    "dificultad": 1,
+    "enunciado": "Un hospital usa inteligencia artificial para analizar imágenes médicas. El sistema señala una posible lesión pero el médico debe revisar el resultado antes de decidir. ¿Por qué es importante esta revisión profesional?",
+    "opciones": [
+      "Porque la inteligencia artificial siempre produce resultados incorrectos.",
+      "Porque una máquina no puede procesar información científica de ningún tipo.",
+      "Porque el resultado debe evaluarse según los límites del sistema y los datos clínicos del paciente.",
+      "Porque la tecnología debe sustituir por completo el criterio del profesional."
+    ],
+    "correcta": 2,
+    "explicacion": "Los sistemas de IA tienen limitaciones (falsos positivos, falsos negativos). El médico integra el resultado con el contexto clínico completo del paciente para tomar la decisión final.",
+    "imagen": null,
+    "autor": "profe",
+    "activa": true,
+    "origen": "normal"
+  },
+  {
+    "id": "RZN-9-019",
+    "materia": "razonamiento",
+    "tema": "contaminacion ambiental cts",
+    "grado": 9,
+    "dificultad": 1,
+    "enunciado": "Investigadores analizan muestras de agua de una zona urbana y una rural: encuentran microplásticos en ambas, aunque en concentraciones distintas. ¿Cuál conclusión es la más sólida?",
+    "opciones": [
+      "Todos los microplásticos encontrados se originaron necesariamente en la ciudad.",
+      "Encontrar microplásticos demuestra que el agua no tiene otros tipos de contaminantes.",
+      "Los microplásticos aparecen en distintos ambientes; se requieren más estudios para identificar sus fuentes.",
+      "Los microplásticos solo afectan a las personas y no a otros organismos del ecosistema."
+    ],
+    "correcta": 2,
+    "explicacion": "La presencia de microplásticos en zonas urbanas y rurales indica que su dispersión es amplia. Se necesitan estudios adicionales para identificar fuentes específicas y evaluar efectos en distintos organismos.",
+    "imagen": null,
+    "autor": "profe",
+    "activa": true,
+    "origen": "normal"
+  },
+  {
+    "id": "RZN-9-020",
+    "materia": "razonamiento",
+    "tema": "indagacion cientifica cts",
+    "grado": 9,
+    "dificultad": 2,
+    "enunciado": "Investigadores miden contaminantes en una avenida antes de una estrategia de movilidad sostenible (80 µg/m³) y después (55 µg/m³). ¿Cuál sería el siguiente paso más apropiado para fortalecer la conclusión?",
+    "opciones": [
+      "Afirmar que la estrategia fue la única causa de la reducción observada.",
+      "Comparar mediciones en varios días y controlar factores como clima y volumen de tráfico.",
+      "Eliminar los datos iniciales porque fueron tomados antes de la intervención.",
+      "Concluir que todos los contaminantes disminuyeron en igual proporción."
+    ],
+    "correcta": 1,
+    "explicacion": "Una sola medición no permite establecer causalidad. Repetir mediciones en varios días y controlar variables externas (clima, tráfico) permite determinar si la reducción se debe realmente a la estrategia.",
+    "imagen": null,
+    "autor": "profe",
+    "activa": true,
+    "origen": "normal"
+  },
+  {
+    "id": "RZN-9-021",
+    "materia": "razonamiento",
+    "tema": "tecnologia y salud cts",
+    "grado": 9,
+    "dificultad": 1,
+    "enunciado": "Estudiantes encuestan a 100 compañeros y encuentran que quienes usan más el celular antes de dormir tienden a dormir menos horas. ¿Cuál conclusión es científicamente más rigurosa?",
+    "opciones": [
+      "El celular es la única causa posible de dormir menos horas.",
+      "Hay asociación entre el uso del celular y las horas de sueño, pero se requieren estudios adicionales para establecer causalidad.",
+      "La encuesta demuestra que todo usuario de celular tiene trastornos del sueño.",
+      "Los resultados no son útiles porque las encuestas nunca aportan datos científicos."
+    ],
+    "correcta": 1,
+    "explicacion": "Una correlación no implica causalidad. Pueden existir factores de confusión. Se requieren estudios controlados para establecer si el uso del celular antes de dormir causa la reducción del sueño.",
+    "imagen": null,
+    "autor": "profe",
+    "activa": true,
+    "origen": "normal"
+  },
+  {
+    "id": "RZN-10-017",
+    "materia": "razonamiento",
+    "tema": "tecnologia alimentaria cts",
+    "grado": 10,
+    "dificultad": 1,
+    "enunciado": "Una empresa desarrolla un empaque que prolonga la conservación de un alimento. Algunos consumidores creen que la tecnología en los alimentos siempre los hace menos saludables. ¿Cuál afirmación es científicamente más adecuada?",
+    "opciones": [
+      "Todo alimento conservado con tecnología es perjudicial para la salud humana.",
+      "La conservación puede reducir el deterioro; la calidad nutricional depende de los ingredientes y el procesamiento.",
+      "Los alimentos sin empaque nunca se contaminan durante su almacenamiento.",
+      "La conservación elimina la necesidad de revisar la fecha de vencimiento."
+    ],
+    "correcta": 1,
+    "explicacion": "Las técnicas de conservación pueden reducir pérdidas sin afectar necesariamente el valor nutricional. La calidad depende del proceso completo, no solo del empaque.",
+    "imagen": null,
+    "autor": "profe",
+    "activa": true,
+    "origen": "normal"
+  },
+  {
+    "id": "RZN-10-018",
+    "materia": "razonamiento",
+    "tema": "resistencia antibioticos cts",
+    "grado": 10,
+    "dificultad": 2,
+    "enunciado": "En un hospital algunas bacterias ya no responden a un antibiótico antes eficaz; las resistentes sobreviven y se multiplican. ¿Cuál medida contribuiría a enfrentar esta situación?",
+    "opciones": [
+      "Usar antibióticos para tratar cualquier infección, incluso las causadas por virus.",
+      "Suspender el tratamiento al mejorar, aunque contradiga las indicaciones médicas.",
+      "Usar antibióticos solo si los indica un profesional y seguir el tratamiento completo.",
+      "Aumentar la dosis por cuenta propia si no se observa mejoría."
+    ],
+    "correcta": 2,
+    "explicacion": "El uso inadecuado favorece la selección de bacterias resistentes. Seguir la prescripción completa elimina la mayor parte de la población bacteriana, reduciendo el riesgo de resistencia.",
+    "imagen": null,
+    "autor": "profe",
+    "activa": true,
+    "origen": "normal"
+  },
+  {
+    "id": "RZN-10-019",
+    "materia": "razonamiento",
+    "tema": "equidad tecnologica cts",
+    "grado": 10,
+    "dificultad": 2,
+    "enunciado": "Un hospital instala equipos médicos modernos pero la población rural no puede acceder por distancia, costo y falta de personal especializado. ¿Cuál decisión aprovecharía mejor la tecnología y reduciría desigualdades?",
+    "opciones": [
+      "Concentrar todos los servicios especializados en la ciudad principal.",
+      "Reemplazar a todos los profesionales de salud por equipos automatizados.",
+      "Complementar los equipos con atención rural, telemedicina viable y capacitación de personal local.",
+      "Limitar el acceso a los equipos a quienes puedan pagar más."
+    ],
+    "correcta": 2,
+    "explicacion": "La tecnología sola no resuelve las barreras geográficas y económicas. Combinarla con telemedicina y formación de personal local permite que sus beneficios lleguen a más personas.",
+    "imagen": null,
+    "autor": "profe",
+    "activa": true,
+    "origen": "normal"
+  },
+  {
+    "id": "RZN-10-020",
+    "materia": "razonamiento",
+    "tema": "pensamiento critico cts",
+    "grado": 10,
+    "dificultad": 2,
+    "enunciado": "Una empresa anuncia un producto que mejora la memoria en pocos días. Presenta 5 testimonios positivos pero no estudios controlados. ¿Cuál sería la mejor decisión antes de aceptar la afirmación?",
+    "opciones": [
+      "Comprar el producto porque los testimonios bastan para demostrar su eficacia.",
+      "Rechazar automáticamente cualquier producto anunciado por una empresa.",
+      "Consultar estudios científicos confiables y verificar si los resultados respaldan la afirmación.",
+      "Creer que funciona porque la publicidad utiliza términos científicos."
+    ],
+    "correcta": 2,
+    "explicacion": "Los testimonios son evidencia anecdótica y pueden estar sesgados. Para evaluar la eficacia de un producto se requieren estudios controlados con muestras representativas y revisión por pares.",
+    "imagen": null,
+    "autor": "profe",
+    "activa": true,
+    "origen": "normal"
   }
 ]
