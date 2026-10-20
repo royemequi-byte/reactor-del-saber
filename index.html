@@ -528,7 +528,8 @@
           📋 Preguntas (<span id="admin-count-preguntas">…</span>)
         </button>
         <button class="admin-tab" data-tab="monitor">📡 Monitor</button>
-        <button class="admin-tab" data-tab="historial">📁 Historial / Ranking</button>
+        <button class="admin-tab" data-tab="historial">📁 Historial</button>
+        <button class="admin-tab" data-tab="indicadores">📊 Indicadores</button>
         <button class="admin-tab" data-tab="exportar" style="display:none">📤 Exportar JSON</button>
       </div>
 
@@ -582,7 +583,12 @@
         <div id="admin-lista" class="admin-lista"></div>
       </div>
 
-      <!-- ── TAB: RANKING ── -->
+      <!-- ── TAB: INDICADORES ── -->
+      <div id="admin-tab-indicadores" class="admin-tabcontent oculto">
+        <div id="ind-contenido">
+          <p class="admin-vacio">Abre esta pestaña para cargar los indicadores.</p>
+        </div>
+      </div>
 
       <!-- ── TAB: EXPORTAR ── -->
       <div id="admin-tab-exportar" class="admin-tabcontent oculto">

@@ -11,6 +11,13 @@
 }
 
 @font-face {
+  font-family: 'LiberationMono';
+  src: url('/fonts/LiberationMono-Bold.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
   font-family: 'Sprucken';
   src: url('/fonts/Sprucken_PERSONAL_USE_ONLY.otf') format('opentype');
   font-weight: normal;
