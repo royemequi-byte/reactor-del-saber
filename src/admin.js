@@ -308,11 +308,8 @@ export function adminInicializar() {
     renderizarPreguntas();
   });
 
-  // Ranking
   document.getElementById('btn-descargar-excel')
     .addEventListener('click', descargarExcel);
-  document.getElementById('btn-limpiar-ranking')
-    .addEventListener('click', limpiarRanking);
 
   // Exportar
   document.getElementById('btn-copiar-json')
@@ -326,7 +323,6 @@ function cambiarTab(tab) {
     .forEach(c => c.classList.add('oculto'));
   document.getElementById(`admin-tab-${tab}`).classList.remove('oculto');
 
-  if (tab === 'ranking')   renderizarRanking();
   if (tab === 'exportar')  renderizarExportar();
   if (tab === 'monitor')   iniciarMonitorTab();
   if (tab === 'historial') renderizarHistorial();

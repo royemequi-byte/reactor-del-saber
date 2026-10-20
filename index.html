@@ -528,8 +528,7 @@
           📋 Preguntas (<span id="admin-count-preguntas">…</span>)
         </button>
         <button class="admin-tab" data-tab="monitor">📡 Monitor</button>
-        <button class="admin-tab" data-tab="historial">📁 Historial</button>
-        <button class="admin-tab" data-tab="ranking">🏆 Ranking</button>
+        <button class="admin-tab" data-tab="historial">📁 Historial / Ranking</button>
         <button class="admin-tab" data-tab="exportar" style="display:none">📤 Exportar JSON</button>
       </div>
 
@@ -544,6 +543,9 @@
 
       <!-- ── TAB: HISTORIAL ── -->
       <div id="admin-tab-historial" class="admin-tabcontent oculto">
+        <div class="admin-toolbar" style="margin-bottom:14px">
+          <button class="btn-accion verde" id="btn-descargar-excel">📥 Descargar Excel consolidado</button>
+        </div>
         <div id="historial-lista"></div>
       </div>
 
@@ -581,13 +583,6 @@
       </div>
 
       <!-- ── TAB: RANKING ── -->
-      <div id="admin-tab-ranking" class="admin-tabcontent oculto">
-        <div class="admin-toolbar">
-          <button class="btn-accion verde" id="btn-descargar-excel">📥 Descargar Excel</button>
-          <button class="btn-accion rojo" id="btn-limpiar-ranking">🗑 Limpiar todo el ranking</button>
-        </div>
-        <div id="admin-ranking-lista" class="admin-lista"></div>
-      </div>
 
       <!-- ── TAB: EXPORTAR ── -->
       <div id="admin-tab-exportar" class="admin-tabcontent oculto">
