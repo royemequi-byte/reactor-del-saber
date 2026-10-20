@@ -712,8 +712,8 @@ function finalizarExamen() {
 }
 
 function calcularNota() {
-  const pctC = estado.aciertos.ciencias / 19;
-  const pctR = estado.aciertos.razonamiento / 10;
+  const pctC = estado.aciertos.ciencias / 23;
+  const pctR = estado.aciertos.razonamiento / 6;
   // Escala ICFES: máximo 500 puntos (ciencias 80 %, razonamiento 20 %)
   const nota = Math.round((pctC * 0.8 + pctR * 0.2) * 500);
   estado.notaFinal = nota;
@@ -728,12 +728,12 @@ function mostrarResultados(nota) {
   document.getElementById('res-puntaje').textContent = estado.puntaje.toLocaleString('es-CO');
   document.getElementById('res-nota').textContent = nota;
 
-  const pctC = (estado.aciertos.ciencias / 19) * 100;
-  const pctR = (estado.aciertos.razonamiento / 10) * 100;
+  const pctC = (estado.aciertos.ciencias / 23) * 100;
+  const pctR = (estado.aciertos.razonamiento / 6) * 100;
   document.getElementById('barra-ciencias').style.width = pctC + '%';
   document.getElementById('barra-razon').style.width    = pctR + '%';
-  document.getElementById('txt-ciencias').textContent   = `${estado.aciertos.ciencias}/19`;
-  document.getElementById('txt-razon').textContent      = `${estado.aciertos.razonamiento}/10`;
+  document.getElementById('txt-ciencias').textContent   = `${estado.aciertos.ciencias}/23`;
+  document.getElementById('txt-razon').textContent      = `${estado.aciertos.razonamiento}/6`;
 
   // Badge de posición en el ranking
   const badge = document.getElementById('tu-posicion-badge');

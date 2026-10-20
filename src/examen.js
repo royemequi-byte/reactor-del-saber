@@ -16,6 +16,10 @@ function gradoMatch(grado, filtro) {
  *   - gradoSala: número (8/9/10) para sala de un grado específico
  *   - gradoSala: 'final' o null → usa el grado propio del estudiante
  */
+const TOTAL_EXAMEN = 29;
+const N_CIENCIAS   = Math.round(TOTAL_EXAMEN * 0.8); // 23 — 80 % ICFES
+const N_RAZ        = TOTAL_EXAMEN - N_CIENCIAS;       // 6  — 20 % razonamiento
+
 export function armarExamen(estudiante, gradoSala = null) {
   const gradoFiltro = (gradoSala === null || gradoSala === 'final')
     ? Number(estudiante.grado)
@@ -28,29 +32,27 @@ export function armarExamen(estudiante, gradoSala = null) {
   const claveHistorial = CLAVE_HISTORIAL(estudiante.nombre, gradoFiltro);
   const historial = JSON.parse(localStorage.getItem(claveHistorial) || '[]');
 
-  // ── Ciencias (química + física + biología) — 70 % ICFES garantizado ──
-  const ciencias     = banco.filter(p => ['quimica','fisica','biologia','cts'].includes(p.materia));
-  const sinVer       = ciencias.filter(p => !historial.includes(p.id));
-  const fuente       = sinVer.length >= 19 ? sinVer : ciencias;
+  // ── Ciencias (química + física + biología) — ICFES primero, normales de relleno ──
+  const ciencias  = banco.filter(p => ['quimica','fisica','biologia','cts'].includes(p.materia));
+  const sinVer    = ciencias.filter(p => !historial.includes(p.id));
+  const fuente    = sinVer.length >= N_CIENCIAS ? sinVer : ciencias;
 
-  const icfes        = fuente.filter(p => p.origen === 'icfes');
-  const normales     = fuente.filter(p => p.origen !== 'icfes');
+  const icfes     = fuente.filter(p => p.origen === 'icfes');
+  const normales  = fuente.filter(p => p.origen !== 'icfes');
 
-  const minICFES     = Math.ceil(19 * 0.7);          // 14
-  const selICFES     = elegirN(icfes, Math.min(minICFES, icfes.length));
-  const restantes    = 19 - selICFES.length;
-  const selNormales  = elegirN(normales, restantes);
+  const selICFES   = elegirN(icfes, Math.min(N_CIENCIAS, icfes.length));
+  const restantes  = N_CIENCIAS - selICFES.length;
+  const selNormales = elegirN(normales, restantes);
 
-  // Si aún faltan (pocos ICFES para el grado), completa con cualquier ciencia
-  const cienciasFinal = barajar([...selICFES, ...selNormales]).slice(0, 19);
+  const cienciasFinal = barajar([...selICFES, ...selNormales]).slice(0, N_CIENCIAS);
 
-  // ── Razonamiento: del banco si hay ≥10, sino código generado ──
-  const razBanco   = banco.filter(p => p.materia === 'razonamiento');
-  const razSinVer  = razBanco.filter(p => !historial.includes(p.id));
-  const razFuente  = razSinVer.length >= 10 ? razSinVer : razBanco;
-  const razonamiento = razFuente.length >= 10
-    ? elegirN(razFuente, 10)
-    : generarPreguntas10();
+  // ── Razonamiento: del banco si hay suficientes, sino código generado ──
+  const razBanco  = banco.filter(p => p.materia === 'razonamiento');
+  const razSinVer = razBanco.filter(p => !historial.includes(p.id));
+  const razFuente = razSinVer.length >= N_RAZ ? razSinVer : razBanco;
+  const razonamiento = razFuente.length >= N_RAZ
+    ? elegirN(razFuente, N_RAZ)
+    : generarPreguntas10().slice(0, N_RAZ);
 
   const todas = barajar([...cienciasFinal, ...razonamiento]);
   return todas.map(p => barajarOpciones(p));

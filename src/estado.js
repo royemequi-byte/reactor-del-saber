@@ -37,8 +37,8 @@ export const estado = {
   // Nota final calculada (se llena al terminar)
   notaFinal: 0,
   aciertos: {
-    ciencias: 0,           // de 19 (química + física + biología)
-    razonamiento: 0        // de 10
+    ciencias: 0,           // de 23 — 80 % del examen (ICFES + relleno si aplica)
+    razonamiento: 0        // de 6  — 20 % del examen
   }
 };
 
@@ -64,11 +64,11 @@ export function resetearEstado() {
   estado.silencio = silGuardado;
 }
 
-// Calcula la nota final (Opción B: 80% ciencias + 20% razonamiento, escala 0-5)
+// 80 % ICFES ciencias (23 preguntas) + 20 % razonamiento (6 preguntas), escala 0-5
 export function calcularNota() {
-  const pctCiencias     = estado.aciertos.ciencias / 19;
-  const pctRazonamiento = estado.aciertos.razonamiento / 10;
+  const pctCiencias     = estado.aciertos.ciencias / 23;
+  const pctRazonamiento = estado.aciertos.razonamiento / 6;
   const nota = (pctCiencias * 0.8 + pctRazonamiento * 0.2) * 5;
-  estado.notaFinal = Math.round(nota * 10) / 10; // 1 decimal
+  estado.notaFinal = Math.round(nota * 10) / 10;
   return estado.notaFinal;
 }
