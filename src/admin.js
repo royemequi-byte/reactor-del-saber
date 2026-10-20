@@ -445,16 +445,19 @@ function renderizarHistorial() {
 
 function renderDetalleAct(act) {
   const terminados = Object.values(act.estudiantes || {})
-    .filter(e => e.estado === 'terminado')
-    .sort((a, b) => (b.puntaje || 0) - (a.puntaje || 0));
+    .filter(e => e.estado === 'terminado');
 
+  const mats   = ['biologia', 'fisica', 'quimica', 'cts'];
+  const emojis = { biologia: '🌿', fisica: '⚡', quimica: '⚗️', cts: '🔬' };
+  const meds   = { 0: '🥇', 1: '🥈', 2: '🥉' };
+  const css    = { 0: 'top1', 1: 'top2', 2: 'top3' };
+
+  // ── Estadísticas por grado (cards superiores) ──
   const porGrado = [8, 9, 10].map(g => {
     const grupo  = terminados.filter(e => e.grado === g);
     if (!grupo.length) return '';
     const notas  = grupo.map(e => Number(e.nota) || 0);
     const cuotas = act.cuotas?.[`grado${g}`] || {};
-    const mats   = ['biologia', 'fisica', 'quimica', 'cts'];
-    const emojis = { biologia: '🌿', fisica: '⚡', quimica: '⚗️', cts: '🔬' };
     const barras = mats.map(m => {
       const total = cuotas[m] || 0;
       if (!total) return '';
@@ -470,35 +473,52 @@ function renderDetalleAct(act) {
       </div>`;
     }).join('');
     const promedio = Math.round(notas.reduce((a, b) => a + b, 0) / notas.length);
+    const mejor    = grupo.slice().sort((a, b) => (b.puntaje || 0) - (a.puntaje || 0))[0];
     return `
       <div style="background:#0d1117;border:1px solid #333;border-radius:8px;padding:12px;flex:1;min-width:180px">
         <div style="color:#ffd600;font-weight:700;margin-bottom:8px">Grado ${g}° · ${grupo.length} estudiantes</div>
         <div style="color:#8ab;font-size:0.82rem">Nota prom: <strong style="color:#fff">${promedio}/500</strong></div>
         <div style="color:#8ab;font-size:0.82rem">Mejor nota: <strong style="color:#39ff14">${Math.max(...notas)}/500</strong></div>
-        <div style="color:#8ab;font-size:0.82rem">1° lugar: <strong style="color:#fff">${grupo[0]?.nombre || '—'}</strong></div>
+        <div style="color:#8ab;font-size:0.82rem">1° lugar: <strong style="color:#fff">${mejor?.nombre || '—'}</strong></div>
         <div style="margin-top:8px">${barras}</div>
       </div>`;
   }).join('');
 
-  const meds = { 0: '🥇', 1: '🥈', 2: '🥉' };
-  const css  = { 0: 'top1', 1: 'top2', 2: 'top3' };
-  const filas = terminados.map((e, i) => `
-    <tr class="${css[i] || ''}">
-      <td>${meds[i] || i + 1}</td>
-      <td>${e.nombre}</td><td>${e.avatar}</td><td>${e.grado}°</td><td>${e.curso}</td>
-      <td>${Number(e.puntaje || 0).toLocaleString('es-CO')}</td>
-      <td>${e.nota}/500</td><td>${fmtTiempo(e.tiempo)}</td>
-    </tr>`).join('');
+  // ── Ranking agrupado por curso ──
+  const grupos = {};
+  terminados.forEach(e => {
+    const clave = `${e.grado}-${e.curso}`;
+    if (!grupos[clave]) grupos[clave] = { grado: e.grado, curso: e.curso, lista: [] };
+    grupos[clave].lista.push(e);
+  });
+  const gruposOrdenados = Object.values(grupos)
+    .sort((a, b) => a.grado - b.grado || String(a.curso).localeCompare(String(b.curso)));
+
+  const tablasPorCurso = gruposOrdenados.map(g => {
+    const sorted = g.lista.slice().sort((a, b) => (b.puntaje || 0) - (a.puntaje || 0));
+    const filas  = sorted.map((e, i) => `
+      <tr class="${css[i] ?? ''}">
+        <td>${meds[i] ?? i + 1}</td>
+        <td>${e.nombre}</td><td>${e.avatar}</td>
+        <td>${Number(e.puntaje || 0).toLocaleString('es-CO')}</td>
+        <td>${e.nota}/500</td><td>${fmtTiempo(e.tiempo)}</td>
+      </tr>`).join('');
+    return `
+      <div style="margin-bottom:18px">
+        <div style="font-weight:700;font-size:0.95rem;color:#ffd600;padding:6px 10px;background:#1a1a2e;border-radius:6px;margin-bottom:6px">
+          📚 Grado ${g.grado}° · Curso ${g.curso}
+          <span style="font-size:0.78rem;color:#8ab;font-weight:400;margin-left:10px">${sorted.length} estudiantes</span>
+        </div>
+        <table class="ranking-tabla">
+          <thead><tr><th>#</th><th>Nombre</th><th>Avatar</th><th>Pts</th><th>Nota</th><th>Tiempo</th></tr></thead>
+          <tbody>${filas}</tbody>
+        </table>
+      </div>`;
+  }).join('');
 
   return `
-    <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px">${porGrado}</div>
-    <table class="ranking-tabla">
-      <thead><tr>
-        <th>#</th><th>Nombre</th><th>Avatar</th><th>Grado</th>
-        <th>Curso</th><th>Pts</th><th>Nota</th><th>Tiempo</th>
-      </tr></thead>
-      <tbody>${filas}</tbody>
-    </table>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:18px">${porGrado}</div>
+    ${tablasPorCurso}
     <div style="margin-top:12px">
       <button class="btn-accion verde chico" onclick="window._xlsAct('${act.key}')">
         📥 Descargar Excel
