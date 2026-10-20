@@ -322,11 +322,9 @@ function fmtTiempo(s) {
 }
 
 function renderizarMonitor(obj) {
-  const todos       = Object.values(obj);
-  const terminados  = todos.filter(e => e.estado === 'terminado')
-                          .sort((a, b) => (b.puntaje || 0) - (a.puntaje || 0));
-  const jugando     = todos.filter(e => e.estado === 'jugando');
-  const inscritos   = todos.filter(e => e.estado === 'inscrito');
+  const todos      = Object.values(obj);
+  const terminados = todos.filter(e => e.estado === 'terminado');
+  const jugando    = todos.filter(e => e.estado === 'jugando');
 
   const contEl = document.getElementById('monitor-contador');
   if (contEl) contEl.textContent =
@@ -340,35 +338,60 @@ function renderizarMonitor(obj) {
     return;
   }
 
+  // Agrupar por grado + curso
+  const grupos = {};
+  todos.forEach(e => {
+    const clave = `${e.grado}-${e.curso}`;
+    if (!grupos[clave]) grupos[clave] = { grado: e.grado, curso: e.curso, estudiantes: [] };
+    grupos[clave].estudiantes.push(e);
+  });
+  const gruposOrdenados = Object.values(grupos)
+    .sort((a, b) => a.grado - b.grado || String(a.curso).localeCompare(String(b.curso)));
+
   const meds = { 0: '🥇', 1: '🥈', 2: '🥉' };
   const css  = { 0: 'top1', 1: 'top2', 2: 'top3' };
 
-  const fila = (e, i, badge) => `
-    <tr class="${css[i] || ''}">
-      <td>${badge ? (meds[i] || i + 1) : '—'}</td>
+  const fila = (e, i, conRanking) => `
+    <tr class="${css[i] ?? ''}">
+      <td>${conRanking ? (meds[i] ?? i + 1) : '—'}</td>
       <td>${e.nombre}</td><td>${e.avatar}</td>
-      <td>${e.grado}°</td><td>${e.curso}</td>
       <td><span class="estado-badge ${e.estado}">${
         e.estado === 'terminado' ? '✅ Terminó' :
         e.estado === 'jugando'   ? '🎯 En examen' : '⏳ Inscrito'
       }</span></td>
-      <td>${badge && e.puntaje != null ? Number(e.puntaje).toLocaleString('es-CO') : '—'}</td>
-      <td>${badge && e.nota != null ? `${e.nota}/500` : '—'}</td>
-      <td>${badge ? fmtTiempo(e.tiempo) : '—'}</td>
+      <td>${conRanking && e.puntaje != null ? Number(e.puntaje).toLocaleString('es-CO') : '—'}</td>
+      <td>${conRanking && e.nota    != null ? e.nota + '/500' : '—'}</td>
+      <td>${conRanking ? fmtTiempo(e.tiempo) : '—'}</td>
     </tr>`;
 
-  lista.innerHTML = `
-    <table class="ranking-tabla">
-      <thead><tr>
-        <th>#</th><th>Nombre</th><th>Avatar</th><th>Grado</th>
-        <th>Curso</th><th>Estado</th><th>Pts</th><th>Nota</th><th>Tiempo</th>
-      </tr></thead>
-      <tbody>
-        ${terminados.map((e, i) => fila(e, i, true)).join('')}
-        ${jugando.map(e   => fila(e, -1, false)).join('')}
-        ${inscritos.map(e => fila(e, -1, false)).join('')}
-      </tbody>
-    </table>`;
+  lista.innerHTML = gruposOrdenados.map(g => {
+    const term = g.estudiantes
+      .filter(e => e.estado === 'terminado')
+      .sort((a, b) => (b.puntaje || 0) - (a.puntaje || 0));
+    const jug  = g.estudiantes.filter(e => e.estado === 'jugando');
+    const insc = g.estudiantes.filter(e => e.estado === 'inscrito');
+
+    return `
+      <div style="margin-bottom:22px">
+        <div style="font-weight:700;font-size:1rem;color:#ffd600;padding:7px 12px;background:#1a1a2e;border-radius:8px;margin-bottom:8px;display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+          📚 Grado ${g.grado}° &nbsp;·&nbsp; Curso ${g.curso}
+          <span style="font-size:0.8rem;color:#8ab;font-weight:400">
+            ${term.length} terminaron &nbsp;·&nbsp; ${jug.length} en examen &nbsp;·&nbsp; ${insc.length} inscritos
+          </span>
+        </div>
+        <table class="ranking-tabla">
+          <thead><tr>
+            <th>#</th><th>Nombre</th><th>Avatar</th>
+            <th>Estado</th><th>Pts</th><th>Nota</th><th>Tiempo</th>
+          </tr></thead>
+          <tbody>
+            ${term.map((e, i) => fila(e, i, true)).join('')}
+            ${jug.map(e  => fila(e, -1, false)).join('')}
+            ${insc.map(e => fila(e, -1, false)).join('')}
+          </tbody>
+        </table>
+      </div>`;
+  }).join('');
 }
 
 // ─── HISTORIAL DE ACTIVIDADES ──────────────────────────────────────────────
