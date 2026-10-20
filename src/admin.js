@@ -864,11 +864,28 @@ function renderizarRanking() {
     </table>`;
 }
 
-function descargarExcel() {
-  const datos = JSON.parse(localStorage.getItem('ranking') || '[]');
-  if (!datos.length) { alert('El ranking está vacío, no hay datos para exportar.'); return; }
+async function descargarExcel() {
+  // Leer de Firebase: combinar todos los estudiantes de todas las actividades del historial
+  const snap = await get(ref(db, 'historial'));
+  let datos = [];
 
-  // Ordenar de mayor a menor nota
+  if (snap.exists()) {
+    Object.values(snap.val()).forEach(act => {
+      Object.values(act.estudiantes || {}).forEach(e => {
+        if (e.estado === 'terminado') {
+          datos.push({ ...e, fechaAct: act.fecha, horaAct: act.hora });
+        }
+      });
+    });
+  }
+
+  // Fallback: localStorage (sesión activa sin guardar)
+  if (!datos.length) {
+    datos = JSON.parse(localStorage.getItem('ranking') || '[]');
+  }
+
+  if (!datos.length) { alert('No hay datos para exportar. Asegúrese de guardar la actividad al cerrarla.'); return; }
+
   const ordenados = [...datos].sort((a, b) => Number(b.nota) - Number(a.nota));
 
   const fila = (r, i) => ({
@@ -881,7 +898,7 @@ function descargarExcel() {
     'Puntaje':     Number(r.puntaje),
     'Nota / 500':  Number(r.nota),
     'Tiempo (s)':  r.tiempo || '—',
-    'Fecha':       r.fecha || '—',
+    'Fecha':       r.fechaAct || r.fecha || '—',
   });
 
   const wb = XLSX.utils.book_new();
@@ -891,15 +908,14 @@ function descargarExcel() {
   aplicarEstilos(wsGeneral, ordenados.length);
   XLSX.utils.book_append_sheet(wb, wsGeneral, 'General');
 
-  // Una pestaña por curso (ordenados dentro de ese curso)
+  // Una pestaña por curso
   const cursos = [...new Set(ordenados.map(r => `${r.grado}°-${r.curso}`))].sort();
   cursos.forEach(clave => {
     const [grado, curso] = clave.split('-');
     const grupo = ordenados.filter(r => String(r.grado) + '°' === grado && r.curso === curso);
     const ws = XLSX.utils.json_to_sheet(grupo.map(fila));
     aplicarEstilos(ws, grupo.length);
-    const nombre = `G${grado} Curso ${curso}`.substring(0, 31);
-    XLSX.utils.book_append_sheet(wb, ws, nombre);
+    XLSX.utils.book_append_sheet(wb, ws, `G${grado} Curso ${curso}`.substring(0, 31));
   });
 
   XLSX.writeFile(wb, `ranking-iti-olimpiadas-${new Date().toISOString().slice(0,10)}.xlsx`);
