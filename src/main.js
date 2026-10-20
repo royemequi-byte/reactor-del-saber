@@ -19,10 +19,47 @@ import { db } from './firebase.js';
 import { ref, onValue } from 'firebase/database';
 
 // ─── NAVEGACIÓN ────────────────────────────────────────────────────────────
+// Pantallas donde el alumno está en medio del examen — se bloquea recarga
+const PANTALLAS_EXAMEN = new Set(['pantalla-examen', 'pantalla-retro']);
+
+function _onBeforeUnload(e) {
+  e.preventDefault();
+  e.returnValue = '';
+}
+
+function _onKeydown(e) {
+  const esRecarga = e.key === 'F5' ||
+    (e.ctrlKey && (e.key === 'r' || e.key === 'R')) ||
+    (e.ctrlKey && e.shiftKey && (e.key === 'r' || e.key === 'R'));
+  if (esRecarga) e.preventDefault();
+}
+
+let antiRecargaActivo = false;
+
+function activarAntiRecarga() {
+  if (antiRecargaActivo) return;
+  antiRecargaActivo = true;
+  window.addEventListener('beforeunload', _onBeforeUnload);
+  window.addEventListener('keydown', _onKeydown);
+}
+
+function desactivarAntiRecarga() {
+  if (!antiRecargaActivo) return;
+  antiRecargaActivo = false;
+  window.removeEventListener('beforeunload', _onBeforeUnload);
+  window.removeEventListener('keydown', _onKeydown);
+}
+
 export function irA(id) {
   document.querySelectorAll('.pantalla').forEach(p => p.classList.remove('activa'));
   const pantalla = document.getElementById(id);
   if (pantalla) pantalla.classList.add('activa');
+
+  if (PANTALLAS_EXAMEN.has(id)) {
+    activarAntiRecarga();
+  } else {
+    desactivarAntiRecarga();
+  }
 
   const widget = document.getElementById('volumen-widget');
   if (widget) widget.classList.toggle('oculto', id !== 'pantalla-examen');
