@@ -464,8 +464,8 @@ function iniciarExamen() {
 
   irA('pantalla-examen');
   tocarIntro();
-  mostrarPregunta();
   iniciarReloj();
+  mostrarPregunta();
 }
 
 // ─── MOSTRAR PREGUNTA ──────────────────────────────────────────────────────
