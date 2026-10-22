@@ -55,7 +55,7 @@ export function iniciarSimSoluciones(container) {
   const elBarC   = container.querySelector('.sim-sol-bar-conc');
   const elTempV  = container.querySelector('.sim-sol-temp-val');
 
-  let moles = 0, litros = 1, tempC = 25;
+  let moles = 6, litros = 1, tempC = 25;
   const SAT_BASE = 6;
   const iones = [];
   let cristales = [];
@@ -288,6 +288,7 @@ export function iniciarSimSoluciones(container) {
     moles=0; litros=1; tempC=25; iones.length=0; cristales.length=0;
   });
 
+  addIones(48); // poblar iones iniciales para la solución saturada de partida
   loop();
   return () => { cancelAnimationFrame(rafId); container.innerHTML=''; };
 }
