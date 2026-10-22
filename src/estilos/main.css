@@ -1514,8 +1514,8 @@ body {
 .sim-sol-title { color:#1d4ed8; font-size:12px; font-weight:700; letter-spacing:.5px; flex:1; }
 .sim-sol-temp-badge { background:#fff; border:1px solid #bfdbfe; border-radius:20px; padding:3px 10px; font-size:11px; font-family:monospace; color:#1d4ed8; }
 
-.sim-sol-layout { display:grid; grid-template-columns:1fr 190px; }
-.sim-sol-cv { display:block; width:100%; }
+.sim-sol-layout { display:grid; grid-template-columns:1fr 190px; background:#f0f8ff; }
+.sim-sol-cv { display:block; width:100%; background:#f0f8ff; }
 
 .sim-sol-panel {
   background:linear-gradient(180deg,#f8fafc,#f0f9ff);
@@ -1565,7 +1565,7 @@ body {
 }
 .sim-rxn-title { color:#6d28d9; font-size:12px; font-weight:700; letter-spacing:.5px; }
 
-.sim-rxn-cv { display:block; width:100%; }
+.sim-rxn-cv { display:block; width:100%; background:#fafafa; }
 
 .sim-rxn-tab-row {
   display:flex; background:#fafafa;
