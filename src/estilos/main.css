@@ -1421,6 +1421,82 @@ body {
   .sim-ley-badge { grid-column: span 1; font-size: 10px; }
 }
 
+/* ── CADENA TRÓFICA ─────────────────────────────────────────────────────── */
+.sim-eco-grid { display: flex; flex-direction: column; }
+
+.sim-eco-row {
+  display: grid;
+  grid-template-columns: 140px 1fr 110px;
+  align-items: center;
+  padding: 9px 14px;
+  border-bottom: 1px solid #ffffff08;
+  gap: 10px;
+  transition: opacity 0.3s, background 0.3s;
+}
+.sim-eco-row.eco-eliminado { opacity: 0.28; filter: grayscale(1); }
+.sim-eco-row.eco-colapso   { background: #2a080808; }
+.sim-eco-row.eco-explosion { background: #2a150008; }
+
+.sim-eco-info { display: flex; align-items: center; gap: 8px; }
+.sim-eco-emoji  { font-size: 20px; }
+.sim-eco-nombre { color: #ccc; font-size: 13px; font-weight: bold; }
+.sim-eco-sub    { color: #555; font-size: 10px; font-family: monospace; }
+
+.sim-eco-barra-wrap { position: relative; height: 26px; }
+.sim-eco-barra-bg   { position: absolute; inset: 0; background: #111128; border-radius: 6px; border: 1px solid #ffffff12; }
+.sim-eco-barra-fill { position: absolute; top: 0; left: 0; height: 100%; border-radius: 6px; transition: width 0.4s, background 0.4s; }
+.sim-eco-barra-lbl  { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; font-family: monospace; color: #fff; z-index: 1; text-shadow: 0 1px 3px #000; }
+.sim-eco-alerta     { position: absolute; right: 6px; top: 50%; transform: translateY(-50%); font-size: 9px; font-weight: bold; font-family: monospace; z-index: 2; }
+
+.sim-eco-btn {
+  padding: 6px 10px; border-radius: 8px; font-size: 11px; font-family: monospace;
+  cursor: pointer; font-weight: bold; transition: all 0.2s; border: 1.5px solid; text-align: center;
+}
+.eco-btn-eliminar  { background: #ff525218; border-color: #ff525266; color: #ff8a80; }
+.eco-btn-eliminar:hover  { background: #ff525244; }
+.eco-btn-restaurar { background: #00e67618; border-color: #00e67666; color: #69f0ae; }
+.eco-btn-restaurar:hover { background: #00e67633; }
+
+.sim-eco-flecha { text-align: center; font-size: 10px; color: #ffffff22; padding: 2px 0; font-family: monospace; }
+
+.sim-eco-resumen {
+  padding: 9px 14px; background: #0a0a1c; border-top: 1px solid #00d4ff18;
+  font-size: 12px; font-family: monospace; color: #4fc3f7; min-height: 36px; line-height: 1.5;
+}
+
+.sim-eco-reset {
+  display: block; margin: 7px 14px 10px; padding: 6px;
+  background: #111128; border: 1px solid #ffffff22; border-radius: 8px;
+  color: #6688aa; font-size: 11px; font-family: monospace; cursor: pointer;
+  width: calc(100% - 28px); transition: all 0.2s;
+}
+.sim-eco-reset:hover { border-color: #4fc3f7; color: #4fc3f7; }
+
+@media (max-width: 480px) {
+  .sim-eco-row { grid-template-columns: 110px 1fr 80px; gap: 6px; padding: 8px 10px; }
+  .sim-eco-nombre { font-size: 11px; }
+  .sim-eco-btn { font-size: 10px; padding: 5px 7px; }
+}
+
+/* ── MITOSIS ─────────────────────────────────────────────────────────────── */
+.sim-mit-fases {
+  display: flex; border-top: 1px solid #00d4ff18; overflow-x: auto;
+}
+.sim-mit-fase-btn {
+  flex: 1; min-width: 80px; padding: 8px 4px; background: none; border: none;
+  border-right: 1px solid #00d4ff12; color: #444466; font-size: 10px;
+  font-family: monospace; cursor: pointer; transition: all 0.2s; text-align: center;
+}
+.sim-mit-fase-btn:last-child { border-right: none; }
+.sim-mit-fase-btn:hover { background: #0d1a2a; color: #7dd3fc; }
+.sim-mit-fase-btn.activa { background: #0d2040; color: var(--fase-col, #00d4ff); border-bottom: 2px solid var(--fase-col, #00d4ff); }
+
+.sim-mit-info {
+  padding: 9px 14px; background: #0a0a1c; border-top: 1px solid #00d4ff18;
+  font-size: 12px; font-family: monospace; color: #8888aa; line-height: 1.5; min-height: 40px;
+}
+.sim-mit-info strong { font-size: 13px; }
+
 /* ── UPLOAD DE IMAGEN EN ADMIN ─────────────────────────────────────────────── */
 .af-imagen-area {
   display: flex;

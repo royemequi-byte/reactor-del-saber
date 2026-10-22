@@ -18,6 +18,8 @@ import { renderCrucigrama }          from './tipos/crucigrama.js';
 import { renderClasifica }           from './tipos/clasifica.js';
 import { iniciarSimEstadosMateria }  from './tipos/sim-estados-materia.js';
 import { iniciarSimGasesIdeales }    from './tipos/sim-gases-ideales.js';
+import { iniciarSimCadenaTrofica }   from './tipos/sim-cadena-trofica.js';
+import { iniciarSimMitosis }         from './tipos/sim-mitosis.js';
 import { db } from './firebase.js';
 import { ref, get, set, update, onValue } from 'firebase/database';
 
@@ -543,6 +545,8 @@ function mostrarPregunta() {
     const SIMS = {
       'estados-materia': iniciarSimEstadosMateria,
       'gases-ideales':   iniciarSimGasesIdeales,
+      'cadena-trofica':  iniciarSimCadenaTrofica,
+      'mitosis':         iniciarSimMitosis,
     };
     const fn = SIMS[p.simulador];
     if (fn) _detenerSim = fn(simContainer);
@@ -1145,7 +1149,7 @@ function iniciarPreview(p) {
   if (p.tipo === 'simulador') {
     const sc = document.getElementById('preview-sim-container');
     sc.classList.remove('oculto');
-    const SIMS = { 'estados-materia': iniciarSimEstadosMateria, 'gases-ideales': iniciarSimGasesIdeales };
+    const SIMS = { 'estados-materia': iniciarSimEstadosMateria, 'gases-ideales': iniciarSimGasesIdeales, 'cadena-trofica': iniciarSimCadenaTrofica, 'mitosis': iniciarSimMitosis };
     const fn = SIMS[p.simulador];
     if (fn) _detenerSimPreview = fn(sc);
   }
