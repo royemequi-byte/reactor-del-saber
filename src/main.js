@@ -85,11 +85,18 @@ function salaLimpiar() {
 }
 
 // ─── SIMULADOR ACTIVO ──────────────────────────────────────────────────────
-let _detenerSim = null;
+let _detenerSim        = null;
+let _detenerSimPreview = null;
 
 function _limpiarSim() {
   if (_detenerSim) { try { _detenerSim(); } catch {} _detenerSim = null; }
   const c = document.getElementById('sim-container');
+  if (c) { c.innerHTML = ''; c.classList.add('oculto'); }
+}
+
+function _limpiarSimPreview() {
+  if (_detenerSimPreview) { try { _detenerSimPreview(); } catch {} _detenerSimPreview = null; }
+  const c = document.getElementById('preview-sim-container');
   if (c) { c.innerHTML = ''; c.classList.add('oculto'); }
 }
 
@@ -1077,6 +1084,7 @@ document.getElementById('btn-cerrar-preview').addEventListener('click', () => {
 });
 
 document.getElementById('btn-preview-volver').addEventListener('click', () => {
+  _limpiarSimPreview();
   irA('pantalla-admin');
 });
 
@@ -1105,7 +1113,7 @@ function iniciarPreview(p) {
   const etiquetas = { quimica: '⚗️ Química', fisica: '⚡ Física', biologia: '🌿 Biología', cts: '🔬 C.T.S.', razonamiento: '🧠 Razonamiento' };
   document.getElementById('preview-materia').textContent = etiquetas[p.materia] || p.materia;
 
-  const formatoLabel = { relacionar: '🔗 Relacionar', ordenar: '🔢 Ordenar', crucigrama: '📝 Crucigrama', clasifica: '📂 Clasificar' };
+  const formatoLabel = { relacionar: '🔗 Relacionar', ordenar: '🔢 Ordenar', crucigrama: '📝 Crucigrama', clasifica: '📂 Clasificar', simulador: '🔬 Simulador' };
   const fmtEl = document.getElementById('preview-formato');
   fmtEl.textContent = formatoLabel[p.tipo] || '';
   fmtEl.classList.toggle('oculto', !p.tipo || p.tipo === 'seleccion');
@@ -1131,6 +1139,16 @@ function iniciarPreview(p) {
 
   // Ocultar feedback anterior
   document.getElementById('preview-feedback').classList.add('oculto');
+
+  // Simulador (preview)
+  _limpiarSimPreview();
+  if (p.tipo === 'simulador') {
+    const sc = document.getElementById('preview-sim-container');
+    sc.classList.remove('oculto');
+    const SIMS = { 'estados-materia': iniciarSimEstadosMateria, 'gases-ideales': iniciarSimGasesIdeales };
+    const fn = SIMS[p.simulador];
+    if (fn) _detenerSimPreview = fn(sc);
+  }
 
   // Renderizar opciones / tipo interactivo
   const area = document.getElementById('preview-opciones');
