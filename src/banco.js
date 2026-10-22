@@ -6,11 +6,16 @@ import bancoBruto from '../data/banco-preguntas.json';
 const RUTA = 'banco-preguntas';
 let cache = [];
 
+function normalizar(val) {
+  if (!val) return [];
+  return Array.isArray(val) ? val.filter(Boolean) : Object.values(val);
+}
+
 // Llamar al arrancar la app — carga desde Firebase y activa listener en tiempo real
 export async function initBanco() {
   const snap = await get(ref(db, RUTA));
   if (snap.exists()) {
-    cache = snap.val();
+    cache = normalizar(snap.val());
   } else {
     // Primera vez: subir el banco inicial desde el JSON
     cache = JSON.parse(JSON.stringify(bancoBruto));
@@ -18,7 +23,7 @@ export async function initBanco() {
   }
   // Mantener cache sincronizado con cambios de otros usuarios en tiempo real
   onValue(ref(db, RUTA), snap => {
-    if (snap.exists()) cache = snap.val();
+    if (snap.exists()) cache = normalizar(snap.val());
   });
 }
 
