@@ -1504,7 +1504,7 @@ body {
 .sim-sol-dots span:nth-child(2) { background:#f59e0b; box-shadow:0 0 5px #f59e0b; }
 .sim-sol-dots span:nth-child(3) { background:#ef4444; box-shadow:0 0 5px #ef4444; }
 
-.sim-sol-wrap { border-radius:14px; overflow:hidden; border:1px solid #bfdbfe; box-shadow:0 4px 24px rgba(59,130,246,0.12); }
+.sim-sol-wrap { border-radius:14px; overflow:hidden; border:1px solid #bfdbfe; box-shadow:0 4px 24px rgba(59,130,246,0.12); background:#fff; }
 
 .sim-sol-header {
   background:linear-gradient(135deg,#eff6ff,#dbeafe);
@@ -1556,7 +1556,7 @@ body {
 }
 
 /* ── SIMULADOR REACCIONES — "White Science Board" ─────────────────────────── */
-.sim-rxn-wrap { border-radius:14px; overflow:hidden; border:1px solid #e9d5ff; box-shadow:0 4px 24px rgba(124,58,237,.1); }
+.sim-rxn-wrap { border-radius:14px; overflow:hidden; border:1px solid #e9d5ff; box-shadow:0 4px 24px rgba(124,58,237,.1); background:#fff; }
 
 .sim-rxn-hdr {
   background:linear-gradient(135deg,#faf5ff,#ede9fe);
