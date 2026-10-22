@@ -1164,7 +1164,7 @@ function iniciarPreview(p) {
 
   const onRespuesta = (esCorrecta) => mostrarPreviewFeedback(p, esCorrecta);
 
-  if (tipo === 'seleccion') {
+  if (tipo === 'seleccion' || tipo === 'simulador') {
     const letras = ['A', 'B', 'C', 'D'];
     p.opciones.forEach((op, i) => {
       const btn = document.createElement('button');
