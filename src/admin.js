@@ -7,7 +7,7 @@ import {
 import { subirImagenPregunta } from './storage.js';
 import * as XLSX from 'xlsx';
 import { db } from './firebase.js';
-import { ref, get, set, onValue } from 'firebase/database';
+import { ref, get, set, remove, onValue } from 'firebase/database';
 import Chart from 'chart.js/auto';
 import './estilos/indicadores.css';
 
@@ -463,6 +463,12 @@ function renderizarHistorial() {
             <span class="admin-badge" style="color:#39ff14">Prom: ${promNota}/500</span>
             <span class="admin-badge" style="color:#ffd600">Mejor: ${maxNota}/500</span>
             <span style="margin-left:auto;color:#8ab;font-size:0.82rem">▼ Ver detalle</span>
+            <button
+              class="btn-accion rojo chico"
+              style="margin-left:6px;padding:3px 10px;font-size:0.78rem"
+              onclick="event.stopPropagation(); window._delHistorial('${e.key}', ${i + 1})">
+              🗑 Eliminar
+            </button>
           </div>
           <div id="hi${i}" class="oculto" style="margin-top:14px">
             ${renderDetalleAct(e)}
@@ -474,6 +480,25 @@ function renderizarHistorial() {
     window._xlsAct  = key => descargarXlsActividad(key);
   });
 }
+
+window._delHistorial = async (key, num) => {
+  if (!confirm(
+    `¿Eliminar la sesión S${num} del historial?\n\n` +
+    `Esto borrará todos los registros de participantes y resultados de esa actividad.`
+  )) return;
+  if (!confirm(
+    `⚠️ Confirmación final\n\n` +
+    `La sesión S${num} se eliminará permanentemente de Firebase.\n` +
+    `Esta acción NO se puede deshacer.\n\n` +
+    `¿Confirmas?`
+  )) return;
+  try {
+    await remove(ref(db, `historial/${key}`));
+    renderizarHistorial();
+  } catch (err) {
+    alert('❌ Error al eliminar: ' + err.message);
+  }
+};
 
 function renderDetalleAct(act) {
   const terminados = Object.values(act.estudiantes || {})
