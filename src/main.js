@@ -12,10 +12,12 @@ import {
   reportarResultado, escucharEstudiantes,
   escucharEstadoSala, cerrarSala, obtenerGradoSala
 } from './sala.js';
-import { renderRelacionar } from './tipos/relacionar.js';
-import { renderOrdenar }    from './tipos/ordenar.js';
-import { renderCrucigrama } from './tipos/crucigrama.js';
-import { renderClasifica }  from './tipos/clasifica.js';
+import { renderRelacionar }         from './tipos/relacionar.js';
+import { renderOrdenar }             from './tipos/ordenar.js';
+import { renderCrucigrama }          from './tipos/crucigrama.js';
+import { renderClasifica }           from './tipos/clasifica.js';
+import { iniciarSimEstadosMateria }  from './tipos/sim-estados-materia.js';
+import { iniciarSimGasesIdeales }    from './tipos/sim-gases-ideales.js';
 import { db } from './firebase.js';
 import { ref, get, set, update, onValue } from 'firebase/database';
 
@@ -80,6 +82,15 @@ const sala = {
 function salaLimpiar() {
   sala.unsub.forEach(fn => { try { fn(); } catch {} });
   sala.unsub = [];
+}
+
+// ─── SIMULADOR ACTIVO ──────────────────────────────────────────────────────
+let _detenerSim = null;
+
+function _limpiarSim() {
+  if (_detenerSim) { try { _detenerSim(); } catch {} _detenerSim = null; }
+  const c = document.getElementById('sim-container');
+  if (c) { c.innerHTML = ''; c.classList.add('oculto'); }
 }
 
 // ─── PARTÍCULAS DE FONDO ───────────────────────────────────────────────────
@@ -488,6 +499,7 @@ function mostrarPregunta() {
     ordenar:     '🔢 Ordenar',
     crucigrama:  '📝 Crucigrama',
     clasifica:   '📂 Clasificar',
+    simulador:   '🔬 Simulador',
   };
   if (tipoLabel) {
     const fmt = formatoLabel[p.tipo];
@@ -514,6 +526,19 @@ function mostrarPregunta() {
   } else {
     imgEl2.src = '';
     imgEl2.classList.add('oculto');
+  }
+
+  // Simulador interactivo (opcional)
+  _limpiarSim();
+  if (p.tipo === 'simulador') {
+    const simContainer = document.getElementById('sim-container');
+    simContainer.classList.remove('oculto');
+    const SIMS = {
+      'estados-materia': iniciarSimEstadosMateria,
+      'gases-ideales':   iniciarSimGasesIdeales,
+    };
+    const fn = SIMS[p.simulador];
+    if (fn) _detenerSim = fn(simContainer);
   }
 
   // Área de interacción
@@ -772,6 +797,7 @@ document.getElementById('ctrl-volumen').addEventListener('input', (e) => {
 // ─── FINALIZAR EXAMEN ──────────────────────────────────────────────────────
 function finalizarExamen() {
   detenerReloj();
+  _limpiarSim();
   const nota = calcularNota();
   guardarEnRanking(nota);
   mostrarResultados(nota);

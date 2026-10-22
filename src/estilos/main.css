@@ -1299,6 +1299,128 @@ body {
   box-shadow: 0 0 12px rgba(0, 229, 255, 0.25);
 }
 
+/* ─── SIMULADORES INTERACTIVOS ──────────────────────────────────────────── */
+.sim-container { width: 100%; }
+.sim-container.oculto { display: none; }
+
+.sim-wrap {
+  background: #08081a;
+  border: 1px solid #00d4ff22;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.sim-head {
+  background: #0c0c20;
+  padding: 8px 16px;
+  border-bottom: 1px solid #00d4ff18;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.sim-titulo-txt { color: #4fc3f7; font-size: 12px; font-weight: bold; letter-spacing: 0.5px; }
+.sim-instruccion { color: #555577; font-size: 11px; margin-left: auto; }
+
+.sim-canvas { display: block; width: 100%; height: 190px; background: #05050e; }
+
+.sim-controles-row {
+  padding: 10px 14px 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #0a0a1c;
+  border-top: 1px solid #00d4ff18;
+}
+.sim-lbl { color: #666; font-size: 14px; }
+
+.sim-slider {
+  flex: 1;
+  -webkit-appearance: none;
+  height: 5px;
+  border-radius: 3px;
+  background: linear-gradient(to right, #1565c0, #ef5350);
+  outline: none;
+  cursor: pointer;
+}
+.sim-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid #4fc3f7;
+  box-shadow: 0 0 6px #4fc3f7;
+  cursor: pointer;
+}
+
+.sim-badge {
+  font-size: 11px; font-weight: bold;
+  padding: 3px 10px; border-radius: 20px;
+  white-space: nowrap; transition: all 0.3s;
+}
+.badge-solido  { background: #1565c022; color: #64b5f6; border: 1px solid #1565c0; }
+.badge-liquido { background: #00695c22; color: #4db6ac; border: 1px solid #00695c; }
+.badge-gaseoso { background: #bf360c22; color: #ff8a65; border: 1px solid #bf360c; }
+
+/* — Gases ideales — */
+.sim-gas-body {
+  display: grid;
+  grid-template-columns: 1fr 140px;
+}
+.sim-canvas-gas { display: block; width: 100%; height: 220px; background: #05050e; border-right: 1px solid #00d4ff18; }
+
+.sim-lecturas {
+  display: flex; flex-direction: column; justify-content: space-around;
+  padding: 10px 8px; background: #07071a; gap: 6px;
+}
+.sim-lectura {
+  background: #111128; border: 1px solid #ffffff15;
+  border-radius: 8px; padding: 6px 8px; text-align: center;
+}
+.sim-lectura.lectura-p { border-color: #ff6b3544; }
+.sim-lectura.lectura-t { border-color: #ff980044; }
+.sim-lectura.lectura-v { border-color: #4fc3f744; }
+
+.lec-lbl  { display: block; font-size: 9px; color: #555577; letter-spacing: 1px; font-family: monospace; }
+.lec-val  { display: block; font-size: 18px; font-weight: bold; font-family: monospace; line-height: 1.1; }
+.lectura-p .lec-val { color: #ff6b35; }
+.lectura-t .lec-val { color: #ff9800; }
+.lectura-v .lec-val { color: #4fc3f7; }
+.lec-unit { font-size: 10px; color: #555577; font-family: monospace; }
+
+.sim-gas-controles {
+  padding: 10px 14px 12px; background: #0a0a1c;
+  border-top: 1px solid #00d4ff18;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 8px 16px;
+}
+.sim-ctrl-group { display: flex; flex-direction: column; gap: 5px; }
+.sim-ctrl-lbl {
+  font-size: 10px; color: #666688; font-family: monospace; letter-spacing: 0.5px;
+  display: flex; justify-content: space-between;
+}
+.sim-ctrl-val { color: #4fc3f7; font-weight: bold; }
+
+.slider-t { background: linear-gradient(to right, #1565c0, #ff7043); }
+.slider-t::-webkit-slider-thumb { border-color: #ff7043; box-shadow: 0 0 6px #ff7043; }
+.slider-v { background: linear-gradient(to right, #4fc3f7, #1565c0); }
+.slider-v::-webkit-slider-thumb { border-color: #4fc3f7; box-shadow: 0 0 6px #4fc3f7; }
+
+.sim-ley-badge {
+  grid-column: span 2;
+  background: #0f1f30; border: 1px solid #4fc3f733;
+  border-radius: 6px; padding: 6px 10px;
+  font-family: monospace; font-size: 11px; color: #4fc3f7;
+  text-align: center; letter-spacing: 0.5px;
+}
+
+@media (max-width: 480px) {
+  .sim-gas-body { grid-template-columns: 1fr; }
+  .sim-lecturas { flex-direction: row; border-top: 1px solid #00d4ff18; }
+  .sim-canvas-gas { height: 180px; border-right: none; }
+  .sim-gas-controles { grid-template-columns: 1fr; }
+  .sim-ley-badge { grid-column: span 1; font-size: 10px; }
+}
+
 /* ── UPLOAD DE IMAGEN EN ADMIN ─────────────────────────────────────────────── */
 .af-imagen-area {
   display: flex;
