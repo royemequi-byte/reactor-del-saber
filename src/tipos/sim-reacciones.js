@@ -1,4 +1,4 @@
-const CPK = { H:'#e8e8ff', O:'#FF3535', C:'#6677aa', N:'#5566FF', Fe:'#FF9911', Na:'#CC44FF', Cl:'#33EE55', S:'#FFEE33' };
+const CPK = { H:'#9ca3af', O:'#ef4444', C:'#374151', N:'#3b82f6', Fe:'#f97316', Na:'#8b5cf6', Cl:'#10b981', S:'#eab308' };
 
 const REACCIONES = [
   {
@@ -17,7 +17,7 @@ const REACCIONES = [
     nombre: 'Síntesis H₂O',
     reactivos: [{ formula:'H2', label:'H₂', coef:2 }, { formula:'O2', label:'O₂', coef:1 }],
     productos:  [{ formula:'H2O', label:'H₂O', coef:2 }],
-    colorAccent:'#22d3ee',
+    colorAccent:'#0ea5e9',
     moleculas: {
       H2:    [{ e:'H',x:-9,y:0,r:8 },{ e:'H',x:9,y:0,r:8 }],
       O2:    [{ e:'O',x:-11,y:0,r:11 },{ e:'O',x:11,y:0,r:11 }],
@@ -28,7 +28,7 @@ const REACCIONES = [
     nombre: 'Oxidación Fe',
     reactivos: [{ formula:'Fe', label:'Fe', coef:4 }, { formula:'O2', label:'O₂', coef:3 }],
     productos:  [{ formula:'Fe2O3', label:'Fe₂O₃', coef:2 }],
-    colorAccent:'#fb923c',
+    colorAccent:'#dc2626',
     moleculas: {
       Fe:    [{ e:'Fe',x:0,y:0,r:14 }],
       O2:    [{ e:'O',x:-11,y:0,r:11 },{ e:'O',x:11,y:0,r:11 }],
@@ -86,15 +86,7 @@ export function iniciarSimReacciones(container) {
   const balRow    = container.querySelector('.sim-rxn-bal-row');
   const balMsg    = container.querySelector('.sim-rxn-bal-msg');
 
-  // Starfield (precomputed)
-  const stars = Array.from({ length: 80 }, () => ({
-    x: Math.random()*W, y: Math.random()*H,
-    r: Math.random()*1.4 + 0.3,
-    phase: Math.random()*Math.PI*2,
-    speed: 0.5 + Math.random()*1.5,
-  }));
-
-  let rxnActual = 0, coefs = [], flash = 0, flashColor = '#fbbf24', reaccionando = false, moleculasAnim = [];
+  let rxnActual = 0, coefs = [], flash = 0, flashColor = '#f97316', reaccionando = false, moleculasAnim = [];
 
   function formatFormula(f) {
     return f.replace(/(\d+)/g,'<sub>$1</sub>').replace(/([A-Z][a-z]?)(\d)/g,'$1<sub>$2</sub>');
@@ -158,7 +150,7 @@ export function iniciarSimReacciones(container) {
     ];
     allParts.forEach((part, pi) => {
       if (part.arrow) {
-        const a=document.createElement('span'); a.className='sim-arrow'; a.textContent='→'; eqRow.appendChild(a); return;
+        const a=document.createElement('span'); a.className='sim-arrow'; a.style.color=REACCIONES[rxnActual].colorAccent; a.textContent='→'; eqRow.appendChild(a); return;
       }
       if (pi>0 && !allParts[pi-1].arrow) {
         const plus=document.createElement('span'); plus.className='sim-op-sign'; plus.textContent='+'; eqRow.appendChild(plus);
@@ -198,95 +190,112 @@ export function iniciarSimReacciones(container) {
     const rxn=REACCIONES[rxnActual];
     const atoms=rxn.moleculas[mol.key];
     if (!atoms) return;
+    // Bonds
     for (let i=1;i<atoms.length;i++) {
       ctx.beginPath(); ctx.moveTo(x+atoms[0].x,y+atoms[0].y); ctx.lineTo(x+atoms[i].x,y+atoms[i].y);
-      ctx.strokeStyle='rgba(220,220,255,0.35)'; ctx.lineWidth=2.5; ctx.stroke();
+      ctx.strokeStyle='rgba(100,100,120,0.4)'; ctx.lineWidth=2.5; ctx.stroke();
     }
     atoms.forEach(a=>{
-      const ax=x+a.x,ay=y+a.y,r=a.r;
+      const ax=x+a.x, ay=y+a.y, r=a.r;
       const col=CPK[a.e]||'#888';
-      // Nebula aura
-      const grd=ctx.createRadialGradient(ax,ay,0,ax,ay,r*2.8);
-      grd.addColorStop(0,col+'55'); grd.addColorStop(1,'transparent');
-      ctx.fillStyle=grd; ctx.beginPath(); ctx.arc(ax,ay,r*2.8,0,Math.PI*2); ctx.fill();
-      // Sphere
+
+      // Soft shadow on white bg
+      ctx.shadowColor=col; ctx.shadowBlur=8;
+
+      // Sphere with 3D gradient
       const sg=ctx.createRadialGradient(ax-r*.32,ay-r*.32,0,ax,ay,r);
-      sg.addColorStop(0,col); sg.addColorStop(0.6,col+'cc'); sg.addColorStop(1,col+'33');
+      sg.addColorStop(0, lighten(col));
+      sg.addColorStop(0.55, col);
+      sg.addColorStop(1, darken(col));
       ctx.fillStyle=sg;
-      ctx.shadowColor=col; ctx.shadowBlur=12;
       ctx.beginPath(); ctx.arc(ax,ay,r,0,Math.PI*2); ctx.fill();
       ctx.shadowBlur=0;
-      ctx.strokeStyle='rgba(255,255,255,0.25)'; ctx.lineWidth=0.8;
+
+      // Dark outline
+      ctx.strokeStyle='rgba(0,0,0,0.18)'; ctx.lineWidth=0.9;
       ctx.beginPath(); ctx.arc(ax,ay,r,0,Math.PI*2); ctx.stroke();
-      ctx.fillStyle='rgba(255,255,255,0.55)';
+
+      // Specular
+      ctx.fillStyle='rgba(255,255,255,0.7)';
       ctx.beginPath(); ctx.arc(ax-r*.32,ay-r*.32,r*.28,0,Math.PI*2); ctx.fill();
-      ctx.fillStyle=col==='#e8e8ff'?'#444':'#fff';
+
+      // Element label — visible on colored sphere
+      const lum = luminance(col);
+      ctx.fillStyle=lum>0.4?'#1f2937':'#ffffff';
       ctx.font=`bold ${Math.max(7,r*.72)}px monospace`;
       ctx.textAlign='center'; ctx.textBaseline='middle';
       ctx.fillText(a.e,ax,ay); ctx.textBaseline='alphabetic';
     });
   }
 
+  function lighten(hex) {
+    const [r,g,b] = hexToComponents(hex);
+    return `rgb(${Math.min(255,r+70)},${Math.min(255,g+70)},${Math.min(255,b+70)})`;
+  }
+  function darken(hex) {
+    const [r,g,b] = hexToComponents(hex);
+    return `rgb(${Math.max(0,r-50)},${Math.max(0,g-50)},${Math.max(0,b-50)})`;
+  }
+  function hexToComponents(hex) {
+    return [parseInt(hex.slice(1,3),16), parseInt(hex.slice(3,5),16), parseInt(hex.slice(5,7),16)];
+  }
+  function luminance(hex) {
+    const [r,g,b] = hexToComponents(hex).map(v=>v/255);
+    return 0.299*r + 0.587*g + 0.114*b;
+  }
+  function hexToRgb(hex) {
+    const [r,g,b] = hexToComponents(hex); return `${r},${g},${b}`;
+  }
+
   let rafId;
   function loop() {
     ctx.clearRect(0,0,W,H);
 
-    // Gradient background
+    // White background with subtle warm gradient
     const bg=ctx.createLinearGradient(0,0,W,H);
-    bg.addColorStop(0,'#0e0820');
-    bg.addColorStop(0.5,'#140a2c');
-    bg.addColorStop(1,'#1a0c38');
+    bg.addColorStop(0,'#fafafa');
+    bg.addColorStop(0.5,'#f8f9ff');
+    bg.addColorStop(1,'#f5f3ff');
     ctx.fillStyle=bg; ctx.fillRect(0,0,W,H);
 
-    // Subtle grid
-    ctx.strokeStyle='rgba(130,80,240,0.07)'; ctx.lineWidth=0.5;
-    for (let gx=0;gx<W;gx+=28) { ctx.beginPath(); ctx.moveTo(gx,0); ctx.lineTo(gx,H); ctx.stroke(); }
-    for (let gy=0;gy<H;gy+=28) { ctx.beginPath(); ctx.moveTo(0,gy); ctx.lineTo(W,gy); ctx.stroke(); }
+    // Subtle dot grid
+    ctx.fillStyle='rgba(99,102,241,0.1)';
+    for (let gx=18;gx<W;gx+=22) {
+      for (let gy=12;gy<H;gy+=22) {
+        ctx.beginPath(); ctx.arc(gx,gy,1.2,0,Math.PI*2); ctx.fill();
+      }
+    }
 
-    // Twinkling stars
-    const t=Date.now()*.001;
-    stars.forEach(s=>{
-      const a=0.25+Math.sin(s.phase+t*s.speed)*0.25;
-      ctx.globalAlpha=a; ctx.fillStyle='#fff';
-      ctx.beginPath(); ctx.arc(s.x,s.y,s.r,0,Math.PI*2); ctx.fill();
-    });
-    ctx.globalAlpha=1;
+    const midX=W*.57;
 
     // Flash on balance
     if (flash>0) {
-      const fc=flashColor||'#fbbf24';
-      ctx.fillStyle=`rgba(${hexToRgb(fc)},${flash*.18})`;
+      const fc=flashColor||'#f97316';
+      ctx.fillStyle=`rgba(${hexToRgb(fc)},${flash*.12})`;
       ctx.fillRect(0,0,W,H);
       if (flash>0.6) {
-        for (let i=0;i<8;i++) {
-          const a=Math.random()*Math.PI*2, r=10+Math.random()*40;
-          ctx.fillStyle=`rgba(${hexToRgb(fc)},${Math.random()*.9})`;
-          ctx.beginPath(); ctx.arc(W*.56+Math.cos(a)*r,H/2+Math.sin(a)*r,Math.random()*4,0,Math.PI*2); ctx.fill();
+        for (let i=0;i<6;i++) {
+          const a=Math.random()*Math.PI*2, rd=8+Math.random()*35;
+          ctx.fillStyle=`rgba(${hexToRgb(fc)},${Math.random()*.8})`;
+          ctx.beginPath(); ctx.arc(midX+Math.cos(a)*rd,H/2+Math.sin(a)*rd,Math.random()*4,0,Math.PI*2); ctx.fill();
         }
       }
       flash-=0.022;
     }
 
-    // Center divider with glow
-    const midX=W*.57;
-    const dg=ctx.createLinearGradient(midX,0,midX,H);
-    const ac=(REACCIONES[rxnActual].colorAccent)||'#ff7043';
-    dg.addColorStop(0,'transparent');
-    dg.addColorStop(0.5,ac+'66');
-    dg.addColorStop(1,'transparent');
-    ctx.strokeStyle=dg; ctx.lineWidth=1.5; ctx.setLineDash([6,5]);
-    ctx.shadowColor=ac; ctx.shadowBlur=8;
-    ctx.beginPath(); ctx.moveTo(midX,8); ctx.lineTo(midX,H-8); ctx.stroke();
-    ctx.setLineDash([]); ctx.shadowBlur=0;
+    // Left/right labels
+    ctx.fillStyle='rgba(100,100,130,0.55)'; ctx.font='bold 9px monospace'; ctx.textAlign='center';
+    ctx.fillText('REACTIVOS',midX*.38,13); ctx.fillText('PRODUCTOS',midX+(W-midX)*.5,13);
+
+    // Center divider with accent color
+    const ac=REACCIONES[rxnActual].colorAccent;
+    ctx.strokeStyle=ac+'88'; ctx.lineWidth=1.5; ctx.setLineDash([5,5]);
+    ctx.beginPath(); ctx.moveTo(midX,16); ctx.lineTo(midX,H-8); ctx.stroke(); ctx.setLineDash([]);
 
     // Arrow
-    ctx.fillStyle=ac+'ee'; ctx.font='bold 24px monospace'; ctx.textAlign='center';
-    ctx.shadowColor=ac; ctx.shadowBlur=16;
-    ctx.fillText('→',midX,H/2+8); ctx.shadowBlur=0;
-
-    // Section labels
-    ctx.fillStyle='rgba(180,160,255,0.45)'; ctx.font='bold 9px monospace'; ctx.textAlign='center';
-    ctx.fillText('REACTIVOS',midX*.38,15); ctx.fillText('PRODUCTOS',midX+(W-midX)*.5,15);
+    ctx.fillStyle=ac; ctx.font='bold 26px sans-serif'; ctx.textAlign='center';
+    ctx.shadowColor=ac; ctx.shadowBlur=10;
+    ctx.fillText('→',midX,H/2+9); ctx.shadowBlur=0;
 
     // Molecules
     moleculasAnim.forEach(mol=>{
@@ -294,17 +303,12 @@ export function iniciarSimReacciones(container) {
       const xMin=mol.lado==='r'?26:midX+22, xMax=mol.lado==='r'?midX-26:W-26;
       if(mol.x<xMin){mol.x=xMin;mol.vx=Math.abs(mol.vx);}
       if(mol.x>xMax){mol.x=xMax;mol.vx=-Math.abs(mol.vx);}
-      if(mol.y<40){mol.y=40;mol.vy=Math.abs(mol.vy);}
-      if(mol.y>H-38){mol.y=H-38;mol.vy=-Math.abs(mol.vy);}
+      if(mol.y<38){mol.y=38;mol.vy=Math.abs(mol.vy);}
+      if(mol.y>H-36){mol.y=H-36;mol.vy=-Math.abs(mol.vy);}
       drawMol(mol,mol.x,mol.y);
     });
 
     rafId=requestAnimationFrame(loop);
-  }
-
-  function hexToRgb(hex) {
-    const r=parseInt(hex.slice(1,3),16), g2=parseInt(hex.slice(3,5),16), b=parseInt(hex.slice(5,7),16);
-    return `${r},${g2},${b}`;
   }
 
   setRxn(0);

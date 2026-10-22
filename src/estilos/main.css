@@ -1497,118 +1497,117 @@ body {
 }
 .sim-mit-info strong { font-size: 13px; }
 
-/* ── SIMULADOR SOLUCIONES — "Ocean Lab" ───────────────────────────────────── */
+/* ── SIMULADOR SOLUCIONES — "White Lab" ───────────────────────────────────── */
 .sim-sol-dots { display:flex; gap:5px; }
 .sim-sol-dots span { width:9px; height:9px; border-radius:50%; }
-.sim-sol-dots span:nth-child(1) { background:#34d399; box-shadow:0 0 6px #34d399; }
-.sim-sol-dots span:nth-child(2) { background:#fbbf24; box-shadow:0 0 6px #fbbf24; }
-.sim-sol-dots span:nth-child(3) { background:#f87171; box-shadow:0 0 6px #f87171; }
+.sim-sol-dots span:nth-child(1) { background:#22c55e; box-shadow:0 0 5px #22c55e; }
+.sim-sol-dots span:nth-child(2) { background:#f59e0b; box-shadow:0 0 5px #f59e0b; }
+.sim-sol-dots span:nth-child(3) { background:#ef4444; box-shadow:0 0 5px #ef4444; }
 
-.sim-sol-wrap { border-radius:14px; overflow:hidden; border:1px solid #22d3ee22; box-shadow:0 0 40px #22d3ee0a; }
+.sim-sol-wrap { border-radius:14px; overflow:hidden; border:1px solid #bfdbfe; box-shadow:0 4px 24px rgba(59,130,246,0.12); }
 
 .sim-sol-header {
-  background:linear-gradient(135deg,#041a2e,#072a44);
-  padding:10px 16px; border-bottom:1px solid #22d3ee22;
+  background:linear-gradient(135deg,#eff6ff,#dbeafe);
+  padding:10px 16px; border-bottom:1px solid #bfdbfe;
   display:flex; align-items:center; gap:12px;
 }
-.sim-sol-title { color:#7dd3fc; font-size:12px; font-weight:bold; letter-spacing:.5px; flex:1; }
-.sim-sol-temp-badge { background:#0a2040; border:1px solid #22d3ee33; border-radius:20px; padding:3px 10px; font-size:11px; font-family:monospace; color:#67e8f9; }
+.sim-sol-title { color:#1d4ed8; font-size:12px; font-weight:700; letter-spacing:.5px; flex:1; }
+.sim-sol-temp-badge { background:#fff; border:1px solid #bfdbfe; border-radius:20px; padding:3px 10px; font-size:11px; font-family:monospace; color:#1d4ed8; }
 
 .sim-sol-layout { display:grid; grid-template-columns:1fr 190px; }
 .sim-sol-cv { display:block; width:100%; }
 
 .sim-sol-panel {
-  background:linear-gradient(180deg,#041828,#062035);
-  border-left:1px solid #22d3ee1a;
+  background:linear-gradient(180deg,#f8fafc,#f0f9ff);
+  border-left:1px solid #bfdbfe;
   display:flex; flex-direction:column; padding:12px 10px; gap:9px;
 }
 
-.sim-sol-gauge { background:#071d30; border:1px solid #22d3ee18; border-radius:10px; padding:9px; text-align:center; position:relative; overflow:hidden; }
-.sim-sol-gauge::before { content:''; position:absolute; left:0; top:0; bottom:0; width:3px; background:var(--ring,#22d3ee); box-shadow:0 0 8px var(--ring,#22d3ee); }
-.sim-sol-gauge-lbl { font-size:9px; color:#64748b; font-family:monospace; letter-spacing:1px; display:block; margin-bottom:4px; }
-.sim-sol-gauge-val { font-size:20px; font-weight:bold; font-family:monospace; display:block; line-height:1; color:#a855f7; }
-.sim-sol-gauge-unit { font-size:10px; color:#475569; font-family:monospace; }
+.sim-sol-gauge { background:#fff; border:1.5px solid #e2e8f0; border-radius:10px; padding:9px; text-align:center; position:relative; overflow:hidden; box-shadow:0 1px 4px rgba(0,0,0,.06); }
+.sim-sol-gauge::before { content:''; position:absolute; left:0; top:0; bottom:0; width:3px; background:var(--acc,#7c3aed); }
+.sim-sol-gauge-lbl { font-size:9px; color:#94a3b8; font-family:monospace; letter-spacing:1px; display:block; margin-bottom:4px; }
+.sim-sol-gauge-val { font-size:20px; font-weight:bold; font-family:monospace; display:block; line-height:1; color:#7c3aed; }
+.sim-sol-gauge-unit { font-size:10px; color:#94a3b8; font-family:monospace; }
 
-.sim-sol-bar-wrap { height:4px; background:#0f2a3e; border-radius:2px; margin-top:7px; overflow:hidden; }
-.sim-sol-bar-fill { height:100%; border-radius:2px; transition:width .5s,background .5s; background:#a855f7; }
+.sim-sol-bar-wrap { height:4px; background:#e2e8f0; border-radius:2px; margin-top:7px; overflow:hidden; }
+.sim-sol-bar-fill { height:100%; border-radius:2px; transition:width .5s,background .5s; background:#7c3aed; }
 
 .sim-sol-actions { display:flex; flex-direction:column; gap:6px; margin-top:auto; }
-.sim-sol-action { padding:8px; border-radius:8px; font-size:11px; font-family:monospace; font-weight:bold; cursor:pointer; border:1.5px solid; transition:all .2s; text-align:center; }
-.btn-nacl-a   { background:#4c1d9510; border-color:#a855f740; color:#c084fc; }
-.btn-nacl-a:hover  { background:#4c1d9520; box-shadow:0 0 14px #a855f733; }
-.btn-agua-a   { background:#0e374e10; border-color:#22d3ee40; color:#67e8f9; }
-.btn-agua-a:hover  { background:#0e374e22; box-shadow:0 0 14px #22d3ee33; }
-.btn-cal-a    { background:#78160a10; border-color:#fb923c40; color:#fdba74; }
-.btn-cal-a:hover   { background:#78160a22; box-shadow:0 0 14px #fb923c33; }
-.btn-rst-a    { background:#0f172a; border-color:#1e293b; color:#475569; }
-.btn-rst-a:hover   { border-color:#22d3ee55; color:#67e8f9; }
+.sim-sol-action { padding:8px; border-radius:8px; font-size:11px; font-family:monospace; font-weight:bold; cursor:pointer; border:1.5px solid; transition:all .2s; text-align:center; background:#fff; }
+.btn-nacl-a   { border-color:#7c3aed; color:#7c3aed; }
+.btn-nacl-a:hover  { background:#f5f3ff; box-shadow:0 2px 8px rgba(124,58,237,.2); }
+.btn-agua-a   { border-color:#0284c7; color:#0284c7; }
+.btn-agua-a:hover  { background:#f0f9ff; box-shadow:0 2px 8px rgba(2,132,199,.2); }
+.btn-cal-a    { border-color:#ea580c; color:#ea580c; }
+.btn-cal-a:hover   { background:#fff7ed; box-shadow:0 2px 8px rgba(234,88,12,.2); }
+.btn-rst-a    { border-color:#cbd5e1; color:#64748b; }
+.btn-rst-a:hover   { border-color:#94a3b8; color:#1e293b; }
 
 .sim-sol-footer {
   display:flex; gap:10px; padding:8px 14px 10px; flex-wrap:wrap; align-items:center;
-  background:linear-gradient(135deg,#041828,#062035);
-  border-top:1px solid #22d3ee15;
+  background:#f8fafc; border-top:1px solid #e2e8f0;
 }
-.sim-sol-ion-tag { font-size:10px; font-family:monospace; color:var(--c,#aaa); }
+.sim-sol-ion-tag { font-size:11px; font-family:monospace; color:var(--c,#555); font-weight:600; }
+.sim-sol-sat-hint { font-size:10px; font-family:monospace; color:#94a3b8; margin-left:auto; }
 
 @media (max-width:480px) {
   .sim-sol-layout { grid-template-columns:1fr; }
-  .sim-sol-panel { border-left:none; border-top:1px solid #22d3ee18; }
+  .sim-sol-panel { border-left:none; border-top:1px solid #bfdbfe; }
 }
 
-/* ── SIMULADOR REACCIONES — "Molecular Cosmos" ────────────────────────────── */
-.sim-rxn-wrap { border-radius:14px; overflow:hidden; border:1px solid #7c3aed22; box-shadow:0 0 40px #7c3aed0a; }
+/* ── SIMULADOR REACCIONES — "White Science Board" ─────────────────────────── */
+.sim-rxn-wrap { border-radius:14px; overflow:hidden; border:1px solid #e9d5ff; box-shadow:0 4px 24px rgba(124,58,237,.1); }
 
 .sim-rxn-hdr {
-  background:linear-gradient(135deg,#0e0820,#1a0a30);
-  padding:10px 16px; border-bottom:1px solid #7c3aed22;
+  background:linear-gradient(135deg,#faf5ff,#ede9fe);
+  padding:10px 16px; border-bottom:1px solid #e9d5ff;
   display:flex; align-items:center; gap:12px;
 }
-.sim-rxn-title { color:#c4b5fd; font-size:12px; font-weight:bold; letter-spacing:.5px; }
+.sim-rxn-title { color:#6d28d9; font-size:12px; font-weight:700; letter-spacing:.5px; }
 
 .sim-rxn-cv { display:block; width:100%; }
 
 .sim-rxn-tab-row {
-  display:flex; background:linear-gradient(135deg,#0e0820,#160a2e);
-  border-top:1px solid #7c3aed22; overflow-x:auto;
+  display:flex; background:#fafafa;
+  border-top:1px solid #e9d5ff; overflow-x:auto;
 }
 .sim-rxn-tab {
   flex:1; min-width:90px; padding:9px 6px; background:none; border:none;
-  border-right:1px solid #7c3aed15; color:#4c3a6e; font-size:11px;
+  border-right:1px solid #ede9fe; color:#a78bfa; font-size:11px;
   font-family:monospace; cursor:pointer; transition:all .2s; text-align:center; line-height:1.4;
 }
 .sim-rxn-tab:last-child { border-right:none; }
-.sim-rxn-tab:hover { background:#1a1040; color:#c4b5fd; }
-.sim-rxn-tab.activa { background:#1e1040; color:var(--accent,#a78bfa); border-bottom:2px solid var(--accent,#a78bfa); }
+.sim-rxn-tab:hover { background:#f5f3ff; color:#6d28d9; }
+.sim-rxn-tab.activa { background:#f5f3ff; color:var(--accent,#7c3aed); border-bottom:2.5px solid var(--accent,#7c3aed); font-weight:700; }
 
 .sim-rxn-eq-panel {
-  padding:12px 14px; background:linear-gradient(135deg,#0d0820,#150a2a);
-  border-top:1px solid #7c3aed18;
+  padding:12px 14px; background:#ffffff;
+  border-top:1px solid #e9d5ff;
 }
-.sim-rxn-eq-lbl { font-size:10px; color:#4c3a6e; font-family:monospace; letter-spacing:1px; margin-bottom:10px; }
+.sim-rxn-eq-lbl { font-size:10px; color:#94a3b8; font-family:monospace; letter-spacing:1px; margin-bottom:10px; }
 .sim-rxn-eq-row { display:flex; align-items:center; justify-content:center; gap:5px; flex-wrap:wrap; margin-bottom:8px; }
 
 .sim-mol-grupo { display:flex; align-items:center; gap:3px; }
 .sim-mol-coef { display:flex; flex-direction:column; align-items:center; }
-.sim-mol-coef button { width:20px; height:16px; background:#1a0a2e; border:1px solid #7c3aed22; border-radius:3px; color:#6d4a9e; font-size:10px; cursor:pointer; transition:all .15s; line-height:1; }
-.sim-mol-coef button:hover { border-color:#a78bfa; color:#c4b5fd; }
-.sim-mol-coef-val { font-size:17px; font-weight:bold; font-family:monospace; color:#e2d9ff; min-width:20px; text-align:center; line-height:1.2; }
-.sim-mol-formula { font-size:14px; font-family:monospace; color:#c4b5fd; white-space:nowrap; }
-.sim-op-sign { font-size:18px; font-family:monospace; color:#4c3a6e; }
+.sim-mol-coef button { width:20px; height:16px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:3px; color:#64748b; font-size:10px; cursor:pointer; transition:all .15s; line-height:1; }
+.sim-mol-coef button:hover { border-color:#7c3aed; color:#7c3aed; background:#f5f3ff; }
+.sim-mol-coef-val { font-size:17px; font-weight:bold; font-family:monospace; color:#1e1b4b; min-width:20px; text-align:center; line-height:1.2; }
+.sim-mol-formula { font-size:14px; font-family:monospace; color:#1e293b; white-space:nowrap; font-weight:600; }
+.sim-op-sign { font-size:18px; font-family:monospace; color:#cbd5e1; }
 .sim-arrow   { font-size:20px; margin:0 3px; }
 
 .sim-rxn-bal-panel {
-  padding:9px 14px 12px;
-  background:linear-gradient(135deg,#110a22,#0e0818);
-  border-top:1px solid #7c3aed12;
+  padding:9px 14px 12px; background:#f8fafc;
+  border-top:1px solid #e9d5ff;
 }
-.sim-rxn-bal-lbl { font-size:10px; color:#4c3a6e; font-family:monospace; letter-spacing:1px; margin-bottom:7px; }
+.sim-rxn-bal-lbl { font-size:10px; color:#94a3b8; font-family:monospace; letter-spacing:1px; margin-bottom:7px; }
 .sim-balance-row { display:flex; gap:7px; flex-wrap:wrap; }
 .sim-elem-badge { padding:4px 9px; border-radius:7px; font-size:12px; font-family:monospace; display:flex; align-items:center; gap:5px; border:1px solid; transition:all .3s; }
-.sim-elem-badge.ok { background:#052e1610; border-color:#34d39944; color:#6ee7b7; }
-.sim-elem-badge.no { background:#450a0a10; border-color:#f87171; color:#fca5a5; }
-.sim-balance-msg { margin-top:7px; font-size:12px; font-family:monospace; min-height:17px; transition:all .3s; }
-.sim-balance-msg.ok { color:#34d399; }
-.sim-balance-msg.no { color:#f87171; }
+.sim-elem-badge.ok { background:#f0fdf4; border-color:#86efac; color:#166534; }
+.sim-elem-badge.no { background:#fef2f2; border-color:#fca5a5; color:#991b1b; }
+.sim-balance-msg { margin-top:7px; font-size:12px; font-family:monospace; min-height:17px; transition:all .3s; font-weight:600; }
+.sim-balance-msg.ok { color:#16a34a; }
+.sim-balance-msg.no { color:#dc2626; }
 
 /* ── UPLOAD DE IMAGEN EN ADMIN ─────────────────────────────────────────────── */
 .af-imagen-area {
