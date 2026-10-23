@@ -1068,6 +1068,16 @@ body {
 .rk-subtab:hover { background: #252545; color: #fff; }
 .rk-subtab.activo { background: var(--cian); color: #000; border-color: var(--cian); font-weight: 700; }
 
+/* Filtros internos del Ranking */
+.rk-filtro {
+  background: #111120; border: 1px solid #2a2a45;
+  border-radius: 20px; color: #8ab;
+  padding: 5px 14px; font-size: 0.82rem; cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.rk-filtro:hover { background: #1e1e38; color: #fff; }
+.rk-filtro.activo { background: #1a2a4a; color: #00e5ff; border-color: #00e5ff; font-weight: 600; }
+
 /* Toolbar de filtros */
 .admin-toolbar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 14px; }
 .admin-select {

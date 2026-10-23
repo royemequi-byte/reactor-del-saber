@@ -1710,49 +1710,118 @@ function _rkGeneral(soloUno, sesiones, cont) {
 function _rkPorSesion(soloUno, sesiones, cont) {
   const meds = ['🥇','🥈','🥉'];
   const css  = ['top1','top2','top3'];
+  const fmtT = t => t ? Math.floor(t/60)+'m '+String(t%60).padStart(2,'0')+'s' : '—';
 
-  const bloques = sesiones.map((ses, idx) => {
-    const est = soloUno
-      .filter(a => a.sesIdx === idx)
-      .map(a => a.e)
-      .sort((a, b) => (Number(b.puntaje)||0) - (Number(a.puntaje)||0));
+  const sesCont = sesiones.map((ses, idx) => ({
+    idx, ses, n: soloUno.filter(a => a.sesIdx === idx).length
+  })).filter(s => s.n > 0);
 
-    if (!est.length) return '';
-
-    const filas = est.map((r, i) => `
-      <tr class="${css[i]||''}">
-        <td>${meds[i]||i+1}</td>
-        <td style="font-weight:${i<3?'700':'400'}">${r.nombre}</td>
-        <td>${r.avatar}</td>
-        <td style="font-size:0.78rem">${r.colegio||'—'}</td>
-        <td>${r.grado}°</td><td>${r.curso}</td>
-        <td style="color:#ffd600;font-weight:700">${Number(r.puntaje).toLocaleString('es-CO')}</td>
-        <td style="color:#39ff14">${r.nota}/500</td>
-        <td style="color:#8ab">${r.tiempo ? Math.floor(r.tiempo/60)+'m '+String(r.tiempo%60).padStart(2,'0')+'s' : '—'}</td>
-      </tr>`).join('');
-
-    return `
-      <div style="margin-bottom:36px">
-        <div style="background:#0d1117;border-left:3px solid #00e5ff;padding:10px 14px;border-radius:0 8px 8px 0;margin-bottom:12px">
-          <span style="color:#00e5ff;font-size:1rem;font-weight:700">📅 Sesión ${idx+1}</span>
-          <span style="color:#ffd600;margin-left:10px">${ses.fecha} · ${ses.hora}</span>
-          <span style="color:#8ab;font-size:0.82rem;margin-left:10px">${est.length} participante${est.length!==1?'s':''} (primer intento)</span>
-        </div>
-        <div style="overflow-x:auto">
-          <table class="ranking-tabla" style="width:100%;font-size:0.88rem">
-            <thead>
-              <tr><th>#</th><th>Nombre</th><th>Apodo</th><th>Institución</th>
-                  <th>Grado</th><th>Curso</th><th>Puntaje</th><th>Nota</th><th>Tiempo</th></tr>
-            </thead>
-            <tbody>${filas}</tbody>
-          </table>
-        </div>
-      </div>`;
-  }).join('');
+  const cursos = [...new Set(soloUno.map(a => a.e.curso))].sort();
 
   cont.innerHTML = `
-    <h3 style="color:#00e5ff;font-size:1.15rem;margin-bottom:16px">📅 Ranking por Sesión — Solo primer intento</h3>
-    ${bloques || '<p class="admin-vacio">Sin datos por sesión.</p>'}`;
+    <h3 style="color:#00e5ff;font-size:1.1rem;margin-bottom:14px">📅 Ranking por Sesión · General — Solo primer intento</h3>
+
+    <div style="margin-bottom:10px">
+      <div style="font-size:0.75rem;color:#8ab;margin-bottom:5px;text-transform:uppercase;letter-spacing:.06em">Sesión</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap" id="rk-fil-ses">
+        <button class="rk-filtro activo" data-ses="all">🌐 Todas (${soloUno.length})</button>
+        ${sesCont.map(s =>
+          `<button class="rk-filtro" data-ses="${s.idx}">S${s.idx+1} · ${s.ses.fecha.slice(0,5)} (${s.n})</button>`
+        ).join('')}
+      </div>
+    </div>
+
+    <div style="margin-bottom:10px">
+      <div style="font-size:0.75rem;color:#8ab;margin-bottom:5px;text-transform:uppercase;letter-spacing:.06em">Grado</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap" id="rk-fil-grado">
+        <button class="rk-filtro activo" data-grado="all">Todos</button>
+        <button class="rk-filtro" data-grado="8">8°</button>
+        <button class="rk-filtro" data-grado="9">9°</button>
+        <button class="rk-filtro" data-grado="10">10°</button>
+      </div>
+    </div>
+
+    <div style="margin-bottom:18px">
+      <div style="font-size:0.75rem;color:#8ab;margin-bottom:5px;text-transform:uppercase;letter-spacing:.06em">Curso</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap" id="rk-fil-curso">
+        <button class="rk-filtro activo" data-curso="all">Todos</button>
+        ${cursos.map(c => `<button class="rk-filtro" data-curso="${c}">${c}</button>`).join('')}
+      </div>
+    </div>
+
+    <div id="rk-sesion-tabla"></div>`;
+
+  let filSes = 'all', filGrado = 'all', filCurso = 'all';
+
+  function renderFiltrado() {
+    let datos = soloUno;
+    if (filSes   !== 'all') datos = datos.filter(a => a.sesIdx === parseInt(filSes));
+    if (filGrado !== 'all') datos = datos.filter(a => String(a.e.grado) === filGrado);
+    if (filCurso !== 'all') datos = datos.filter(a => a.e.curso === filCurso);
+
+    const sorted = datos
+      .map(a => ({ ...a.e, sesNum: a.sesIdx + 1, fecha: a.ses.fecha }))
+      .sort((a, b) => (Number(b.puntaje)||0) - (Number(a.puntaje)||0));
+
+    const filas = sorted.map((r, i) => `
+      <tr class="${css[i]||''}">
+        <td style="min-width:28px">${meds[i]||i+1}</td>
+        <td style="font-weight:${i<3?'700':'400'};min-width:130px">${r.nombre}</td>
+        <td>${r.avatar}</td>
+        <td style="font-size:0.78rem;max-width:160px">${r.colegio||'—'}</td>
+        <td>${r.grado}°</td>
+        <td>${r.curso}</td>
+        <td style="color:#ffd600;font-weight:700">${Number(r.puntaje).toLocaleString('es-CO')}</td>
+        <td style="color:#39ff14">${r.nota}/500</td>
+        <td style="color:#8ab">${fmtT(r.tiempo)}</td>
+        <td style="color:#6b7280;font-size:0.78rem">S${r.sesNum} · ${r.fecha||'—'}</td>
+      </tr>`).join('');
+
+    document.getElementById('rk-sesion-tabla').innerHTML = `
+      <p style="color:#8ab;font-size:0.85rem;margin-bottom:8px">${sorted.length} resultado${sorted.length!==1?'s':''}</p>
+      <div style="overflow-x:auto">
+        <table class="ranking-tabla" style="width:100%;font-size:0.88rem">
+          <thead>
+            <tr><th>#</th><th>Nombre</th><th>Apodo</th><th>Institución</th>
+                <th>Grado</th><th>Curso</th><th>Puntaje</th><th>Nota</th>
+                <th>Tiempo</th><th>Sesión · Fecha</th></tr>
+          </thead>
+          <tbody>${filas||'<tr><td colspan="10" style="text-align:center;color:#8ab;padding:20px">Sin resultados con estos filtros</td></tr>'}</tbody>
+        </table>
+      </div>`;
+  }
+
+  cont.querySelectorAll('[data-ses]').forEach(btn => {
+    btn.onclick = () => {
+      cont.querySelectorAll('[data-ses]').forEach(b => b.classList.remove('activo'));
+      btn.classList.add('activo');
+      filSes = btn.dataset.ses;
+      renderFiltrado();
+    };
+  });
+
+  cont.querySelectorAll('[data-grado]').forEach(btn => {
+    btn.onclick = () => {
+      cont.querySelectorAll('[data-grado]').forEach(b => b.classList.remove('activo'));
+      btn.classList.add('activo');
+      filGrado = btn.dataset.grado;
+      filCurso = 'all';
+      cont.querySelectorAll('[data-curso]').forEach(b => b.classList.remove('activo'));
+      cont.querySelector('[data-curso="all"]').classList.add('activo');
+      renderFiltrado();
+    };
+  });
+
+  cont.querySelectorAll('[data-curso]').forEach(btn => {
+    btn.onclick = () => {
+      cont.querySelectorAll('[data-curso]').forEach(b => b.classList.remove('activo'));
+      btn.classList.add('activo');
+      filCurso = btn.dataset.curso;
+      renderFiltrado();
+    };
+  });
+
+  renderFiltrado();
 }
 
 // ── Múltiples intentos ─────────────────────────────────────────────────────
