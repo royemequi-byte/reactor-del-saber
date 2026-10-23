@@ -1667,7 +1667,7 @@ function normalizarCurso(grado, cursoRaw) {
   const c = String(cursoRaw).trim().replace(',', '.');
   if (!c || c === 'undefined') return null;
   const g = String(grado);
-  if (c.startsWith(g) && c.length === g.length + 2) return c; // ya canónico
+  if (c.startsWith(g) && c.length === g.length + 2 && /^\d+$/.test(c.slice(g.length))) return c; // ya canónico
   let num = null;
   const mDot = c.match(new RegExp(`^${g}[.,]0?(\\d+)$`));
   if (mDot) { num = parseInt(mDot[1]); }
