@@ -414,6 +414,20 @@ document.getElementById('form-registro').addEventListener('submit', async (e) =>
 
   if (!avatar) { alert('Por favor escribe tu apodo de científico ⚗️'); return; }
 
+  // Bloquear segundo intento
+  const errYaParticipo = document.getElementById('error-ya-participo');
+  const rankingActual = JSON.parse(localStorage.getItem('ranking') || '[]');
+  const yaParticipo = rankingActual.some(r =>
+    r.nombre.toLowerCase() === nombre.toLowerCase() &&
+    r.grado === grado &&
+    r.curso === curso
+  );
+  if (yaParticipo) {
+    errYaParticipo.classList.remove('oculto');
+    return;
+  }
+  errYaParticipo.classList.add('oculto');
+
   // Validar grado contra sala
   const errGrado = document.getElementById('error-grado-sala');
   if (sala.modo === 'sala' && sala.gradoSala !== 'final' && sala.gradoSala !== null) {
@@ -884,6 +898,15 @@ function mostrarResultados(nota) {
 
 function guardarEnRanking(nota) {
   const ranking = JSON.parse(localStorage.getItem('ranking') || '[]');
+
+  // Primer intento es el oficial — no sobreescribir si ya existe
+  const yaExiste = ranking.some(r =>
+    r.nombre === estado.estudiante.nombre &&
+    r.grado  === estado.estudiante.grado &&
+    r.curso  === estado.estudiante.curso
+  );
+  if (yaExiste) return;
+
   const entrada = {
     nombre:   estado.estudiante.nombre,
     avatar:   estado.estudiante.avatar,
