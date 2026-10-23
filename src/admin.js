@@ -1665,45 +1665,110 @@ function _rkRenderTab(tab, { sesiones, soloUno, multiples }, cont) {
 function _rkGeneral(soloUno, sesiones, cont) {
   const meds = ['🥇','🥈','🥉'];
   const css  = ['top1','top2','top3'];
+  const fmtT = t => t ? Math.floor(t/60)+'m '+String(t%60).padStart(2,'0')+'s' : '—';
 
-  const sorted = soloUno
-    .map(a => ({ ...a.e, fecha: a.ses.fecha, hora: a.ses.hora, sesNum: a.sesIdx + 1 }))
-    .sort((a, b) => (Number(b.puntaje)||0) - (Number(a.puntaje)||0));
-
-  const filas = sorted.map((r, i) => `
-    <tr class="${css[i]||''}">
-      <td>${meds[i] || i+1}</td>
-      <td style="font-weight:${i<3?'700':'400'};min-width:120px">${r.nombre}</td>
-      <td>${r.avatar}</td>
-      <td style="font-size:0.78rem;max-width:170px">${r.colegio||'—'}</td>
-      <td>${r.grado}°</td>
-      <td>${r.curso}</td>
-      <td style="color:#ffd600;font-weight:700">${Number(r.puntaje).toLocaleString('es-CO')}</td>
-      <td style="color:#39ff14">${r.nota}/500</td>
-      <td style="color:#8ab">S${r.sesNum} · ${r.fecha||'—'}</td>
-    </tr>`).join('');
+  const sesCont = sesiones.map((ses, idx) => ({
+    idx, ses, n: soloUno.filter(a => a.sesIdx === idx).length
+  })).filter(s => s.n > 0);
+  const cursos = [...new Set(soloUno.map(a => a.e.curso))].sort();
 
   cont.innerHTML = `
-    <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:10px;margin-bottom:16px">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px;margin-bottom:16px">
       <div>
         <h3 style="color:#ffd600;font-size:1.15rem;margin:0 0 4px">🌐 Ranking General — Primer intento único</h3>
         <p style="color:#8ab;font-size:0.85rem;margin:0">
-          ${sorted.length} estudiante${sorted.length!==1?'s':''} válidos ·
-          ${sesiones.length} sesion${sesiones.length!==1?'es':''} ·
-          <span style="color:#ff6b6b">Excluye los ${_rkCache.multiples.length} con múltiples intentos</span>
+          ${soloUno.length} estudiantes válidos · ${sesiones.length} sesiones ·
+          <span style="color:#ff6b6b">Excluye ${_rkCache.multiples.length} con múltiples intentos</span>
         </p>
       </div>
       <button class="btn-accion verde chico" onclick="window._rkExcel()">📥 Excel</button>
     </div>
-    <div style="overflow-x:auto">
-      <table class="ranking-tabla" style="width:100%;font-size:0.88rem">
-        <thead>
-          <tr><th>#</th><th>Nombre</th><th>Apodo</th><th>Institución</th>
-              <th>Grado</th><th>Curso</th><th>Puntaje</th><th>Nota</th><th>Sesión · Fecha</th></tr>
-        </thead>
-        <tbody>${filas || '<tr><td colspan="9" style="text-align:center;color:#8ab">Sin datos</td></tr>'}</tbody>
-      </table>
-    </div>`;
+
+    <div style="margin-bottom:10px">
+      <div style="font-size:0.75rem;color:#8ab;margin-bottom:5px;text-transform:uppercase;letter-spacing:.06em">Sesión</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <button class="rk-filtro activo" data-gses="all">Todas (${soloUno.length})</button>
+        ${sesCont.map(s => `<button class="rk-filtro" data-gses="${s.idx}">S${s.idx+1} · ${s.ses.fecha.slice(0,5)} (${s.n})</button>`).join('')}
+      </div>
+    </div>
+    <div style="margin-bottom:10px">
+      <div style="font-size:0.75rem;color:#8ab;margin-bottom:5px;text-transform:uppercase;letter-spacing:.06em">Grado</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <button class="rk-filtro activo" data-ggrado="all">Todos</button>
+        <button class="rk-filtro" data-ggrado="8">8°</button>
+        <button class="rk-filtro" data-ggrado="9">9°</button>
+        <button class="rk-filtro" data-ggrado="10">10°</button>
+      </div>
+    </div>
+    <div style="margin-bottom:18px">
+      <div style="font-size:0.75rem;color:#8ab;margin-bottom:5px;text-transform:uppercase;letter-spacing:.06em">Curso</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <button class="rk-filtro activo" data-gcurso="all">Todos</button>
+        ${cursos.map(c => `<button class="rk-filtro" data-gcurso="${c}">${c}</button>`).join('')}
+      </div>
+    </div>
+    <div id="rk-gen-tabla"></div>`;
+
+  let filSes = 'all', filGrado = 'all', filCurso = 'all';
+
+  function render() {
+    let datos = soloUno;
+    if (filSes   !== 'all') datos = datos.filter(a => a.sesIdx === parseInt(filSes));
+    if (filGrado !== 'all') datos = datos.filter(a => String(a.e.grado) === filGrado);
+    if (filCurso !== 'all') datos = datos.filter(a => a.e.curso === filCurso);
+
+    const sorted = datos
+      .map(a => ({ ...a.e, sesNum: a.sesIdx + 1, fecha: a.ses.fecha }))
+      .sort((a, b) => (Number(b.puntaje)||0) - (Number(a.puntaje)||0));
+
+    const filas = sorted.map((r, i) => `
+      <tr class="${css[i]||''}">
+        <td>${meds[i]||i+1}</td>
+        <td style="font-weight:${i<3?'700':'400'};min-width:130px">${r.nombre}</td>
+        <td>${r.avatar}</td>
+        <td style="font-size:0.78rem;max-width:160px">${r.colegio||'—'}</td>
+        <td>${r.grado}°</td><td>${r.curso}</td>
+        <td style="color:#ffd600;font-weight:700">${Number(r.puntaje).toLocaleString('es-CO')}</td>
+        <td style="color:#39ff14">${r.nota}/500</td>
+        <td style="color:#8ab">${fmtT(r.tiempo)}</td>
+        <td style="color:#6b7280;font-size:0.78rem">S${r.sesNum} · ${r.fecha||'—'}</td>
+      </tr>`).join('');
+
+    document.getElementById('rk-gen-tabla').innerHTML = `
+      <p style="color:#8ab;font-size:0.85rem;margin-bottom:8px">${sorted.length} resultado${sorted.length!==1?'s':''}</p>
+      <div style="overflow-x:auto">
+        <table class="ranking-tabla" style="width:100%;font-size:0.88rem">
+          <thead><tr><th>#</th><th>Nombre</th><th>Apodo</th><th>Institución</th>
+            <th>Grado</th><th>Curso</th><th>Puntaje</th><th>Nota</th><th>Tiempo</th><th>Sesión · Fecha</th></tr></thead>
+          <tbody>${filas||'<tr><td colspan="10" style="text-align:center;color:#8ab;padding:20px">Sin resultados</td></tr>'}</tbody>
+        </table>
+      </div>`;
+  }
+
+  cont.querySelectorAll('[data-gses]').forEach(btn => {
+    btn.onclick = () => {
+      cont.querySelectorAll('[data-gses]').forEach(b => b.classList.remove('activo'));
+      btn.classList.add('activo'); filSes = btn.dataset.gses; render();
+    };
+  });
+  cont.querySelectorAll('[data-ggrado]').forEach(btn => {
+    btn.onclick = () => {
+      cont.querySelectorAll('[data-ggrado]').forEach(b => b.classList.remove('activo'));
+      btn.classList.add('activo'); filGrado = btn.dataset.ggrado;
+      filCurso = 'all';
+      cont.querySelectorAll('[data-gcurso]').forEach(b => b.classList.remove('activo'));
+      cont.querySelector('[data-gcurso="all"]').classList.add('activo');
+      render();
+    };
+  });
+  cont.querySelectorAll('[data-gcurso]').forEach(btn => {
+    btn.onclick = () => {
+      cont.querySelectorAll('[data-gcurso]').forEach(b => b.classList.remove('activo'));
+      btn.classList.add('activo'); filCurso = btn.dataset.gcurso; render();
+    };
+  });
+
+  render();
 }
 
 // ── Por sesión ─────────────────────────────────────────────────────────────
@@ -1831,33 +1896,7 @@ function _rkIrregulares(multiples, cont) {
     return;
   }
 
-  const tarjetas = multiples
-    .sort((a, b) => b.length - a.length)
-    .map(arr => {
-      const e0 = arr[0].e;
-      const filas = arr.map((a, i) => `
-        <tr style="background:${i===0?'rgba(57,255,20,0.06)':'rgba(192,57,43,0.06)'}">
-          <td style="color:${i===0?'#39ff14':'#ff6b6b'}">${i===0?'1° Oficial':''+i+'° Excluido'}</td>
-          <td>S${a.sesIdx+1}</td>
-          <td>${a.ses.fecha}</td>
-          <td>${a.ses.hora}</td>
-          <td style="color:#ffd600;font-weight:700">${Number(a.e.puntaje).toLocaleString('es-CO')}</td>
-          <td>${a.e.nota}/500</td>
-        </tr>`).join('');
-      return `
-        <div style="background:#130a0a;border:1px solid #c0392b;border-radius:10px;padding:14px 16px;margin-bottom:14px">
-          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px">
-            <span style="color:#ff6b6b;font-weight:700;font-size:1rem">${e0.nombre}</span>
-            <span style="color:#8ab;font-size:0.82rem">${e0.avatar} · Grado ${e0.grado}° · Curso ${e0.curso}</span>
-            <span style="color:#8ab;font-size:0.82rem">${e0.colegio||'—'}</span>
-            <span style="background:#c0392b;color:#fff;padding:2px 10px;border-radius:12px;font-size:0.75rem;font-weight:700">${arr.length} intentos</span>
-          </div>
-          <table class="ranking-tabla" style="width:100%;font-size:0.85rem">
-            <thead><tr><th>Intento</th><th>Sesión</th><th>Fecha</th><th>Hora</th><th>Puntaje</th><th>Nota</th></tr></thead>
-            <tbody>${filas}</tbody>
-          </table>
-        </div>`;
-    }).join('');
+  const cursos = [...new Set(multiples.map(arr => arr[0].e.curso))].sort();
 
   cont.innerHTML = `
     <div style="margin-bottom:16px">
@@ -1865,10 +1904,82 @@ function _rkIrregulares(multiples, cont) {
       <p style="color:#8ab;font-size:0.85rem;margin:0">
         ${multiples.length} estudiante${multiples.length!==1?'s':''} con 2+ intentos.
         <strong style="color:#ffd600">Excluidos del ranking general.</strong>
-        Solo se muestra su primer intento para referencia.
       </p>
     </div>
-    ${tarjetas}`;
+
+    <div style="margin-bottom:10px">
+      <div style="font-size:0.75rem;color:#8ab;margin-bottom:5px;text-transform:uppercase;letter-spacing:.06em">Grado</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <button class="rk-filtro activo" data-igrado="all">Todos (${multiples.length})</button>
+        ${[8,9,10].map(g => {
+          const n = multiples.filter(arr => +arr[0].e.grado === g).length;
+          return n ? `<button class="rk-filtro" data-igrado="${g}">${g}° (${n})</button>` : '';
+        }).join('')}
+      </div>
+    </div>
+    <div style="margin-bottom:18px">
+      <div style="font-size:0.75rem;color:#8ab;margin-bottom:5px;text-transform:uppercase;letter-spacing:.06em">Curso</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <button class="rk-filtro activo" data-icurso="all">Todos</button>
+        ${cursos.map(c => `<button class="rk-filtro" data-icurso="${c}">${c}</button>`).join('')}
+      </div>
+    </div>
+    <div id="rk-irr-lista"></div>`;
+
+  let filGrado = 'all', filCurso = 'all';
+
+  function render() {
+    let datos = multiples;
+    if (filGrado !== 'all') datos = datos.filter(arr => String(arr[0].e.grado) === filGrado);
+    if (filCurso !== 'all') datos = datos.filter(arr => arr[0].e.curso === filCurso);
+
+    const tarjetas = datos.length
+      ? datos.sort((a, b) => b.length - a.length).map(arr => {
+          const e0 = arr[0].e;
+          const filas = arr.map((a, i) => `
+            <tr style="background:${i===0?'rgba(57,255,20,0.06)':'rgba(192,57,43,0.06)'}">
+              <td style="color:${i===0?'#39ff14':'#ff6b6b'}">${i===0?'1° Oficial':i+'° Excluido'}</td>
+              <td>S${a.sesIdx+1}</td><td>${a.ses.fecha}</td><td>${a.ses.hora}</td>
+              <td style="color:#ffd600;font-weight:700">${Number(a.e.puntaje).toLocaleString('es-CO')}</td>
+              <td>${a.e.nota}/500</td>
+            </tr>`).join('');
+          return `
+            <div style="background:#130a0a;border:1px solid #c0392b;border-radius:10px;padding:14px 16px;margin-bottom:14px">
+              <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px">
+                <span style="color:#ff6b6b;font-weight:700;font-size:1rem">${e0.nombre}</span>
+                <span style="color:#8ab;font-size:0.82rem">${e0.avatar} · Grado ${e0.grado}° · Curso ${e0.curso} · ${e0.colegio||'—'}</span>
+                <span style="background:#c0392b;color:#fff;padding:2px 10px;border-radius:12px;font-size:0.75rem;font-weight:700">${arr.length} intentos</span>
+              </div>
+              <table class="ranking-tabla" style="width:100%;font-size:0.85rem">
+                <thead><tr><th>Intento</th><th>Sesión</th><th>Fecha</th><th>Hora</th><th>Puntaje</th><th>Nota</th></tr></thead>
+                <tbody>${filas}</tbody>
+              </table>
+            </div>`;
+        }).join('')
+      : '<p class="admin-vacio">Sin resultados con estos filtros.</p>';
+
+    document.getElementById('rk-irr-lista').innerHTML =
+      `<p style="color:#8ab;font-size:0.85rem;margin-bottom:12px">${datos.length} estudiante${datos.length!==1?'s':''}</p>${tarjetas}`;
+  }
+
+  cont.querySelectorAll('[data-igrado]').forEach(btn => {
+    btn.onclick = () => {
+      cont.querySelectorAll('[data-igrado]').forEach(b => b.classList.remove('activo'));
+      btn.classList.add('activo'); filGrado = btn.dataset.igrado;
+      filCurso = 'all';
+      cont.querySelectorAll('[data-icurso]').forEach(b => b.classList.remove('activo'));
+      cont.querySelector('[data-icurso="all"]').classList.add('activo');
+      render();
+    };
+  });
+  cont.querySelectorAll('[data-icurso]').forEach(btn => {
+    btn.onclick = () => {
+      cont.querySelectorAll('[data-icurso]').forEach(b => b.classList.remove('activo'));
+      btn.classList.add('activo'); filCurso = btn.dataset.icurso; render();
+    };
+  });
+
+  render();
 }
 
 // Excel del ranking general
