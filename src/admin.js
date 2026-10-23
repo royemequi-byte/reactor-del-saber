@@ -1661,6 +1661,22 @@ function _rkRenderTab(tab, { sesiones, soloUno, multiples }, cont) {
   if (tab === 'irregulares') _rkIrregulares(multiples, cont);
 }
 
+// Normaliza variantes libres de curso al formato canónico: "801", "902", "1001"
+function normalizarCurso(grado, cursoRaw) {
+  if (cursoRaw == null) return null;
+  const c = String(cursoRaw).trim().replace(',', '.');
+  if (!c || c === 'undefined') return null;
+  const g = String(grado);
+  if (c.startsWith(g) && c.length === g.length + 2) return c; // ya canónico
+  let num = null;
+  const mDot = c.match(new RegExp(`^${g}[.,]0?(\\d+)$`));
+  if (mDot) { num = parseInt(mDot[1]); }
+  else if (g.length === 1 && c.length === 2 && c.startsWith(g)) { num = parseInt(c[1]); }
+  else if (/^\d{1,2}$/.test(c)) { num = parseInt(c); }
+  if (num && num >= 1 && num <= 9) return `${g}0${num}`;
+  return c;
+}
+
 // ── General ────────────────────────────────────────────────────────────────
 function _rkGeneral(soloUno, sesiones, cont) {
   const meds = ['🥇','🥈','🥉'];
@@ -1670,7 +1686,7 @@ function _rkGeneral(soloUno, sesiones, cont) {
   const sesCont = sesiones.map((ses, idx) => ({
     idx, ses, n: soloUno.filter(a => a.sesIdx === idx).length
   })).filter(s => s.n > 0);
-  const cursos = [...new Set(soloUno.map(a => a.e.curso).filter(c => c != null && String(c) !== 'undefined' && String(c).trim() !== ''))].sort();
+  const cursos = [...new Set(soloUno.map(a => normalizarCurso(a.e.grado, a.e.curso)).filter(Boolean))].sort();
 
   cont.innerHTML = `
     <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px;margin-bottom:16px">
@@ -1715,7 +1731,7 @@ function _rkGeneral(soloUno, sesiones, cont) {
     let datos = soloUno;
     if (filSes   !== 'all') datos = datos.filter(a => a.sesIdx === parseInt(filSes));
     if (filGrado !== 'all') datos = datos.filter(a => String(a.e.grado) === filGrado);
-    if (filCurso !== 'all') datos = datos.filter(a => a.e.curso === filCurso);
+    if (filCurso !== 'all') datos = datos.filter(a => normalizarCurso(a.e.grado, a.e.curso) === filCurso);
 
     const sorted = datos
       .map(a => ({ ...a.e, sesNum: a.sesIdx + 1, fecha: a.ses.fecha }))
@@ -1727,7 +1743,7 @@ function _rkGeneral(soloUno, sesiones, cont) {
         <td style="font-weight:${i<3?'700':'400'};min-width:130px">${r.nombre}</td>
         <td>${r.avatar}</td>
         <td style="font-size:0.78rem;max-width:160px">${r.colegio||'—'}</td>
-        <td>${r.grado}°</td><td>${r.curso}</td>
+        <td>${r.grado}°</td><td>${normalizarCurso(r.grado, r.curso)||r.curso}</td>
         <td style="color:#ffd600;font-weight:700">${Number(r.puntaje).toLocaleString('es-CO')}</td>
         <td style="color:#39ff14">${r.nota}/500</td>
         <td style="color:#8ab">${fmtT(r.tiempo)}</td>
@@ -1781,7 +1797,7 @@ function _rkPorSesion(soloUno, sesiones, cont) {
     idx, ses, n: soloUno.filter(a => a.sesIdx === idx).length
   })).filter(s => s.n > 0);
 
-  const cursos = [...new Set(soloUno.map(a => a.e.curso).filter(c => c != null && String(c) !== 'undefined' && String(c).trim() !== ''))].sort();
+  const cursos = [...new Set(soloUno.map(a => normalizarCurso(a.e.grado, a.e.curso)).filter(Boolean))].sort();
 
   cont.innerHTML = `
     <h3 style="color:#00e5ff;font-size:1.1rem;margin-bottom:14px">📅 Ranking por Sesión · General — Solo primer intento</h3>
@@ -1822,7 +1838,7 @@ function _rkPorSesion(soloUno, sesiones, cont) {
     let datos = soloUno;
     if (filSes   !== 'all') datos = datos.filter(a => a.sesIdx === parseInt(filSes));
     if (filGrado !== 'all') datos = datos.filter(a => String(a.e.grado) === filGrado);
-    if (filCurso !== 'all') datos = datos.filter(a => a.e.curso === filCurso);
+    if (filCurso !== 'all') datos = datos.filter(a => normalizarCurso(a.e.grado, a.e.curso) === filCurso);
 
     const sorted = datos
       .map(a => ({ ...a.e, sesNum: a.sesIdx + 1, fecha: a.ses.fecha }))
@@ -1835,7 +1851,7 @@ function _rkPorSesion(soloUno, sesiones, cont) {
         <td>${r.avatar}</td>
         <td style="font-size:0.78rem;max-width:160px">${r.colegio||'—'}</td>
         <td>${r.grado}°</td>
-        <td>${r.curso}</td>
+        <td>${normalizarCurso(r.grado, r.curso)||r.curso}</td>
         <td style="color:#ffd600;font-weight:700">${Number(r.puntaje).toLocaleString('es-CO')}</td>
         <td style="color:#39ff14">${r.nota}/500</td>
         <td style="color:#8ab">${fmtT(r.tiempo)}</td>
@@ -1896,7 +1912,7 @@ function _rkIrregulares(multiples, cont) {
     return;
   }
 
-  const cursos = [...new Set(multiples.map(arr => arr[0].e.curso).filter(c => c != null && String(c) !== 'undefined' && String(c).trim() !== ''))].sort();
+  const cursos = [...new Set(multiples.map(arr => normalizarCurso(arr[0].e.grado, arr[0].e.curso)).filter(Boolean))].sort();
 
   cont.innerHTML = `
     <div style="margin-bottom:16px">
@@ -1931,7 +1947,7 @@ function _rkIrregulares(multiples, cont) {
   function render() {
     let datos = multiples;
     if (filGrado !== 'all') datos = datos.filter(arr => String(arr[0].e.grado) === filGrado);
-    if (filCurso !== 'all') datos = datos.filter(arr => arr[0].e.curso === filCurso);
+    if (filCurso !== 'all') datos = datos.filter(arr => normalizarCurso(arr[0].e.grado, arr[0].e.curso) === filCurso);
 
     if (!datos.length) {
       document.getElementById('rk-irr-lista').innerHTML = '<p class="admin-vacio">Sin resultados con estos filtros.</p>';
@@ -1956,7 +1972,7 @@ function _rkIrregulares(multiples, cont) {
           <td style="font-weight:700;color:#ff6b6b">${e0.nombre}</td>
           <td style="color:#8ab">${e0.avatar}</td>
           <td>${e0.grado}°</td>
-          <td>${e0.curso}</td>
+          <td>${normalizarCurso(e0.grado, e0.curso)||e0.curso}</td>
           <td><span style="background:#c0392b;color:#fff;padding:2px 8px;border-radius:10px;font-size:0.75rem;font-weight:700">${arr.length} intentos</span></td>
           <td style="color:#ffd600;font-weight:700">${Number(oficial.e.puntaje).toLocaleString('es-CO')}</td>
           <td style="color:#39ff14">${oficial.e.nota}/500</td>
