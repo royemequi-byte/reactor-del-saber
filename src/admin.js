@@ -1933,33 +1933,54 @@ function _rkIrregulares(multiples, cont) {
     if (filGrado !== 'all') datos = datos.filter(arr => String(arr[0].e.grado) === filGrado);
     if (filCurso !== 'all') datos = datos.filter(arr => arr[0].e.curso === filCurso);
 
-    const tarjetas = datos.length
-      ? datos.sort((a, b) => b.length - a.length).map(arr => {
-          const e0 = arr[0].e;
-          const filas = arr.map((a, i) => `
-            <tr style="background:${i===0?'rgba(57,255,20,0.06)':'rgba(192,57,43,0.06)'}">
-              <td style="color:${i===0?'#39ff14':'#ff6b6b'}">${i===0?'1° Oficial':i+'° Excluido'}</td>
-              <td>S${a.sesIdx+1}</td><td>${a.ses.fecha}</td><td>${a.ses.hora}</td>
-              <td style="color:#ffd600;font-weight:700">${Number(a.e.puntaje).toLocaleString('es-CO')}</td>
-              <td>${a.e.nota}/500</td>
-            </tr>`).join('');
-          return `
-            <div style="background:#130a0a;border:1px solid #c0392b;border-radius:10px;padding:14px 16px;margin-bottom:14px">
-              <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px">
-                <span style="color:#ff6b6b;font-weight:700;font-size:1rem">${e0.nombre}</span>
-                <span style="color:#8ab;font-size:0.82rem">${e0.avatar} · Grado ${e0.grado}° · Curso ${e0.curso} · ${e0.colegio||'—'}</span>
-                <span style="background:#c0392b;color:#fff;padding:2px 10px;border-radius:12px;font-size:0.75rem;font-weight:700">${arr.length} intentos</span>
-              </div>
-              <table class="ranking-tabla" style="width:100%;font-size:0.85rem">
-                <thead><tr><th>Intento</th><th>Sesión</th><th>Fecha</th><th>Hora</th><th>Puntaje</th><th>Nota</th></tr></thead>
-                <tbody>${filas}</tbody>
-              </table>
-            </div>`;
-        }).join('')
-      : '<p class="admin-vacio">Sin resultados con estos filtros.</p>';
+    if (!datos.length) {
+      document.getElementById('rk-irr-lista').innerHTML = '<p class="admin-vacio">Sin resultados con estos filtros.</p>';
+      return;
+    }
 
-    document.getElementById('rk-irr-lista').innerHTML =
-      `<p style="color:#8ab;font-size:0.85rem;margin-bottom:12px">${datos.length} estudiante${datos.length!==1?'s':''}</p>${tarjetas}`;
+    datos = datos.sort((a, b) => b.length - a.length);
+
+    const filas = datos.map((arr, idx) => {
+      const e0 = arr[0].e;
+      const oficial = arr[0];
+      const detalleFilas = arr.map((a, i) => `
+        <tr style="background:${i===0?'rgba(57,255,20,0.06)':'rgba(192,57,43,0.06)'}">
+          <td style="color:${i===0?'#39ff14':'#ff6b6b'}">${i===0?'1° Oficial':i+'° Excluido'}</td>
+          <td>S${a.sesIdx+1}</td><td>${a.ses.fecha}</td><td>${a.ses.hora}</td>
+          <td style="color:#ffd600;font-weight:700">${Number(a.e.puntaje).toLocaleString('es-CO')}</td>
+          <td>${a.e.nota}/500</td>
+        </tr>`).join('');
+      return `
+        <tr class="rk-irr-fila" onclick="window._irrToggle(this,'irr-det-${idx}')">
+          <td style="width:28px"><span class="rk-arr">▶</span></td>
+          <td style="font-weight:700;color:#ff6b6b">${e0.nombre}</td>
+          <td style="color:#8ab">${e0.avatar}</td>
+          <td>${e0.grado}°</td>
+          <td>${e0.curso}</td>
+          <td><span style="background:#c0392b;color:#fff;padding:2px 8px;border-radius:10px;font-size:0.75rem;font-weight:700">${arr.length} intentos</span></td>
+          <td style="color:#ffd600;font-weight:700">${Number(oficial.e.puntaje).toLocaleString('es-CO')}</td>
+          <td style="color:#39ff14">${oficial.e.nota}/500</td>
+        </tr>
+        <tr id="irr-det-${idx}" style="display:none">
+          <td colspan="8" style="padding:0;background:#130a0a">
+            <div style="padding:12px 16px;border-top:1px solid #c0392b">
+              <table class="ranking-tabla" style="width:100%;font-size:0.83rem">
+                <thead><tr><th>Intento</th><th>Sesión</th><th>Fecha</th><th>Hora</th><th>Puntaje</th><th>Nota</th></tr></thead>
+                <tbody>${detalleFilas}</tbody>
+              </table>
+            </div>
+          </td>
+        </tr>`;
+    }).join('');
+
+    document.getElementById('rk-irr-lista').innerHTML = `
+      <p style="color:#8ab;font-size:0.85rem;margin-bottom:12px">${datos.length} estudiante${datos.length!==1?'s':''} · Clic en el nombre para ver los intentos</p>
+      <div style="overflow-x:auto">
+        <table class="ranking-tabla" style="width:100%">
+          <thead><tr><th></th><th>Nombre</th><th>Apodo</th><th>Grado</th><th>Curso</th><th>Intentos</th><th>Puntaje oficial</th><th>Nota oficial</th></tr></thead>
+          <tbody>${filas}</tbody>
+        </table>
+      </div>`;
   }
 
   cont.querySelectorAll('[data-igrado]').forEach(btn => {
@@ -2008,6 +2029,15 @@ window._rkExcel = () => {
   ws['!cols'] = [{wch:4},{wch:22},{wch:8},{wch:30},{wch:7},{wch:7},{wch:10},{wch:10},{wch:10},{wch:6},{wch:12}];
   XLSX.utils.book_append_sheet(wb, ws, 'Ranking General');
   XLSX.writeFile(wb, `ranking-general-${new Date().toISOString().slice(0,10)}.xlsx`);
+};
+
+window._irrToggle = function(tr, detId) {
+  const det = document.getElementById(detId);
+  const arr = tr.querySelector('.rk-arr');
+  if (!det) return;
+  const visible = det.style.display !== 'none';
+  det.style.display = visible ? 'none' : 'table-row';
+  if (arr) arr.textContent = visible ? '▶' : '▼';
 };
 
 // ─── BLOQUEADOS ────────────────────────────────────────────────────────────

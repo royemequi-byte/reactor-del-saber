@@ -1077,6 +1077,9 @@ body {
 }
 .rk-filtro:hover { background: #1e1e38; color: #fff; }
 .rk-filtro.activo { background: #1a2a4a; color: #00e5ff; border-color: #00e5ff; font-weight: 600; }
+.rk-arr { display: inline-block; font-size: 0.7rem; color: #8ab; width: 12px; }
+.rk-irr-fila { cursor: pointer; }
+.rk-irr-fila:hover td { background: #1a0808 !important; }
 
 /* Toolbar de filtros */
 .admin-toolbar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 14px; }
