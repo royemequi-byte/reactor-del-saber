@@ -26,8 +26,16 @@ import { db } from './firebase.js';
 import { ref, get, set, update, onValue } from 'firebase/database';
 
 // ─── HELPERS ──────────────────────────────────────────────────────────────
+function normalizarNombre(str) {
+  return str.trim()
+    .toLowerCase()
+    .normalize('NFD').replace(/[̀-ͯ]/g, '')  // tildes → sin tilde
+    .replace(/\s+/g, ' ')                               // espacios múltiples → uno
+    .replace(/[^a-z0-9 ]/g, '');                        // solo letras, números y espacio
+}
+
 function claveIntento(nombre, grado, curso) {
-  return `${nombre}__${grado}__${curso}`.replace(/[.#$[\]/]/g, '_');
+  return `${normalizarNombre(nombre)}__${grado}__${curso}`.replace(/ /g, '_');
 }
 
 // ─── NAVEGACIÓN ────────────────────────────────────────────────────────────
@@ -423,8 +431,9 @@ document.getElementById('form-registro').addEventListener('submit', async (e) =>
   const errYaParticipo = document.getElementById('error-ya-participo');
   const MSG_BLOQUEADO = '⚠️ Ya registraste un resultado con este nombre, grado y curso. Tu primer intento es el oficial.';
   const rankingActual = JSON.parse(localStorage.getItem('ranking') || '[]');
+  const nombreNorm = normalizarNombre(nombre);
   const yaLocal = rankingActual.some(r =>
-    r.nombre.toLowerCase() === nombre.toLowerCase() &&
+    normalizarNombre(r.nombre) === nombreNorm &&
     r.grado === grado &&
     r.curso === curso
   );
