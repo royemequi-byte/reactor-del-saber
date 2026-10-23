@@ -313,6 +313,13 @@ export function adminInicializar() {
   document.getElementById('btn-descargar-excel')
     .addEventListener('click', descargarExcel);
 
+  document.getElementById('btn-limpiar-bloqueados')
+    ?.addEventListener('click', async () => {
+      if (!confirm('¿Eliminar todos los bloqueos? Los estudiantes podrán hacer un nuevo intento.')) return;
+      await set(ref(db, 'intentos-bloqueados'), null);
+      renderizarBloqueados();
+    });
+
   // Exportar
   document.getElementById('btn-copiar-json')
     .addEventListener('click', copiarJSON);
@@ -329,6 +336,7 @@ function cambiarTab(tab) {
   if (tab === 'monitor')     iniciarMonitorTab();
   if (tab === 'historial')   renderizarHistorial();
   if (tab === 'indicadores') renderIndicadores();
+  if (tab === 'bloqueados')  renderizarBloqueados();
 }
 
 // ─── MONITOR EN TIEMPO REAL ────────────────────────────────────────────────
@@ -1586,6 +1594,52 @@ function _renderCharts(d, act) {
     });
   }
 }
+
+// ─── BLOQUEADOS ────────────────────────────────────────────────────────────
+async function renderizarBloqueados() {
+  const lista = document.getElementById('bloqueados-lista');
+  if (!lista) return;
+  lista.innerHTML = '<p class="admin-vacio">Cargando…</p>';
+
+  const snap = await get(ref(db, 'intentos-bloqueados'));
+  if (!snap.exists() || !Object.keys(snap.val()).length) {
+    lista.innerHTML = '<p class="admin-vacio">No hay estudiantes bloqueados.</p>';
+    return;
+  }
+
+  const entries = Object.entries(snap.val())
+    .map(([key, val]) => ({ key, ...val }))
+    .sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+
+  lista.innerHTML = `
+    <p style="color:#8ab;font-size:0.85rem;margin-bottom:12px">
+      ${entries.length} estudiante${entries.length !== 1 ? 's' : ''} con intento registrado
+    </p>
+    <table class="ranking-tabla">
+      <thead><tr><th>Nombre</th><th>Grado</th><th>Curso</th><th>Institución</th><th>Hora</th><th>Acción</th></tr></thead>
+      <tbody>
+        ${entries.map(e => `
+          <tr>
+            <td>${e.nombre}</td>
+            <td>${e.grado}°</td>
+            <td>${e.curso}</td>
+            <td style="font-size:0.78rem">${e.colegio || '—'}</td>
+            <td style="font-size:0.78rem">${e.timestamp ? new Date(e.timestamp).toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' }) : '—'}</td>
+            <td><button class="btn-accion verde chico" onclick="window._desbloquear('${e.key}')">🔓 Desbloquear</button></td>
+          </tr>`).join('')}
+      </tbody>
+    </table>`;
+}
+
+window._desbloquear = async (key) => {
+  if (!confirm('¿Desbloquear este estudiante? Podrá hacer un nuevo intento.')) return;
+  try {
+    await remove(ref(db, `intentos-bloqueados/${key}`));
+    renderizarBloqueados();
+  } catch (err) {
+    alert('❌ Error: ' + err.message);
+  }
+};
 
 // ─── EXPORTAR ──────────────────────────────────────────────────────────────
 function renderizarExportar() {

@@ -534,6 +534,7 @@
         <button class="admin-tab" data-tab="monitor">📡 Monitor</button>
         <button class="admin-tab" data-tab="historial">📁 Historial</button>
         <button class="admin-tab" data-tab="indicadores">📊 Indicadores</button>
+        <button class="admin-tab" data-tab="bloqueados">🔒 Bloqueados</button>
         <button class="admin-tab" data-tab="exportar" style="display:none">📤 Exportar JSON</button>
       </div>
 
@@ -592,6 +593,15 @@
         <div id="ind-contenido">
           <p class="admin-vacio">Abre esta pestaña para cargar los indicadores.</p>
         </div>
+      </div>
+
+      <!-- ── TAB: BLOQUEADOS ── -->
+      <div id="admin-tab-bloqueados" class="admin-tabcontent oculto">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:14px">
+          <p style="color:#8ab;font-size:0.88rem;margin:0">Estudiantes que ya completaron un intento. Desbloquea solo si hubo un problema técnico real.</p>
+          <button class="btn-accion rojo chico" id="btn-limpiar-bloqueados">🗑 Limpiar todos</button>
+        </div>
+        <div id="bloqueados-lista"><p class="admin-vacio">Abre esta pestaña para cargar la lista.</p></div>
       </div>
 
       <!-- ── TAB: EXPORTAR ── -->

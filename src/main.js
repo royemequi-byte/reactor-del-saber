@@ -25,6 +25,11 @@ import { iniciarSimReacciones }      from './tipos/sim-reacciones.js';
 import { db } from './firebase.js';
 import { ref, get, set, update, onValue } from 'firebase/database';
 
+// ─── HELPERS ──────────────────────────────────────────────────────────────
+function claveIntento(nombre, grado, curso) {
+  return `${nombre}__${grado}__${curso}`.replace(/[.#$[\]/]/g, '_');
+}
+
 // ─── NAVEGACIÓN ────────────────────────────────────────────────────────────
 // Pantallas donde el alumno está en medio del examen — se bloquea recarga
 const PANTALLAS_EXAMEN = new Set(['pantalla-examen', 'pantalla-retro']);
@@ -414,17 +419,31 @@ document.getElementById('form-registro').addEventListener('submit', async (e) =>
 
   if (!avatar) { alert('Por favor escribe tu apodo de científico ⚗️'); return; }
 
-  // Bloquear segundo intento
+  // Bloquear segundo intento — localStorage (rápido) + Firebase (antifraude)
   const errYaParticipo = document.getElementById('error-ya-participo');
+  const MSG_BLOQUEADO = '⚠️ Ya registraste un resultado con este nombre, grado y curso. Tu primer intento es el oficial.';
   const rankingActual = JSON.parse(localStorage.getItem('ranking') || '[]');
-  const yaParticipo = rankingActual.some(r =>
+  const yaLocal = rankingActual.some(r =>
     r.nombre.toLowerCase() === nombre.toLowerCase() &&
     r.grado === grado &&
     r.curso === curso
   );
-  if (yaParticipo) {
+  if (yaLocal) {
+    errYaParticipo.textContent = MSG_BLOQUEADO;
     errYaParticipo.classList.remove('oculto');
     return;
+  }
+  errYaParticipo.textContent = '⏳ Verificando acceso…';
+  errYaParticipo.classList.remove('oculto');
+  try {
+    const clave = claveIntento(nombre, grado, curso);
+    const snapIntento = await get(ref(db, `intentos-bloqueados/${clave}`));
+    if (snapIntento.exists()) {
+      errYaParticipo.textContent = MSG_BLOQUEADO;
+      return;
+    }
+  } catch {
+    // Si Firebase falla, no penalizar al estudiante
   }
   errYaParticipo.classList.add('oculto');
 
@@ -830,6 +849,16 @@ function finalizarExamen() {
   const nota = calcularNota();
   guardarEnRanking(nota);
   mostrarResultados(nota);
+
+  // Registrar bloqueo en Firebase (persiste en incógnito y otros dispositivos)
+  const claveB = claveIntento(estado.estudiante.nombre, estado.estudiante.grado, estado.estudiante.curso);
+  set(ref(db, `intentos-bloqueados/${claveB}`), {
+    nombre:    estado.estudiante.nombre,
+    grado:     estado.estudiante.grado,
+    curso:     estado.estudiante.curso,
+    colegio:   estado.estudiante.colegio || '',
+    timestamp: Date.now(),
+  }).catch(() => {});
 
   if (sala.monitorUid) {
     update(ref(db), {
