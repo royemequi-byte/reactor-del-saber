@@ -535,6 +535,7 @@
         <button class="admin-tab" data-tab="historial">📁 Historial</button>
         <button class="admin-tab" data-tab="indicadores">📊 Indicadores</button>
         <button class="admin-tab" data-tab="bloqueados">🔒 Bloqueados</button>
+        <button class="admin-tab" data-tab="ranking">🏆 Ranking</button>
         <button class="admin-tab" data-tab="exportar" style="display:none">📤 Exportar JSON</button>
       </div>
 
@@ -602,6 +603,16 @@
           <button class="btn-accion rojo chico" id="btn-limpiar-bloqueados">🗑 Limpiar todos</button>
         </div>
         <div id="bloqueados-lista"><p class="admin-vacio">Abre esta pestaña para cargar la lista.</p></div>
+      </div>
+
+      <!-- ── TAB: RANKING ── -->
+      <div id="admin-tab-ranking" class="admin-tabcontent oculto">
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px;border-bottom:1px solid #2a2a45;padding-bottom:14px">
+          <button class="rk-subtab activo" data-rtab="general">🌐 General</button>
+          <button class="rk-subtab" data-rtab="sesion">📅 Por sesión</button>
+          <button class="rk-subtab" data-rtab="irregulares">⚠️ Múltiples intentos</button>
+        </div>
+        <div id="ranking-completo-cont"><p class="admin-vacio">Abre esta pestaña para cargar el ranking.</p></div>
       </div>
 
       <!-- ── TAB: EXPORTAR ── -->

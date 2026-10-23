@@ -337,6 +337,7 @@ function cambiarTab(tab) {
   if (tab === 'historial')   renderizarHistorial();
   if (tab === 'indicadores') renderIndicadores();
   if (tab === 'bloqueados')  renderizarBloqueados();
+  if (tab === 'ranking')     renderizarRankingCompleto();
 }
 
 // ─── MONITOR EN TIEMPO REAL ────────────────────────────────────────────────
@@ -1594,6 +1595,240 @@ function _renderCharts(d, act) {
     });
   }
 }
+
+// ─── RANKING COMPLETO ──────────────────────────────────────────────────────
+function _rkNorm(str) {
+  return String(str).trim().toLowerCase()
+    .normalize('NFD').replace(/[̀-ͯ]/g, '')
+    .replace(/\s+/g, ' ').replace(/[^a-z0-9 ]/g, '');
+}
+
+let _rkCache = null;
+let _rkTabActivo = 'general';
+
+async function renderizarRankingCompleto() {
+  const cont = document.getElementById('ranking-completo-cont');
+  if (!cont) return;
+
+  // Wiring de sub-tabs (solo primera vez)
+  document.querySelectorAll('.rk-subtab').forEach(btn => {
+    btn.onclick = () => {
+      document.querySelectorAll('.rk-subtab').forEach(b => b.classList.remove('activo'));
+      btn.classList.add('activo');
+      _rkTabActivo = btn.dataset.rtab;
+      if (_rkCache) _rkRenderTab(_rkTabActivo, _rkCache, cont);
+    };
+  });
+
+  cont.innerHTML = '<p class="admin-vacio">⏳ Cargando datos…</p>';
+  const snap = await get(ref(db, 'historial'));
+  if (!snap.exists()) {
+    cont.innerHTML = '<p class="admin-vacio">No hay actividades guardadas aún.</p>';
+    return;
+  }
+
+  const sesiones = Object.entries(snap.val())
+    .map(([key, val]) => ({ key, ...val }))
+    .sort((a, b) => a.timestamp - b.timestamp);
+
+  // Agrupar apariciones por clave normalizada
+  const mapa = {}; // clave → [{ e, ses, sesIdx }]
+  sesiones.forEach((ses, sesIdx) => {
+    Object.values(ses.estudiantes || {})
+      .filter(e => e.estado === 'terminado')
+      .forEach(e => {
+        const clave = `${_rkNorm(e.nombre)}__${e.grado}__${e.curso}`;
+        if (!mapa[clave]) mapa[clave] = [];
+        mapa[clave].push({ e, ses, sesIdx });
+      });
+  });
+
+  const soloUno   = []; // exactamente 1 intento
+  const multiples = []; // 2+ intentos
+
+  Object.values(mapa).forEach(arr => {
+    if (arr.length === 1) soloUno.push(arr[0]);
+    else                  multiples.push(arr);
+  });
+
+  _rkCache = { sesiones, soloUno, multiples };
+  _rkRenderTab(_rkTabActivo, _rkCache, cont);
+}
+
+function _rkRenderTab(tab, { sesiones, soloUno, multiples }, cont) {
+  if (tab === 'general')     _rkGeneral(soloUno, sesiones, cont);
+  if (tab === 'sesion')      _rkPorSesion(soloUno, sesiones, cont);
+  if (tab === 'irregulares') _rkIrregulares(multiples, cont);
+}
+
+// ── General ────────────────────────────────────────────────────────────────
+function _rkGeneral(soloUno, sesiones, cont) {
+  const meds = ['🥇','🥈','🥉'];
+  const css  = ['top1','top2','top3'];
+
+  const sorted = soloUno
+    .map(a => ({ ...a.e, fecha: a.ses.fecha, hora: a.ses.hora, sesNum: a.sesIdx + 1 }))
+    .sort((a, b) => (Number(b.puntaje)||0) - (Number(a.puntaje)||0));
+
+  const filas = sorted.map((r, i) => `
+    <tr class="${css[i]||''}">
+      <td>${meds[i] || i+1}</td>
+      <td style="font-weight:${i<3?'700':'400'};min-width:120px">${r.nombre}</td>
+      <td>${r.avatar}</td>
+      <td style="font-size:0.78rem;max-width:170px">${r.colegio||'—'}</td>
+      <td>${r.grado}°</td>
+      <td>${r.curso}</td>
+      <td style="color:#ffd600;font-weight:700">${Number(r.puntaje).toLocaleString('es-CO')}</td>
+      <td style="color:#39ff14">${r.nota}/500</td>
+      <td style="color:#8ab">S${r.sesNum} · ${r.fecha||'—'}</td>
+    </tr>`).join('');
+
+  cont.innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:10px;margin-bottom:16px">
+      <div>
+        <h3 style="color:#ffd600;font-size:1.15rem;margin:0 0 4px">🌐 Ranking General — Primer intento único</h3>
+        <p style="color:#8ab;font-size:0.85rem;margin:0">
+          ${sorted.length} estudiante${sorted.length!==1?'s':''} válidos ·
+          ${sesiones.length} sesion${sesiones.length!==1?'es':''} ·
+          <span style="color:#ff6b6b">Excluye los ${_rkCache.multiples.length} con múltiples intentos</span>
+        </p>
+      </div>
+      <button class="btn-accion verde chico" onclick="window._rkExcel()">📥 Excel</button>
+    </div>
+    <div style="overflow-x:auto">
+      <table class="ranking-tabla" style="width:100%;font-size:0.88rem">
+        <thead>
+          <tr><th>#</th><th>Nombre</th><th>Apodo</th><th>Institución</th>
+              <th>Grado</th><th>Curso</th><th>Puntaje</th><th>Nota</th><th>Sesión · Fecha</th></tr>
+        </thead>
+        <tbody>${filas || '<tr><td colspan="9" style="text-align:center;color:#8ab">Sin datos</td></tr>'}</tbody>
+      </table>
+    </div>`;
+}
+
+// ── Por sesión ─────────────────────────────────────────────────────────────
+function _rkPorSesion(soloUno, sesiones, cont) {
+  const meds = ['🥇','🥈','🥉'];
+  const css  = ['top1','top2','top3'];
+
+  const bloques = sesiones.map((ses, idx) => {
+    const est = soloUno
+      .filter(a => a.sesIdx === idx)
+      .map(a => a.e)
+      .sort((a, b) => (Number(b.puntaje)||0) - (Number(a.puntaje)||0));
+
+    if (!est.length) return '';
+
+    const filas = est.map((r, i) => `
+      <tr class="${css[i]||''}">
+        <td>${meds[i]||i+1}</td>
+        <td style="font-weight:${i<3?'700':'400'}">${r.nombre}</td>
+        <td>${r.avatar}</td>
+        <td style="font-size:0.78rem">${r.colegio||'—'}</td>
+        <td>${r.grado}°</td><td>${r.curso}</td>
+        <td style="color:#ffd600;font-weight:700">${Number(r.puntaje).toLocaleString('es-CO')}</td>
+        <td style="color:#39ff14">${r.nota}/500</td>
+        <td style="color:#8ab">${r.tiempo ? Math.floor(r.tiempo/60)+'m '+String(r.tiempo%60).padStart(2,'0')+'s' : '—'}</td>
+      </tr>`).join('');
+
+    return `
+      <div style="margin-bottom:36px">
+        <div style="background:#0d1117;border-left:3px solid #00e5ff;padding:10px 14px;border-radius:0 8px 8px 0;margin-bottom:12px">
+          <span style="color:#00e5ff;font-size:1rem;font-weight:700">📅 Sesión ${idx+1}</span>
+          <span style="color:#ffd600;margin-left:10px">${ses.fecha} · ${ses.hora}</span>
+          <span style="color:#8ab;font-size:0.82rem;margin-left:10px">${est.length} participante${est.length!==1?'s':''} (primer intento)</span>
+        </div>
+        <div style="overflow-x:auto">
+          <table class="ranking-tabla" style="width:100%;font-size:0.88rem">
+            <thead>
+              <tr><th>#</th><th>Nombre</th><th>Apodo</th><th>Institución</th>
+                  <th>Grado</th><th>Curso</th><th>Puntaje</th><th>Nota</th><th>Tiempo</th></tr>
+            </thead>
+            <tbody>${filas}</tbody>
+          </table>
+        </div>
+      </div>`;
+  }).join('');
+
+  cont.innerHTML = `
+    <h3 style="color:#00e5ff;font-size:1.15rem;margin-bottom:16px">📅 Ranking por Sesión — Solo primer intento</h3>
+    ${bloques || '<p class="admin-vacio">Sin datos por sesión.</p>'}`;
+}
+
+// ── Múltiples intentos ─────────────────────────────────────────────────────
+function _rkIrregulares(multiples, cont) {
+  if (!multiples.length) {
+    cont.innerHTML = '<p class="admin-vacio" style="color:#39ff14;padding:40px 0;text-align:center">✅ No se detectaron estudiantes con múltiples intentos.</p>';
+    return;
+  }
+
+  const tarjetas = multiples
+    .sort((a, b) => b.length - a.length)
+    .map(arr => {
+      const e0 = arr[0].e;
+      const filas = arr.map((a, i) => `
+        <tr style="background:${i===0?'rgba(57,255,20,0.06)':'rgba(192,57,43,0.06)'}">
+          <td style="color:${i===0?'#39ff14':'#ff6b6b'}">${i===0?'1° Oficial':''+i+'° Excluido'}</td>
+          <td>S${a.sesIdx+1}</td>
+          <td>${a.ses.fecha}</td>
+          <td>${a.ses.hora}</td>
+          <td style="color:#ffd600;font-weight:700">${Number(a.e.puntaje).toLocaleString('es-CO')}</td>
+          <td>${a.e.nota}/500</td>
+        </tr>`).join('');
+      return `
+        <div style="background:#130a0a;border:1px solid #c0392b;border-radius:10px;padding:14px 16px;margin-bottom:14px">
+          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px">
+            <span style="color:#ff6b6b;font-weight:700;font-size:1rem">${e0.nombre}</span>
+            <span style="color:#8ab;font-size:0.82rem">${e0.avatar} · Grado ${e0.grado}° · Curso ${e0.curso}</span>
+            <span style="color:#8ab;font-size:0.82rem">${e0.colegio||'—'}</span>
+            <span style="background:#c0392b;color:#fff;padding:2px 10px;border-radius:12px;font-size:0.75rem;font-weight:700">${arr.length} intentos</span>
+          </div>
+          <table class="ranking-tabla" style="width:100%;font-size:0.85rem">
+            <thead><tr><th>Intento</th><th>Sesión</th><th>Fecha</th><th>Hora</th><th>Puntaje</th><th>Nota</th></tr></thead>
+            <tbody>${filas}</tbody>
+          </table>
+        </div>`;
+    }).join('');
+
+  cont.innerHTML = `
+    <div style="margin-bottom:16px">
+      <h3 style="color:#ff4444;font-size:1.15rem;margin:0 0 4px">⚠️ Múltiples intentos detectados</h3>
+      <p style="color:#8ab;font-size:0.85rem;margin:0">
+        ${multiples.length} estudiante${multiples.length!==1?'s':''} con 2+ intentos.
+        <strong style="color:#ffd600">Excluidos del ranking general.</strong>
+        Solo se muestra su primer intento para referencia.
+      </p>
+    </div>
+    ${tarjetas}`;
+}
+
+// Excel del ranking general
+window._rkExcel = () => {
+  if (!_rkCache) return;
+  const datos = _rkCache.soloUno
+    .map(a => ({ ...a.e, fecha: a.ses.fecha, sesNum: a.sesIdx + 1 }))
+    .sort((a, b) => (Number(b.puntaje)||0) - (Number(a.puntaje)||0));
+
+  const filas = datos.map((r, i) => ({
+    '#':          i + 1,
+    'Nombre':     r.nombre,
+    'Apodo':      r.avatar,
+    'Institución':r.colegio || '—',
+    'Grado':      r.grado + '°',
+    'Curso':      r.curso,
+    'Puntaje':    Number(r.puntaje) || 0,
+    'Nota /500':  Number(r.nota)    || 0,
+    'Tiempo (s)': r.tiempo          || 0,
+    'Sesión':     'S' + r.sesNum,
+    'Fecha':      r.fecha           || '—',
+  }));
+
+  const wb = XLSX.utils.book_new();
+  const ws = XLSX.utils.json_to_sheet(filas);
+  ws['!cols'] = [{wch:4},{wch:22},{wch:8},{wch:30},{wch:7},{wch:7},{wch:10},{wch:10},{wch:10},{wch:6},{wch:12}];
+  XLSX.utils.book_append_sheet(wb, ws, 'Ranking General');
+  XLSX.writeFile(wb, `ranking-general-${new Date().toISOString().slice(0,10)}.xlsx`);
+};
 
 // ─── BLOQUEADOS ────────────────────────────────────────────────────────────
 async function renderizarBloqueados() {

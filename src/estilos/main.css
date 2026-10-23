@@ -1058,6 +1058,16 @@ body {
 .admin-tab.activo { background: var(--magenta); color: #fff; border-color: var(--magenta); }
 .admin-tabcontent { width: 100%; }
 
+/* Sub-tabs del Ranking */
+.rk-subtab {
+  background: #1a1a2e; border: 1px solid #3a5070;
+  border-radius: 8px; color: #8ab;
+  padding: 8px 22px; font-size: 0.92rem; cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.rk-subtab:hover { background: #252545; color: #fff; }
+.rk-subtab.activo { background: var(--cian); color: #000; border-color: var(--cian); font-weight: 700; }
+
 /* Toolbar de filtros */
 .admin-toolbar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 14px; }
 .admin-select {
