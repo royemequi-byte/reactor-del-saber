@@ -1670,7 +1670,7 @@ function _rkGeneral(soloUno, sesiones, cont) {
   const sesCont = sesiones.map((ses, idx) => ({
     idx, ses, n: soloUno.filter(a => a.sesIdx === idx).length
   })).filter(s => s.n > 0);
-  const cursos = [...new Set(soloUno.map(a => a.e.curso))].sort();
+  const cursos = [...new Set(soloUno.map(a => a.e.curso).filter(c => c != null && String(c) !== 'undefined' && String(c).trim() !== ''))].sort();
 
   cont.innerHTML = `
     <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px;margin-bottom:16px">
@@ -1781,7 +1781,7 @@ function _rkPorSesion(soloUno, sesiones, cont) {
     idx, ses, n: soloUno.filter(a => a.sesIdx === idx).length
   })).filter(s => s.n > 0);
 
-  const cursos = [...new Set(soloUno.map(a => a.e.curso))].sort();
+  const cursos = [...new Set(soloUno.map(a => a.e.curso).filter(c => c != null && String(c) !== 'undefined' && String(c).trim() !== ''))].sort();
 
   cont.innerHTML = `
     <h3 style="color:#00e5ff;font-size:1.1rem;margin-bottom:14px">📅 Ranking por Sesión · General — Solo primer intento</h3>
@@ -1896,7 +1896,7 @@ function _rkIrregulares(multiples, cont) {
     return;
   }
 
-  const cursos = [...new Set(multiples.map(arr => arr[0].e.curso))].sort();
+  const cursos = [...new Set(multiples.map(arr => arr[0].e.curso).filter(c => c != null && String(c) !== 'undefined' && String(c).trim() !== ''))].sort();
 
   cont.innerHTML = `
     <div style="margin-bottom:16px">
