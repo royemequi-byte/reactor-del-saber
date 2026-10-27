@@ -13,6 +13,11 @@ import './estilos/indicadores.css';
 
 let listo = false; // evitar listeners duplicados en re-login
 
+// Tipos con estructura propia (pares, secuencia, pistas…) donde los campos
+// opciones/correcta del formulario no aplican. 'simulador' queda fuera:
+// usa opciones/correcta planas igual que una pregunta de selección normal.
+const TIPOS_ESTRUCTURA_PROPIA = new Set(['relacionar', 'ordenar', 'crucigrama', 'clasifica']);
+
 // ─── CONTROL DE ACCESO ─────────────────────────────────────────────────────
 function iniciarControlAcceso() {
   const btnToggle  = document.getElementById('btn-toggle-acceso');
@@ -689,6 +694,7 @@ function renderizarPreguntas() {
         <div class="admin-card-acciones">
           <button class="btn-accion cian chico" onclick="window._adminEditar('${p.id}')">✏️ Editar</button>
           <button class="btn-accion amarillo chico" onclick="window._adminPreview('${p.id}')">👁 Vista previa</button>
+          ${p.tipo === 'simulador' ? `<button class="btn-accion morado chico" onclick="window._adminDuplicar('${p.id}')">📋 Duplicar</button>` : ''}
           <button class="btn-accion ${p.activa ? 'gris' : 'verde'} chico" onclick="window._adminToggle('${p.id}')">
             ${p.activa ? '🔕 Desactivar' : '🔔 Activar'}
           </button>
@@ -733,7 +739,7 @@ function abrirModal(id) {
     document.getElementById('af-tema').value       = p.tema || '';
     document.getElementById('af-enunciado').value  = p.enunciado;
 
-    const tipoInteractivo = p.tipo && p.tipo !== 'seleccion';
+    const tipoInteractivo = TIPOS_ESTRUCTURA_PROPIA.has(p.tipo);
     const ops = p.opciones || [];
     document.getElementById('af-op0').value        = ops[0] || '';
     document.getElementById('af-op1').value        = ops[1] || '';
@@ -798,7 +804,7 @@ function guardarPregunta(e) {
 
   // Base existente para preservar campos de tipos interactivos
   const base = id ? (getBanco().find(p => p.id === id) || {}) : {};
-  const tipoInteractivo = base.tipo && base.tipo !== 'seleccion';
+  const tipoInteractivo = TIPOS_ESTRUCTURA_PROPIA.has(base.tipo);
 
   const pregunta = {
     ...base,
@@ -859,6 +865,19 @@ window._adminBorrar = (id) => {
   eliminarPregunta(id);
   actualizarContador();
   renderizarPreguntas();
+};
+window._adminDuplicar = (id) => {
+  const original = getBanco().find(p => p.id === id);
+  if (!original) return;
+  const copia = {
+    ...original,
+    id: `P-${Date.now()}`,
+    activa: false, // inactiva hasta que se edite el enunciado/opciones y se active a mano
+  };
+  agregarPregunta(copia);
+  actualizarContador();
+  renderizarPreguntas();
+  abrirModal(copia.id);
 };
 
 // ─── RANKING ───────────────────────────────────────────────────────────────

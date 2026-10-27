@@ -1100,6 +1100,7 @@ body {
 .btn-accion.rojo    { background: var(--rojo-iti);  color: #fff; }
 .btn-accion.amarillo{ background: var(--amarillo); color: #000; }
 .btn-accion.gris    { background: var(--gris);     color: var(--blanco); border: 1px solid #4a6080; }
+.btn-accion.morado  { background: #a78bfa;         color: #000; }
 .btn-accion.chico   { padding: 5px 10px; font-size: 0.8rem; }
 
 /* Lista scrolleable */
