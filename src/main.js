@@ -24,6 +24,14 @@ import { iniciarSimSoluciones }      from './tipos/sim-soluciones.js';
 import { iniciarSimReacciones }      from './tipos/sim-reacciones.js';
 import { iniciarSimReaccionNuclear } from './tipos/sim-reaccion-nuclear.js';
 import { iniciarSimPresionOsmotica } from './tipos/sim-presion-osmotica.js';
+import { iniciarSimMovimiento } from './tipos/sim-movimiento.js';
+import { iniciarSimLeyesNewton } from './tipos/sim-leyes-newton.js';
+import { iniciarSimEnergiaPotencial } from './tipos/sim-energia-potencial.js';
+import { iniciarSimOndasCuerda } from './tipos/sim-ondas-cuerda.js';
+import { iniciarSimTransferenciaCalor } from './tipos/sim-transferencia-calor.js';
+import { iniciarSimLeyCoulomb } from './tipos/sim-ley-coulomb.js';
+import { iniciarSimSonidoVacio } from './tipos/sim-sonido-vacio.js';
+import { iniciarSimLeyOhm } from './tipos/sim-ley-ohm.js';
 import { db } from './firebase.js';
 import { ref, get, set, update, onValue } from 'firebase/database';
 
@@ -597,6 +605,14 @@ function mostrarPregunta() {
       'reacciones':      iniciarSimReacciones,
       'reaccion-nuclear': iniciarSimReaccionNuclear,
       'presion-osmotica': iniciarSimPresionOsmotica,
+      'movimiento':          iniciarSimMovimiento,
+      'leyes-newton':        iniciarSimLeyesNewton,
+      'energia-potencial':   iniciarSimEnergiaPotencial,
+      'ondas-cuerda':        iniciarSimOndasCuerda,
+      'transferencia-calor': iniciarSimTransferenciaCalor,
+      'ley-coulomb':         iniciarSimLeyCoulomb,
+      'sonido-vacio':        iniciarSimSonidoVacio,
+      'ley-ohm':             iniciarSimLeyOhm,
     };
     const fn = SIMS[p.simulador];
     if (fn) _detenerSim = fn(simContainer);
@@ -1249,7 +1265,7 @@ function iniciarPreview(p) {
   if (p.tipo === 'simulador') {
     const sc = document.getElementById('preview-sim-container');
     sc.classList.remove('oculto');
-    const SIMS = { 'estados-materia': iniciarSimEstadosMateria, 'gases-ideales': iniciarSimGasesIdeales, 'cadena-trofica': iniciarSimCadenaTrofica, 'mitosis': iniciarSimMitosis, 'soluciones': iniciarSimSoluciones, 'reacciones': iniciarSimReacciones, 'reaccion-nuclear': iniciarSimReaccionNuclear, 'presion-osmotica': iniciarSimPresionOsmotica };
+    const SIMS = { 'estados-materia': iniciarSimEstadosMateria, 'gases-ideales': iniciarSimGasesIdeales, 'cadena-trofica': iniciarSimCadenaTrofica, 'mitosis': iniciarSimMitosis, 'soluciones': iniciarSimSoluciones, 'reacciones': iniciarSimReacciones, 'reaccion-nuclear': iniciarSimReaccionNuclear, 'presion-osmotica': iniciarSimPresionOsmotica, 'movimiento': iniciarSimMovimiento, 'leyes-newton': iniciarSimLeyesNewton, 'energia-potencial': iniciarSimEnergiaPotencial, 'ondas-cuerda': iniciarSimOndasCuerda, 'transferencia-calor': iniciarSimTransferenciaCalor, 'ley-coulomb': iniciarSimLeyCoulomb, 'sonido-vacio': iniciarSimSonidoVacio, 'ley-ohm': iniciarSimLeyOhm };
     const fn = SIMS[p.simulador];
     if (fn) _detenerSimPreview = fn(sc);
   }

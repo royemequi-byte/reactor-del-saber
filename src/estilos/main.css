@@ -1737,6 +1737,79 @@ body {
   .sim-osmosis-cv { height: 320px; }
 }
 
+/* ── SIMULADORES FÍSICA — MOVIMIENTO / NEWTON / ENERGÍA / ONDAS / CALOR / COULOMB / SONIDO / OHM ── */
+.sim-mov-cv, .sim-newton-cv, .sim-ondas-cv, .sim-calor-cv, .sim-coulomb-cv, .sim-sonido-cv, .sim-ohm-cv {
+  display: block; width: 100%; background: #05050e;
+}
+.sim-mov-badge {
+  text-align: center; font-size: 11px; font-weight: bold; font-family: monospace;
+  color: #4fc3f7; padding: 4px; letter-spacing: 1px; background: #07071a;
+}
+
+.sim-newton-tabs { display: flex; background: #0a0a1c; border-bottom: 1px solid #4fc3f722; }
+.sim-newton-tab {
+  flex: 1; padding: 8px 4px; background: none; border: none; color: #666688;
+  font-size: 10px; font-family: monospace; cursor: pointer; border-bottom: 2px solid transparent;
+}
+.sim-newton-tab:hover { color: #4fc3f7; }
+.sim-newton-tab.activa { color: #4fc3f7; border-bottom-color: #4fc3f7; font-weight: bold; }
+.sim-newton-lectura {
+  padding: 8px 14px; background: #07071a; color: #8ab; font-size: 11px;
+  font-family: monospace; border-top: 1px solid #4fc3f722; min-height: 34px;
+}
+
+.sim-epot-body { display: grid; grid-template-columns: 1fr 120px; }
+.sim-epot-barras {
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  padding: 10px 8px; background: #07071a;
+}
+.sim-epot-barra-grupo { display: flex; flex-direction: column; align-items: center; gap: 4px; flex: 1; }
+.sim-epot-barra-wrap {
+  position: relative; width: 26px; height: 140px; background: #111128;
+  border: 1px solid #ffffff15; border-radius: 6px; overflow: hidden;
+}
+.sim-epot-barra-fill { position: absolute; bottom: 0; left: 0; width: 100%; transition: height 0.1s linear; }
+.sim-epot-barra-fill.ep { background: linear-gradient(0deg, #ff6b35, #ffb088); }
+.sim-epot-barra-fill.ec { background: linear-gradient(0deg, #4fc3f7, #a8e6ff); }
+.sim-epot-barra-val { font-size: 10px; font-family: monospace; color: #8ab; }
+.sim-epot-total { font-size: 11px; font-family: monospace; color: #ffd600; text-align: center; }
+
+.sim-ondas-lecturas, .sim-coulomb-lectura, .sim-sonido-lectura {
+  display: flex; justify-content: center; gap: 20px; padding: 8px 14px;
+  background: #07071a; border-top: 1px solid #4fc3f722;
+}
+.sim-coulomb-lectura, .sim-sonido-lectura {
+  font-size: 11px; font-family: monospace; color: #8ab; text-align: center;
+}
+.sim-ondas-lectura { display: flex; align-items: baseline; gap: 5px; }
+
+.sim-coulomb-signo {
+  margin-left: 8px; width: 20px; height: 20px; border-radius: 50%;
+  background: #111128; border: 1px solid #4fc3f7; color: #4fc3f7;
+  font-weight: bold; cursor: pointer; font-size: 11px; line-height: 1;
+}
+.sim-coulomb-signo.neg { border-color: #ff5252; color: #ff5252; }
+
+.sim-sonido-medios { display: flex; gap: 8px; }
+.sim-sonido-medio {
+  flex: 1; padding: 8px; border-radius: 8px; font-size: 11px; font-family: monospace;
+  cursor: pointer; border: 1.5px solid #ffffff22; background: #111128; color: #6688aa;
+}
+.sim-sonido-medio:hover { border-color: #4fc3f7; color: #4fc3f7; }
+.sim-sonido-medio.activa { border-color: #4fc3f7; color: #4fc3f7; background: #0f1f30; font-weight: bold; }
+
+.sim-ohm-body { display: grid; grid-template-columns: 1fr 120px; }
+.sim-ohm-lecturas {
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 10px 8px; background: #07071a; gap: 10px;
+}
+
+@media (max-width: 480px) {
+  .sim-epot-body, .sim-ohm-body { grid-template-columns: 1fr; }
+  .sim-epot-barras { flex-direction: row; border-top: 1px solid #00d4ff18; }
+  .sim-epot-barra-wrap { height: 70px; width: 60px; flex-direction: row-reverse; }
+}
+
 /* ── UPLOAD DE IMAGEN EN ADMIN ─────────────────────────────────────────────── */
 .af-imagen-area {
   display: flex;
