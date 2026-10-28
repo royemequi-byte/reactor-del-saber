@@ -1633,6 +1633,101 @@ body {
 .sim-balance-msg.ok { color:#16a34a; }
 .sim-balance-msg.no { color:#dc2626; }
 
+/* ── SIMULADOR REACCIÓN NUCLEAR — sala de control de reactor ──────────────── */
+.sim-nuclear-body { display: grid; grid-template-columns: 1fr 140px; }
+.sim-nuclear-cv   { display: block; width: 100%; height: 240px; background: #05050e; border-right: 1px solid #4fc3f722; }
+
+.sim-nuclear-panel {
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  padding: 10px 8px; background: #07071a;
+}
+.sim-nuclear-gauge { display: flex; flex-direction: column; align-items: center; width: 100%; }
+.sim-nuclear-gauge-svg { width: 100%; }
+#sim-nu-aguja { transition: transform 0.3s ease-out; }
+.sim-nuclear-mw { font-family: monospace; font-size: 13px; font-weight: bold; color: #eaf6ff; margin-top: -4px; }
+.sim-nuclear-k  { font-family: monospace; font-size: 10px; color: #666688; text-align: center; }
+.sim-nuclear-k strong { color: #4fc3f7; }
+
+.sim-nuclear-badge {
+  font-size: 10px; font-weight: bold; font-family: monospace; letter-spacing: 0.5px;
+  padding: 4px 9px; border-radius: 20px; border: 1px solid #4fc3f7; text-align: center;
+  white-space: nowrap; transition: all 0.3s;
+}
+.sim-nuclear-badge-alerta { animation: nuclearAlerta 0.6s infinite alternate; }
+@keyframes nuclearAlerta {
+  from { box-shadow: 0 0 4px currentColor; }
+  to   { box-shadow: 0 0 14px currentColor; }
+}
+
+.sim-nuclear-turbina-wrap { display: flex; flex-direction: column; align-items: center; gap: 2px; margin-top: auto; }
+.sim-nuclear-turbina { width: 52px; height: 52px; }
+#sim-nu-aspas { transition: transform 0.1s linear; }
+.sim-nuclear-turbina-lbl { font-size: 8px; color: #555577; font-family: monospace; letter-spacing: 1px; }
+
+.sim-nuclear-controles {
+  padding: 10px 14px 12px; background: #0a0a1c;
+  border-top: 1px solid #4fc3f722;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.slider-nu { background: linear-gradient(to right, #4fc3f7, #ffd600, #ff3b3b); }
+.slider-nu::-webkit-slider-thumb { border-color: #4fc3f7; box-shadow: 0 0 6px #4fc3f7; }
+
+.sim-nuclear-btns { display: flex; gap: 8px; }
+.sim-nuclear-btn {
+  flex: 1; padding: 8px; border-radius: 8px; font-size: 11px; font-weight: bold;
+  font-family: monospace; cursor: pointer; border: 1.5px solid; transition: all 0.2s;
+}
+.sim-nuclear-btn-go  { background: #0f1f30; border-color: #4fc3f7; color: #4fc3f7; }
+.sim-nuclear-btn-go:hover { background: #4fc3f722; }
+.sim-nuclear-btn-go:disabled { opacity: 0.35; cursor: not-allowed; }
+.sim-nuclear-btn-rst { background: #111128; border-color: #ffffff22; color: #6688aa; }
+.sim-nuclear-btn-rst:hover { border-color: #4fc3f7; color: #4fc3f7; }
+
+@media (max-width: 480px) {
+  .sim-nuclear-body { grid-template-columns: 1fr; }
+  .sim-nuclear-panel { flex-direction: row; flex-wrap: wrap; justify-content: space-around; border-top: 1px solid #4fc3f722; }
+  .sim-nuclear-cv { height: 200px; border-right: none; }
+}
+
+/* ── SIMULADOR PRESIÓN OSMÓTICA — tubo en U + microscopio ──────────────────── */
+.sim-head-claro { background: #f1f5f9; border-bottom: 1px solid #e2e8f0; }
+.sim-titulo-claro { color: #0369a1; }
+.sim-instruccion-claro { color: #64748b; }
+
+.sim-osmosis-cv { display: block; width: 100%; height: 230px; background: #f8fafc; }
+
+.sim-osmosis-lecturas {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  padding: 8px 14px; background: #f1f5f9; border-top: 1px solid #e2e8f0;
+}
+.sim-osmosis-lectura { display: flex; align-items: baseline; gap: 4px; }
+.lec-lbl-claro  { font-size: 9px; color: #64748b; letter-spacing: 1px; font-family: monospace; }
+.lec-val-claro  { font-size: 16px; font-weight: bold; font-family: monospace; color: #0369a1; }
+.lec-unit-claro { font-size: 10px; color: #64748b; font-family: monospace; }
+
+.sim-osmosis-badge {
+  font-size: 10px; font-weight: bold; font-family: monospace; letter-spacing: 0.5px;
+  padding: 4px 10px; border-radius: 20px; border: 1.5px solid #0ea5e9; color: #0369a1;
+  background: #e0f2fe; white-space: nowrap;
+}
+
+.sim-osmosis-controles {
+  padding: 10px 14px 12px; background: #f1f5f9; border-top: 1px solid #e2e8f0;
+  display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px 14px;
+}
+.sim-ctrl-lbl-claro {
+  font-size: 10px; color: #475569; font-family: monospace; letter-spacing: 0.5px;
+  display: flex; justify-content: space-between;
+}
+.sim-ctrl-val-claro { color: #0369a1; font-weight: bold; }
+.slider-os { background: linear-gradient(to right, #7dd3fc, #0369a1); }
+.slider-os::-webkit-slider-thumb { border-color: #0369a1; box-shadow: 0 0 6px #0369a1; }
+
+@media (max-width: 480px) {
+  .sim-osmosis-controles { grid-template-columns: 1fr; }
+  .sim-osmosis-cv { height: 320px; }
+}
+
 /* ── UPLOAD DE IMAGEN EN ADMIN ─────────────────────────────────────────────── */
 .af-imagen-area {
   display: flex;
