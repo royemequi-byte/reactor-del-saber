@@ -612,10 +612,16 @@ function mostrarPregunta() {
 
   if (!INTERACTIVOS.has(tipo)) {
     const letras = ['A', 'B', 'C', 'D'];
+    const imgs = p.opcionesImagenes;
     p.opciones.forEach((op, i) => {
       const btn = document.createElement('button');
-      btn.className = 'opcion-btn';
-      btn.innerHTML = `<strong>${letras[i]}.</strong> ${op}`;
+      if (imgs && imgs[i]) {
+        btn.className = 'opcion-btn opcion-btn-img';
+        btn.innerHTML = `<span class="opcion-letra-badge">${letras[i]}</span><img class="opcion-img" src="${imgs[i]}" alt="${op || 'Opción ' + letras[i]}" />`;
+      } else {
+        btn.className = 'opcion-btn';
+        btn.innerHTML = `<strong>${letras[i]}.</strong> ${op}`;
+      }
       btn.addEventListener('click', () => responder(i));
       grid.appendChild(btn);
     });
@@ -1239,10 +1245,16 @@ function iniciarPreview(p) {
 
   if (tipo === 'seleccion' || tipo === 'simulador') {
     const letras = ['A', 'B', 'C', 'D'];
+    const imgsPrev = p.opcionesImagenes;
     p.opciones.forEach((op, i) => {
       const btn = document.createElement('button');
-      btn.className = 'opcion-btn';
-      btn.innerHTML = `<strong>${letras[i]}.</strong> ${op}`;
+      if (imgsPrev && imgsPrev[i]) {
+        btn.className = 'opcion-btn opcion-btn-img';
+        btn.innerHTML = `<span class="opcion-letra-badge">${letras[i]}</span><img class="opcion-img" src="${imgsPrev[i]}" alt="${op || 'Opción ' + letras[i]}" />`;
+      } else {
+        btn.className = 'opcion-btn';
+        btn.innerHTML = `<strong>${letras[i]}.</strong> ${op}`;
+      }
       btn.addEventListener('click', () => {
         area.querySelectorAll('.opcion-btn').forEach((b, j) => {
           b.disabled = true;

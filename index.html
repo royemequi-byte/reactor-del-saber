@@ -587,6 +587,7 @@
           <select id="admin-fil-formato" class="admin-select">
             <option value="">Todos los formatos</option>
             <option value="simulador">🖥️ Simuladores</option>
+            <option value="img-opciones">🖼️ Opciones con imagen</option>
             <option value="relacionar">🔗 Relacionar</option>
             <option value="ordenar">🔢 Ordenar</option>
             <option value="crucigrama">🧩 Crucigrama</option>
@@ -702,6 +703,59 @@
                 <span class="af-letra">D.</span>
                 <input type="text" id="af-op3" placeholder="Opción D" required />
                 <input type="radio" name="af-correcta" value="3" title="Opción D es correcta" />
+              </div>
+            </div>
+
+            <div class="af-campo full">
+              <label class="af-check-label">
+                <input type="checkbox" id="af-opimg-toggle" />
+                🖼️ Opciones de respuesta con imagen (en vez de solo texto)
+              </label>
+              <div id="af-opimg-grid" class="af-opimg-grid oculto">
+                <div class="af-opimg-slot">
+                  <span class="af-letra">A.</span>
+                  <input type="hidden" id="af-opimg0-url" />
+                  <img id="af-opimg0-preview" class="af-opimg-preview oculto" alt="Opción A" />
+                  <div class="af-opimg-acciones">
+                    <label class="af-upload-btn af-upload-btn-chico" for="af-opimg0-file">📁 Subir</label>
+                    <input type="file" id="af-opimg0-file" accept="image/*" style="display:none" />
+                    <button type="button" class="btn-accion rojo chico" id="btn-quitar-opimg0" style="display:none">✕</button>
+                  </div>
+                  <span id="af-opimg0-estado" class="af-imagen-estado"></span>
+                </div>
+                <div class="af-opimg-slot">
+                  <span class="af-letra">B.</span>
+                  <input type="hidden" id="af-opimg1-url" />
+                  <img id="af-opimg1-preview" class="af-opimg-preview oculto" alt="Opción B" />
+                  <div class="af-opimg-acciones">
+                    <label class="af-upload-btn af-upload-btn-chico" for="af-opimg1-file">📁 Subir</label>
+                    <input type="file" id="af-opimg1-file" accept="image/*" style="display:none" />
+                    <button type="button" class="btn-accion rojo chico" id="btn-quitar-opimg1" style="display:none">✕</button>
+                  </div>
+                  <span id="af-opimg1-estado" class="af-imagen-estado"></span>
+                </div>
+                <div class="af-opimg-slot">
+                  <span class="af-letra">C.</span>
+                  <input type="hidden" id="af-opimg2-url" />
+                  <img id="af-opimg2-preview" class="af-opimg-preview oculto" alt="Opción C" />
+                  <div class="af-opimg-acciones">
+                    <label class="af-upload-btn af-upload-btn-chico" for="af-opimg2-file">📁 Subir</label>
+                    <input type="file" id="af-opimg2-file" accept="image/*" style="display:none" />
+                    <button type="button" class="btn-accion rojo chico" id="btn-quitar-opimg2" style="display:none">✕</button>
+                  </div>
+                  <span id="af-opimg2-estado" class="af-imagen-estado"></span>
+                </div>
+                <div class="af-opimg-slot">
+                  <span class="af-letra">D.</span>
+                  <input type="hidden" id="af-opimg3-url" />
+                  <img id="af-opimg3-preview" class="af-opimg-preview oculto" alt="Opción D" />
+                  <div class="af-opimg-acciones">
+                    <label class="af-upload-btn af-upload-btn-chico" for="af-opimg3-file">📁 Subir</label>
+                    <input type="file" id="af-opimg3-file" accept="image/*" style="display:none" />
+                    <button type="button" class="btn-accion rojo chico" id="btn-quitar-opimg3" style="display:none">✕</button>
+                  </div>
+                  <span id="af-opimg3-estado" class="af-imagen-estado"></span>
+                </div>
               </div>
             </div>
 

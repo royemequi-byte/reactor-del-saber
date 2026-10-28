@@ -307,6 +307,39 @@ export function adminInicializar() {
     document.getElementById('af-imagen2-estado').textContent = '';
   });
 
+  // Opciones de respuesta con imagen — 4 slots (A-D)
+  document.getElementById('af-opimg-toggle').addEventListener('change', (e) => {
+    document.getElementById('af-opimg-grid').classList.toggle('oculto', !e.target.checked);
+  });
+  for (let i = 0; i < 4; i++) {
+    document.getElementById(`af-opimg${i}-file`).addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const estadoEl = document.getElementById(`af-opimg${i}-estado`);
+      const preview  = document.getElementById(`af-opimg${i}-preview`);
+      const btnQ     = document.getElementById(`btn-quitar-opimg${i}`);
+      estadoEl.textContent = '⏳ Subiendo…';
+      try {
+        const url = await subirImagenPregunta(file);
+        document.getElementById(`af-opimg${i}-url`).value = url;
+        preview.src = url;
+        preview.classList.remove('oculto');
+        btnQ.style.display = 'inline-block';
+        estadoEl.textContent = '✅ Lista';
+      } catch (err) {
+        estadoEl.textContent = '❌ Error al subir: ' + err.message;
+      }
+    });
+    document.getElementById(`btn-quitar-opimg${i}`).addEventListener('click', () => {
+      document.getElementById(`af-opimg${i}-url`).value = '';
+      document.getElementById(`af-opimg${i}-file`).value = '';
+      document.getElementById(`af-opimg${i}-preview`).classList.add('oculto');
+      document.getElementById(`af-opimg${i}-preview`).src = '';
+      document.getElementById(`btn-quitar-opimg${i}`).style.display = 'none';
+      document.getElementById(`af-opimg${i}-estado`).textContent = '';
+    });
+  }
+
   // Restaurar banco original
   document.getElementById('btn-reset-banco').addEventListener('click', () => {
     if (!confirm('¿Sincronizar banco? Se agregarán las preguntas base que falten. Las preguntas existentes NO se eliminan.')) return;
@@ -658,8 +691,9 @@ function renderizarPreguntas() {
   if (activa === '1') banco = banco.filter(p =>  p.activa);
   if (activa === '0') banco = banco.filter(p => !p.activa);
   if (origen)         banco = banco.filter(p => (p.origen || 'normal') === origen);
-  if (formato === 'seleccion') banco = banco.filter(p => !p.tipo || p.tipo === 'seleccion');
-  else if (formato)            banco = banco.filter(p => p.tipo === formato);
+  if (formato === 'seleccion')      banco = banco.filter(p => !p.tipo || p.tipo === 'seleccion');
+  else if (formato === 'img-opciones') banco = banco.filter(p => p.opcionesImagenes && p.opcionesImagenes.some(u => u));
+  else if (formato)                 banco = banco.filter(p => p.tipo === formato);
 
   const colores = { quimica: '#39ff14', fisica: '#00e5ff', biologia: '#ff9f1c', cts: '#ff69b4', razonamiento: '#a78bfa' };
   const emojis  = { quimica: '⚗️', fisica: '⚡', biologia: '🌿', cts: '🔬', razonamiento: '🧠' };
@@ -679,6 +713,9 @@ function renderizarPreguntas() {
     const icfesTag = p.origen === 'icfes'
       ? '<span class="admin-badge icfes">📄 ICFES</span>'
       : '';
+    const opimgTag = (p.opcionesImagenes && p.opcionesImagenes.some(u => u))
+      ? '<span class="admin-badge icfes">🖼️ Opciones con imagen</span>'
+      : '';
     const gradoLabel = Array.isArray(p.grado)
       ? p.grado.map(g => `${g}°`).join('/')
       : (p.grado === 'todos' ? 'Todos' : `${p.grado}°`);
@@ -690,6 +727,7 @@ function renderizarPreguntas() {
           <span class="admin-badge grado">G${gradoLabel}</span>
           <span class="admin-badge dif">D${p.dificultad}</span>
           ${icfesTag}
+          ${opimgTag}
           <span class="admin-badge ${p.activa ? 'activo' : 'inactivo'}">${p.activa ? '✓ Activa' : '✗ Inactiva'}</span>
           <span class="admin-card-tema">${p.tema || ''}</span>
         </div>
@@ -697,7 +735,7 @@ function renderizarPreguntas() {
         <div class="admin-card-acciones">
           <button class="btn-accion cian chico" onclick="window._adminEditar('${p.id}')">✏️ Editar</button>
           <button class="btn-accion amarillo chico" onclick="window._adminPreview('${p.id}')">👁 Vista previa</button>
-          ${p.tipo === 'simulador' ? `<button class="btn-accion morado chico" onclick="window._adminDuplicar('${p.id}')">📋 Duplicar</button>` : ''}
+          ${(p.tipo === 'simulador' || (p.opcionesImagenes && p.opcionesImagenes.some(u => u))) ? `<button class="btn-accion morado chico" onclick="window._adminDuplicar('${p.id}')">📋 Duplicar</button>` : ''}
           <button class="btn-accion ${p.activa ? 'gris' : 'verde'} chico" onclick="window._adminToggle('${p.id}')">
             ${p.activa ? '🔕 Desactivar' : '🔔 Activar'}
           </button>
@@ -727,6 +765,16 @@ function abrirModal(id) {
   document.getElementById('af-imagen2-preview').src = '';
   document.getElementById('btn-quitar-imagen2').style.display = 'none';
   document.getElementById('af-imagen2-estado').textContent = '';
+  document.getElementById('af-opimg-toggle').checked = false;
+  document.getElementById('af-opimg-grid').classList.add('oculto');
+  for (let i = 0; i < 4; i++) {
+    document.getElementById(`af-opimg${i}-url`).value = '';
+    document.getElementById(`af-opimg${i}-file`).value = '';
+    document.getElementById(`af-opimg${i}-preview`).classList.add('oculto');
+    document.getElementById(`af-opimg${i}-preview`).src = '';
+    document.getElementById(`btn-quitar-opimg${i}`).style.display = 'none';
+    document.getElementById(`af-opimg${i}-estado`).textContent = '';
+  }
 
   if (id) {
     const p = getBanco().find(q => q.id === id);
@@ -780,6 +828,19 @@ function abrirModal(id) {
       document.getElementById('btn-quitar-imagen2').style.display = 'inline-block';
       document.getElementById('af-imagen2-estado').textContent = '✅ Imagen 2 cargada';
     }
+    if (p.opcionesImagenes && p.opcionesImagenes.some(u => u)) {
+      document.getElementById('af-opimg-toggle').checked = true;
+      document.getElementById('af-opimg-grid').classList.remove('oculto');
+      p.opcionesImagenes.forEach((url, i) => {
+        if (!url) return;
+        document.getElementById(`af-opimg${i}-url`).value = url;
+        const prev = document.getElementById(`af-opimg${i}-preview`);
+        prev.src = url;
+        prev.classList.remove('oculto');
+        document.getElementById(`btn-quitar-opimg${i}`).style.display = 'inline-block';
+        document.getElementById(`af-opimg${i}-estado`).textContent = '✅ Lista';
+      });
+    }
   } else {
     titulo.textContent = '➕ Nueva pregunta';
     document.getElementById('af-id').value = '';
@@ -830,6 +891,13 @@ function guardarPregunta(e) {
     autor:      'admin',
     activa:     document.getElementById('af-activa').checked,
   };
+
+  if (document.getElementById('af-opimg-toggle').checked) {
+    const urls = [0, 1, 2, 3].map(i => document.getElementById(`af-opimg${i}-url`).value || null);
+    pregunta.opcionesImagenes = urls.some(u => u) ? urls : null;
+  } else {
+    pregunta.opcionesImagenes = null;
+  }
 
   // Solo actualizar opciones/correcta si es tipo seleccion
   if (!tipoInteractivo) {
