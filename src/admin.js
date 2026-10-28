@@ -233,7 +233,7 @@ export function adminInicializar() {
   );
 
   // Filtros
-  ['admin-fil-materia', 'admin-fil-grado', 'admin-fil-activa', 'admin-fil-origen'].forEach(id =>
+  ['admin-fil-materia', 'admin-fil-grado', 'admin-fil-activa', 'admin-fil-origen', 'admin-fil-formato'].forEach(id =>
     document.getElementById(id).addEventListener('change', renderizarPreguntas)
   );
 
@@ -644,6 +644,7 @@ function renderizarPreguntas() {
   const grado   = document.getElementById('admin-fil-grado').value;
   const activa  = document.getElementById('admin-fil-activa').value;
   const origen  = document.getElementById('admin-fil-origen').value;
+  const formato = document.getElementById('admin-fil-formato').value;
 
   let banco = getBanco();
   if (materia)        banco = banco.filter(p => p.materia === materia);
@@ -657,6 +658,8 @@ function renderizarPreguntas() {
   if (activa === '1') banco = banco.filter(p =>  p.activa);
   if (activa === '0') banco = banco.filter(p => !p.activa);
   if (origen)         banco = banco.filter(p => (p.origen || 'normal') === origen);
+  if (formato === 'seleccion') banco = banco.filter(p => !p.tipo || p.tipo === 'seleccion');
+  else if (formato)            banco = banco.filter(p => p.tipo === formato);
 
   const colores = { quimica: '#39ff14', fisica: '#00e5ff', biologia: '#ff9f1c', cts: '#ff69b4', razonamiento: '#a78bfa' };
   const emojis  = { quimica: '⚗️', fisica: '⚡', biologia: '🌿', cts: '🔬', razonamiento: '🧠' };
