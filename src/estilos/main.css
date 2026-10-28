@@ -793,6 +793,15 @@ body {
 .opcion-btn.correcta { border-color: var(--verde); background: #0d2a14; box-shadow: var(--sombra-verde); }
 .opcion-btn.incorrecta { border-color: var(--error); background: #2a0d0d; }
 .opcion-btn:disabled { cursor: default; }
+.opcion-btn-bloqueada { opacity: 0.35; filter: grayscale(0.6); cursor: not-allowed; }
+
+.bloqueo-respuesta-msg {
+  text-align: center; font-size: 0.85rem; color: var(--amarillo);
+  background: #2a2200; border: 1px solid #5a4a00; border-radius: 20px;
+  padding: 6px 14px; margin: 0 auto 10px; width: fit-content;
+  letter-spacing: 0.3px;
+}
+.bloqueo-respuesta-msg strong { font-size: 0.95rem; }
 
 /* =============================================
    PANTALLA 4 — RETROALIMENTACIÓN

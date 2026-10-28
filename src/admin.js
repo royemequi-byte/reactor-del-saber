@@ -446,7 +446,7 @@ function renderizarMonitor(obj) {
   lista.innerHTML = gruposOrdenados.map(g => {
     const term = g.estudiantes
       .filter(e => e.estado === 'terminado')
-      .sort((a, b) => (b.puntaje || 0) - (a.puntaje || 0));
+      .sort((a, b) => (Number(b.nota)||0) - (Number(a.nota)||0) || (b.puntaje || 0) - (a.puntaje || 0) || (a.tiempo||0) - (b.tiempo||0));
     const jug  = g.estudiantes.filter(e => e.estado === 'jugando');
     const insc = g.estudiantes.filter(e => e.estado === 'inscrito');
 
@@ -577,7 +577,7 @@ function renderDetalleAct(act) {
       </div>`;
     }).join('');
     const promedio = Math.round(notas.reduce((a, b) => a + b, 0) / notas.length);
-    const mejor    = grupo.slice().sort((a, b) => (b.puntaje || 0) - (a.puntaje || 0))[0];
+    const mejor    = grupo.slice().sort((a, b) => (Number(b.nota)||0) - (Number(a.nota)||0) || (b.puntaje || 0) - (a.puntaje || 0) || (a.tiempo||0) - (b.tiempo||0))[0];
     return `
       <div style="background:#0d1117;border:1px solid #333;border-radius:8px;padding:12px;flex:1;min-width:180px">
         <div style="color:#ffd600;font-weight:700;margin-bottom:8px">Grado ${g}° · ${grupo.length} estudiantes</div>
@@ -599,7 +599,7 @@ function renderDetalleAct(act) {
     .sort((a, b) => a.grado - b.grado || String(a.curso).localeCompare(String(b.curso)));
 
   const tablasPorCurso = gruposOrdenados.map(g => {
-    const sorted = g.lista.slice().sort((a, b) => (b.puntaje || 0) - (a.puntaje || 0));
+    const sorted = g.lista.slice().sort((a, b) => (Number(b.nota)||0) - (Number(a.nota)||0) || (b.puntaje || 0) - (a.puntaje || 0) || (a.tiempo||0) - (b.tiempo||0));
     const filas  = sorted.map((e, i) => `
       <tr class="${css[i] ?? ''}">
         <td>${meds[i] ?? i + 1}</td>
@@ -635,7 +635,7 @@ function descargarXlsActividad(key) {
   if (!act) return;
   const terminados = Object.values(act.estudiantes || {})
     .filter(e => e.estado === 'terminado')
-    .sort((a, b) => (b.puntaje || 0) - (a.puntaje || 0));
+    .sort((a, b) => (Number(b.nota)||0) - (Number(a.nota)||0) || (b.puntaje || 0) - (a.puntaje || 0) || (a.tiempo||0) - (b.tiempo||0));
 
   const filas = terminados.map((e, i) => ({
     '#':          i + 1,
@@ -1191,7 +1191,7 @@ function _calcSesion(act, gradoFiltro = 0) {
     .map(v => ({ grado: v.grado, curso: v.curso, n: v.notas.length, p: Math.round(v.notas.reduce((a, b) => a + b, 0) / v.notas.length) }))
     .sort((a, b) => b.p - a.p);
 
-  const top10 = term.slice().sort((a, b) => (Number(b.nota) || 0) - (Number(a.nota) || 0)).slice(0, 10);
+  const top10 = term.slice().sort((a, b) => (Number(b.nota)||0) - (Number(a.nota)||0) || (b.puntaje || 0) - (a.puntaje || 0) || (a.tiempo||0) - (b.tiempo||0)).slice(0, 10);
 
   return { term, notas, promNota, maxNota, aprobados, compPct, pctMat, bins, med, sd, porGrado, cursos, top10, totalAll: totalFilt };
 }
@@ -1396,7 +1396,7 @@ async function renderIndicadores() {
     const act = _indSesiones[_indIdx];
     if (!act) return;
     const term = Object.values(act.estudiantes || {}).filter(e => e.estado === 'terminado')
-      .sort((a, b) => (b.puntaje || 0) - (a.puntaje || 0));
+      .sort((a, b) => (Number(b.nota)||0) - (Number(a.nota)||0) || (b.puntaje || 0) - (a.puntaje || 0) || (a.tiempo||0) - (b.tiempo||0));
     const filas = term.map((e, i) => ({
       '#': i+1, 'Nombre': e.nombre, 'Avatar': e.avatar,
       'Grado': e.grado+'°', 'Curso': e.curso,
@@ -1825,7 +1825,7 @@ function _rkGeneral(soloUno, sesiones, cont) {
 
     const sorted = datos
       .map(a => ({ ...a.e, sesNum: a.sesIdx + 1, fecha: a.ses.fecha }))
-      .sort((a, b) => (Number(b.puntaje)||0) - (Number(a.puntaje)||0));
+      .sort((a, b) => (Number(b.nota)||0) - (Number(a.nota)||0) || (Number(b.puntaje)||0) - (Number(a.puntaje)||0) || (a.tiempo||0) - (b.tiempo||0));
 
     const filas = sorted.map((r, i) => `
       <tr class="${css[i]||''}">
@@ -1932,7 +1932,7 @@ function _rkPorSesion(soloUno, sesiones, cont) {
 
     const sorted = datos
       .map(a => ({ ...a.e, sesNum: a.sesIdx + 1, fecha: a.ses.fecha }))
-      .sort((a, b) => (Number(b.puntaje)||0) - (Number(a.puntaje)||0));
+      .sort((a, b) => (Number(b.nota)||0) - (Number(a.nota)||0) || (Number(b.puntaje)||0) - (Number(a.puntaje)||0) || (a.tiempo||0) - (b.tiempo||0));
 
     const filas = sorted.map((r, i) => `
       <tr class="${css[i]||''}">
@@ -2114,7 +2114,7 @@ window._rkExcel = () => {
   if (!_rkCache) return;
   const datos = _rkCache.soloUno
     .map(a => ({ ...a.e, fecha: a.ses.fecha, sesNum: a.sesIdx + 1 }))
-    .sort((a, b) => (Number(b.puntaje)||0) - (Number(a.puntaje)||0));
+    .sort((a, b) => (Number(b.nota)||0) - (Number(a.nota)||0) || (Number(b.puntaje)||0) - (Number(a.puntaje)||0) || (a.tiempo||0) - (b.tiempo||0));
 
   const filas = datos.map((r, i) => ({
     '#':          i + 1,

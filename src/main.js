@@ -616,13 +616,16 @@ function mostrarPregunta() {
     p.opciones.forEach((op, i) => {
       const btn = document.createElement('button');
       if (imgs && imgs[i]) {
-        btn.className = 'opcion-btn opcion-btn-img';
+        btn.className = 'opcion-btn opcion-btn-img opcion-btn-bloqueada';
         btn.innerHTML = `<span class="opcion-letra-badge">${letras[i]}</span><img class="opcion-img" src="${imgs[i]}" alt="${op || 'Opción ' + letras[i]}" />`;
       } else {
-        btn.className = 'opcion-btn';
+        btn.className = 'opcion-btn opcion-btn-bloqueada';
         btn.innerHTML = `<strong>${letras[i]}.</strong> ${op}`;
       }
-      btn.addEventListener('click', () => responder(i));
+      btn.addEventListener('click', () => {
+        if (btn.classList.contains('opcion-btn-bloqueada')) return;
+        responder(i);
+      });
       grid.appendChild(btn);
     });
   } else {
@@ -670,10 +673,10 @@ function procesarRespuesta(esCorrecta) {
   let pts = 0;
   if (esCorrecta) {
     pts = 100;
-    // Bonus de velocidad solo en selección múltiple
+    // Bonus de velocidad solo en selección múltiple — se calcula sobre el 30%
+    // final del tiempo, que es la única ventana en la que ya se puede responder.
     if (tipo === 'seleccion') {
-      const tiempoBase = p?.origen === 'icfes' ? 90 : 60;
-      pts += Math.round((estado.tiempoRestante / tiempoBase) * 50);
+      pts += Math.round((estado.tiempoRestante / estado.tiempoMinimoRespuesta) * 50);
     }
     pts = Math.round(pts * estado.multiplicador);
 
@@ -768,13 +771,17 @@ function iniciarReloj() {
 function reiniciarReloj() {
   detenerReloj();
   const p = estado.preguntas[estado.preguntaActual];
-  estado.tiempoRestante = p?.origen === 'icfes' ? 90 : 60;
+  const tiempoBase = p?.origen === 'icfes' ? 90 : 60;
+  estado.tiempoRestante = tiempoBase;
+  estado.tiempoMinimoRespuesta = Math.ceil(tiempoBase * 0.3);
   actualizarDisplayReloj();
+  actualizarBloqueoOpciones();
   intervaloReloj = setInterval(() => {
     estado.tiempoRestante--;
     estado.tiempoTotal++;
     setTiempoRestante(estado.tiempoRestante);
     actualizarDisplayReloj();
+    actualizarBloqueoOpciones();
     if (estado.tiempoRestante <= 0) {
       detenerReloj();
       const tipoActual = estado.preguntas[estado.preguntaActual]?.tipo || 'seleccion';
@@ -798,6 +805,24 @@ function actualizarDisplayReloj() {
   const el = document.getElementById('reloj');
   el.textContent = estado.tiempoRestante;
   el.parentElement.classList.toggle('reloj-urgente', estado.tiempoRestante <= 10);
+}
+
+// Bloquea las opciones de respuesta hasta que pase el 70% del tiempo de la pregunta
+// (obliga a leer con calma antes de poder contestar). No usa el atributo disabled
+// para no interferir con el selector ":not(:disabled)" del poder catalizador.
+function actualizarBloqueoOpciones() {
+  const bloqueado = estado.tiempoRestante > estado.tiempoMinimoRespuesta;
+  const msg = document.getElementById('bloqueo-respuesta-msg');
+  if (msg) {
+    msg.classList.toggle('oculto', !bloqueado);
+    if (bloqueado) {
+      document.getElementById('bloqueo-respuesta-seg').textContent =
+        estado.tiempoRestante - estado.tiempoMinimoRespuesta;
+    }
+  }
+  document.querySelectorAll('.opcion-btn').forEach(btn => {
+    btn.classList.toggle('opcion-btn-bloqueada', bloqueado);
+  });
 }
 
 // ─── PODERES ───────────────────────────────────────────────────────────────
@@ -967,10 +992,10 @@ function guardarEnRanking(nota) {
     fecha:   new Date().toLocaleDateString('es-CO')
   };
   ranking.push(entrada);
-  // Ordenar: 1° puntaje desc, 2° aciertos desc (sumados), 3° tiempo asc
+  // Ordenar: 1° nota/500 desc (criterio oficial), 2° puntaje de velocidad desc, 3° tiempo asc
   ranking.sort((a, b) =>
-    b.puntaje - a.puntaje ||
     parseFloat(b.nota) - parseFloat(a.nota) ||
+    b.puntaje - a.puntaje ||
     a.tiempo - b.tiempo
   );
   localStorage.setItem('ranking', JSON.stringify(ranking));

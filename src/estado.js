@@ -29,6 +29,7 @@ export const estado = {
   // Tiempo
   tiempoRestante: 30,      // segundos del reloj actual
   tiempoTotal: 0,          // segundos totales usados en el examen
+  tiempoMinimoRespuesta: 0, // umbral (30% del tiempo base) bajo el cual ya se puede responder
 
   // Audio
   volumen: 0.7,
@@ -61,6 +62,7 @@ export function resetearEstado() {
   estado.poderes       = { catalizador: true, reposo: true, isotopo: true };
   estado.tiempoRestante = 30;
   estado.tiempoTotal   = 0;
+  estado.tiempoMinimoRespuesta = 0;
   estado.notaFinal     = 0;
   estado.aciertos      = { ciencias: 0, biologia: 0, fisica: 0, quimica: 0, cts: 0, razonamiento: 0 };
 
