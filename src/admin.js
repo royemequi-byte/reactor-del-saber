@@ -145,6 +145,38 @@ function iniciarAyudas() {
   });
 }
 
+// ─── MOSTRAR PUNTAJE EN PANTALLA DE RESULTADOS ────────────────────────────
+function iniciarMostrarPuntaje() {
+  const btnToggle = document.getElementById('btn-toggle-puntaje');
+  const textoEl   = document.getElementById('puntaje-estado-texto');
+
+  function aplicar(mostrar) {
+    if (mostrar) {
+      btnToggle.textContent      = '🙈 Ocultar puntaje';
+      btnToggle.style.background = '#c0392b';
+      btnToggle.style.color      = '#fff';
+      textoEl.textContent        = '✅ Los estudiantes ven el puntaje al terminar';
+      textoEl.style.color        = '#39ff14';
+    } else {
+      btnToggle.textContent      = '👁️ Mostrar puntaje';
+      btnToggle.style.background = '#27ae60';
+      btnToggle.style.color      = '#fff';
+      textoEl.textContent        = '🔒 Oculto — solo ven la nota /500, sin confusión';
+      textoEl.style.color        = '#ffd600';
+    }
+  }
+
+  onValue(ref(db, 'config/mostrarPuntaje'), snap => {
+    aplicar(snap.val() === true);
+  });
+
+  btnToggle.addEventListener('click', async () => {
+    const snap   = await get(ref(db, 'config/mostrarPuntaje'));
+    const actual = snap.val() === true;
+    await set(ref(db, 'config/mostrarPuntaje'), !actual);
+  });
+}
+
 // ─── CUOTAS POR MATERIA ────────────────────────────────────────────────────
 const MATERIAS_POR_GRADO = {
   8:  ['biologia', 'fisica', 'quimica', 'cts', 'razonamiento'],
@@ -222,6 +254,7 @@ export function adminInicializar() {
   iniciarControlAcceso();
   iniciarMostrarRespuestas();
   iniciarAyudas();
+  iniciarMostrarPuntaje();
   iniciarCuotas();
 
   if (listo) return;

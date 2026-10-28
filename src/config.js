@@ -12,6 +12,7 @@ let cache = {
   habilitado:        false,
   mostrarRespuestas: true,
   ayudasActivas:     true,
+  mostrarPuntaje:    false,
   cuotas:            CUOTAS_DEFAULT,
 };
 
@@ -23,6 +24,7 @@ export async function initConfig() {
       habilitado:        val.habilitado        ?? false,
       mostrarRespuestas: val.mostrarRespuestas  ?? true,
       ayudasActivas:     val.ayudasActivas      ?? true,
+      mostrarPuntaje:    val.mostrarPuntaje     ?? false,
       cuotas:            val.cuotas             ?? CUOTAS_DEFAULT,
     };
   }
@@ -33,6 +35,7 @@ export async function initConfig() {
         habilitado:        val.habilitado        ?? false,
         mostrarRespuestas: val.mostrarRespuestas  ?? true,
         ayudasActivas:     val.ayudasActivas      ?? true,
+        mostrarPuntaje:    val.mostrarPuntaje     ?? false,
         cuotas:            val.cuotas             ?? CUOTAS_DEFAULT,
       };
     }

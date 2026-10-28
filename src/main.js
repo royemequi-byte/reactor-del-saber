@@ -959,6 +959,10 @@ function mostrarResultados(nota) {
   document.getElementById('res-puntaje').textContent = estado.puntaje.toLocaleString('es-CO');
   document.getElementById('res-nota').textContent = nota;
 
+  // El puntaje gamificado queda oculto por defecto (lo controla el admin) para
+  // no confundirlo con la nota /500, que es el criterio oficial.
+  document.querySelector('.puntaje-grande').classList.toggle('oculto', !getConfig().mostrarPuntaje);
+
   const totalExamen2 = estado.preguntas.filter(p => p.materia !== 'razonamiento').length;
   const total = totalExamen2 || getTotalCuotas(estado.estudiante.grado);
   const pctC  = (estado.aciertos.ciencias / total) * 100;
