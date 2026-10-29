@@ -12,6 +12,7 @@ import Chart from 'chart.js/auto';
 import './estilos/indicadores.css';
 
 let listo = false; // evitar listeners duplicados en re-login
+let mostrarPuntajeCache = false; // espejo local de config/mostrarPuntaje, controla la columna Pts en las tablas
 
 // Tipos con estructura propia (pares, secuencia, pistas…) donde los campos
 // opciones/correcta del formulario no aplican. 'simulador' queda fuera:
@@ -167,7 +168,9 @@ function iniciarMostrarPuntaje() {
   }
 
   onValue(ref(db, 'config/mostrarPuntaje'), snap => {
-    aplicar(snap.val() === true);
+    mostrarPuntajeCache = snap.val() === true;
+    aplicar(mostrarPuntajeCache);
+    refrescarVistaActualConPuntaje();
   });
 
   btnToggle.addEventListener('click', async () => {
@@ -424,8 +427,20 @@ function iniciarMonitorTab() {
   if (_monitorActivo) return;
   _monitorActivo = true;
   onValue(ref(db, 'actividad-actual/estudiantes'), snap => {
-    renderizarMonitor(snap.val() || {});
+    _ultimoMonitorObj = snap.val() || {};
+    renderizarMonitor(_ultimoMonitorObj);
   });
+}
+let _ultimoMonitorObj = {};
+
+// Re-dibuja la pestaña de admin que esté abierta (usado cuando cambia mostrarPuntaje)
+function refrescarVistaActualConPuntaje() {
+  const activo = document.querySelector('.admin-tabcontent:not(.oculto)');
+  if (!activo) return;
+  const tab = activo.id.replace('admin-tab-', '');
+  if (tab === 'monitor')    renderizarMonitor(_ultimoMonitorObj);
+  if (tab === 'historial')  renderizarHistorial();
+  if (tab === 'ranking')    renderizarRankingCompleto();
 }
 
 function fmtTiempo(s) {
@@ -471,7 +486,7 @@ function renderizarMonitor(obj) {
         e.estado === 'terminado' ? '✅ Terminó' :
         e.estado === 'jugando'   ? '🎯 En examen' : '⏳ Inscrito'
       }</span></td>
-      <td>${conRanking && e.puntaje != null ? Number(e.puntaje).toLocaleString('es-CO') : '—'}</td>
+      ${mostrarPuntajeCache ? `<td>${conRanking && e.puntaje != null ? Number(e.puntaje).toLocaleString('es-CO') : '—'}</td>` : ''}
       <td>${conRanking && e.nota    != null ? e.nota + '/500' : '—'}</td>
       <td>${conRanking ? fmtTiempo(e.tiempo) : '—'}</td>
     </tr>`;
@@ -494,7 +509,7 @@ function renderizarMonitor(obj) {
         <table class="ranking-tabla">
           <thead><tr>
             <th>#</th><th>Nombre</th><th>Avatar</th>
-            <th>Estado</th><th>Pts</th><th>Nota</th><th>Tiempo</th>
+            <th>Estado</th>${mostrarPuntajeCache ? '<th>Pts</th>' : ''}<th>Nota</th><th>Tiempo</th>
           </tr></thead>
           <tbody>
             ${term.map((e, i) => fila(e, i, true)).join('')}
@@ -637,7 +652,7 @@ function renderDetalleAct(act) {
       <tr class="${css[i] ?? ''}">
         <td>${meds[i] ?? i + 1}</td>
         <td>${e.nombre}</td><td>${e.avatar}</td>
-        <td>${Number(e.puntaje || 0).toLocaleString('es-CO')}</td>
+        ${mostrarPuntajeCache ? `<td>${Number(e.puntaje || 0).toLocaleString('es-CO')}</td>` : ''}
         <td>${e.nota}/500</td><td>${fmtTiempo(e.tiempo)}</td>
       </tr>`).join('');
     return `
@@ -647,7 +662,7 @@ function renderDetalleAct(act) {
           <span style="font-size:0.78rem;color:#8ab;font-weight:400;margin-left:10px">${sorted.length} estudiantes</span>
         </div>
         <table class="ranking-tabla">
-          <thead><tr><th>#</th><th>Nombre</th><th>Avatar</th><th>Pts</th><th>Nota</th><th>Tiempo</th></tr></thead>
+          <thead><tr><th>#</th><th>Nombre</th><th>Avatar</th>${mostrarPuntajeCache ? '<th>Pts</th>' : ''}<th>Nota</th><th>Tiempo</th></tr></thead>
           <tbody>${filas}</tbody>
         </table>
       </div>`;
@@ -1867,7 +1882,7 @@ function _rkGeneral(soloUno, sesiones, cont) {
         <td>${r.avatar}</td>
         <td style="font-size:0.78rem;max-width:160px">${r.colegio||'—'}</td>
         <td>${r.grado}°</td><td>${normalizarCurso(r.grado, r.curso)||r.curso}</td>
-        <td style="color:#ffd600;font-weight:700">${Number(r.puntaje).toLocaleString('es-CO')}</td>
+        ${mostrarPuntajeCache ? `<td style="color:#ffd600;font-weight:700">${Number(r.puntaje).toLocaleString('es-CO')}</td>` : ''}
         <td style="color:#39ff14">${r.nota}/500</td>
         <td style="color:#8ab">${fmtT(r.tiempo)}</td>
         <td style="color:#6b7280;font-size:0.78rem">S${r.sesNum} · ${r.fecha||'—'}</td>
@@ -1878,7 +1893,7 @@ function _rkGeneral(soloUno, sesiones, cont) {
       <div style="overflow-x:auto">
         <table class="ranking-tabla" style="width:100%;font-size:0.88rem">
           <thead><tr><th>#</th><th>Nombre</th><th>Apodo</th><th>Institución</th>
-            <th>Grado</th><th>Curso</th><th>Puntaje</th><th>Nota</th><th>Tiempo</th><th>Sesión · Fecha</th></tr></thead>
+            <th>Grado</th><th>Curso</th>${mostrarPuntajeCache ? '<th>Puntaje</th>' : ''}<th>Nota</th><th>Tiempo</th><th>Sesión · Fecha</th></tr></thead>
           <tbody>${filas||'<tr><td colspan="10" style="text-align:center;color:#8ab;padding:20px">Sin resultados</td></tr>'}</tbody>
         </table>
       </div>`;
@@ -1975,7 +1990,7 @@ function _rkPorSesion(soloUno, sesiones, cont) {
         <td style="font-size:0.78rem;max-width:160px">${r.colegio||'—'}</td>
         <td>${r.grado}°</td>
         <td>${normalizarCurso(r.grado, r.curso)||r.curso}</td>
-        <td style="color:#ffd600;font-weight:700">${Number(r.puntaje).toLocaleString('es-CO')}</td>
+        ${mostrarPuntajeCache ? `<td style="color:#ffd600;font-weight:700">${Number(r.puntaje).toLocaleString('es-CO')}</td>` : ''}
         <td style="color:#39ff14">${r.nota}/500</td>
         <td style="color:#8ab">${fmtT(r.tiempo)}</td>
         <td style="color:#6b7280;font-size:0.78rem">S${r.sesNum} · ${r.fecha||'—'}</td>
@@ -1987,7 +2002,7 @@ function _rkPorSesion(soloUno, sesiones, cont) {
         <table class="ranking-tabla" style="width:100%;font-size:0.88rem">
           <thead>
             <tr><th>#</th><th>Nombre</th><th>Apodo</th><th>Institución</th>
-                <th>Grado</th><th>Curso</th><th>Puntaje</th><th>Nota</th>
+                <th>Grado</th><th>Curso</th>${mostrarPuntajeCache ? '<th>Puntaje</th>' : ''}<th>Nota</th>
                 <th>Tiempo</th><th>Sesión · Fecha</th></tr>
           </thead>
           <tbody>${filas||'<tr><td colspan="10" style="text-align:center;color:#8ab;padding:20px">Sin resultados con estos filtros</td></tr>'}</tbody>
