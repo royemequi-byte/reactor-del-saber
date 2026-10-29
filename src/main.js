@@ -1187,7 +1187,7 @@ document.getElementById('btn-admin-entrar').addEventListener('click', async () =
 document.getElementById('btn-admin-salir').addEventListener('click', () => irA('pantalla-portada'));
 
 const ADMIN_USER = 'admin';
-const ADMIN_HASH = '31e99cad92af26174febd9dae33f155187521845fe00b294824909150afee575'; // iti2026
+const ADMIN_HASH = 'b05c3890064e1925ddffae3669d9c42fbf9a61099ca60193bfdfcb75f1ec1401'; // hash SHA-256 de la contraseña
 
 async function verificarAdmin(user, pass) {
   if (user.toLowerCase() !== ADMIN_USER) return false;
