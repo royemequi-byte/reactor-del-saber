@@ -2205,6 +2205,7 @@ async function _rkRecuperar(cont) {
     .map(([key, val]) => ({ key, ...val }))
     .sort((a, b) => a.timestamp - b.timestamp);
 
+  // Identificar problemas (grado=0 o curso=sin-identificar)
   const problemas = [];
   sesiones.forEach((ses, idx) => {
     Object.entries(ses.estudiantes || {}).forEach(([uid, e]) => {
@@ -2219,60 +2220,112 @@ async function _rkRecuperar(cont) {
     return;
   }
 
+  // Construir lista de candidatos: estudiantes de sesiones anteriores que no aparecen
+  // como identificados en la sesión problemática (misma sesKey).
+  // Agrupa por sesión problemática para manejar múltiples sesiones con sin-identificar.
+  const sesionesSinId = [...new Set(problemas.map(p => p.sesKey))];
+  const candidatosPorSes = {}; // sesKey → [{ nombre, grado, curso, colegio }]
+
+  sesionesSinId.forEach(sesKey => {
+    const idxSes = sesiones.findIndex(s => s.key === sesKey);
+    // Nombres ya identificados en esa sesión
+    const yaIdent = new Set(
+      Object.values(sesiones[idxSes]?.estudiantes || {})
+        .filter(e => e.grado !== 0 && e.grado && e.curso !== 'sin-identificar' && e.nombre)
+        .map(e => e.nombre.toLowerCase().trim())
+    );
+    // Buscar en TODAS las sesiones anteriores + la sesión inmediata anterior (p.ej. S11)
+    const pool = {};
+    sesiones.slice(0, idxSes).forEach(ses => {
+      Object.values(ses.estudiantes || {}).forEach(e => {
+        if (!e.nombre || !e.grado || !e.curso) return;
+        const key = e.nombre.toLowerCase().trim();
+        if (!yaIdent.has(key) && !pool[key]) {
+          pool[key] = { nombre: e.nombre, grado: e.grado, curso: e.curso, colegio: e.colegio || '' };
+        }
+      });
+    });
+    candidatosPorSes[sesKey] = Object.values(pool).sort((a, b) => a.nombre.localeCompare(b.nombre));
+  });
+
   const fmtT = t => t ? Math.floor(t / 60) + 'm ' + String(t % 60).padStart(2, '0') + 's' : '—';
 
+  // Ordenar problemas por nota desc para facilitar identificación
+  problemas.sort((a, b) => (b.e.nota || 0) - (a.e.nota || 0));
+
   cont.innerHTML = `
-    <div style="background:#1a1100;border:1px solid #ff9f1c55;border-radius:10px;padding:14px 18px;margin-bottom:20px">
-      <h3 style="color:#ff9f1c;font-size:1.05rem;margin:0 0 6px">🔧 Recuperar identificaciones — ${problemas.length} registro${problemas.length !== 1 ? 's' : ''}</h3>
+    <div style="background:#1a1100;border:1px solid #ff9f1c55;border-radius:10px;padding:14px 18px;margin-bottom:16px">
+      <h3 style="color:#ff9f1c;font-size:1.05rem;margin:0 0 5px">🔧 Recuperar identificaciones — ${problemas.length} registro${problemas.length !== 1 ? 's' : ''}</h3>
       <p style="color:#8ab;font-size:0.82rem;margin:0">
-        Los resultados del examen están intactos. Completa nombre, grado y curso para cada estudiante y presiona 💾.
-        El <em>grado inferido</em> se deduce del patrón de aciertos (quimica alta → Grado 10; biologia alta → Grado 8/9).
+        Resultados intactos. Usa los chips de candidatos para auto-rellenar, o escribe manualmente.
+        El grado se infiere de aciertos: <strong>quimica &gt; 4 → G10</strong> · <strong>biologia &gt; 6 → G8/9</strong>.
+        Pregunta a cada estudiante su <strong>nota /500</strong> para identificarlos.
       </p>
     </div>
     ${problemas.map((p, i) => {
       const ac = p.e.aciertos || {};
       const inferGrado = ac.quimica > 4 ? 10 : (ac.biologia > 6 ? '8/9' : '?');
+      const inferNum   = ac.quimica > 4 ? 10 : 0;
+      const candidatos = (candidatosPorSes[p.sesKey] || []).filter(c => {
+        if (inferNum === 10) return c.grado === 10;
+        if (inferNum === 0 && ac.biologia > 6) return c.grado === 8 || c.grado === 9;
+        return true;
+      });
+      const chipsHTML = candidatos.length
+        ? `<div style="margin-top:8px">
+            <div style="font-size:0.7rem;color:#6b7280;margin-bottom:4px;text-transform:uppercase;letter-spacing:.06em">Candidatos sesiones anteriores (clic → auto-rellenar)</div>
+            <div style="display:flex;flex-wrap:wrap;gap:5px">
+              ${candidatos.map(c =>
+                `<button onclick="window._recFill(${i},${JSON.stringify(c).replace(/"/g,'&quot;')})"
+                  style="background:#1a2a1e;border:1px solid #2d5a3a;color:#8ff4a8;border-radius:20px;padding:3px 10px;font-size:0.73rem;cursor:pointer;white-space:nowrap">
+                  ${c.nombre} · ${c.grado}°${c.curso}
+                </button>`
+              ).join('')}
+            </div>
+          </div>`
+        : '';
       return `
         <div id="rec-card-${i}" style="background:#0d1117;border:1px solid #2a2a4a;border-radius:10px;padding:14px;margin-bottom:10px;transition:opacity .3s">
-          <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:flex-start">
+          <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:flex-start">
             <div style="flex:1;min-width:200px">
-              <div style="color:#ffd600;font-weight:700;font-size:0.9rem">
+              <div style="font-size:0.82rem;font-weight:700;color:#ffd600">
                 S${p.sesNum} · ${p.fecha} · <span style="color:#ff9f1c">${p.e.nombre}</span>
               </div>
-              <div style="color:#8ab;font-size:0.78rem;margin:4px 0">
-                Nota: <strong style="color:#39ff14">${p.e.nota}/500</strong> &nbsp;·&nbsp;
-                Pts: <strong style="color:#ffd600">${Number(p.e.puntaje).toLocaleString('es-CO')}</strong> &nbsp;·&nbsp;
-                Tiempo: <strong style="color:#fff">${fmtT(p.e.tiempo)}</strong>
+              <div style="color:#8ab;font-size:0.78rem;margin:3px 0">
+                Nota: <strong style="color:#39ff14;font-size:1rem">${p.e.nota}/500</strong> &nbsp;·&nbsp;
+                Tiempo: <strong style="color:#fff">${fmtT(p.e.tiempo)}</strong> &nbsp;·&nbsp;
+                Pts: <strong style="color:#ffd600">${Number(p.e.puntaje).toLocaleString('es-CO')}</strong>
               </div>
-              <div style="color:#8ab;font-size:0.75rem">
-                🌿Bio:${ac.biologia || 0} &nbsp;⚡Fis:${ac.fisica || 0} &nbsp;⚗️Qui:${ac.quimica || 0} &nbsp;📋CTS:${ac.cts || 0} &nbsp;🧠Rzn:${ac.razonamiento || 0}
-                &nbsp;→&nbsp; <span style="color:#ff9f1c">Grado inferido: <strong>${inferGrado}</strong></span>
+              <div style="color:#8ab;font-size:0.74rem">
+                🌿${ac.biologia||0} ⚡${ac.fisica||0} ⚗️${ac.quimica||0} 📋${ac.cts||0} 🧠${ac.razonamiento||0}
+                &nbsp;→&nbsp;<span style="color:#ff9f1c">G.inferido: <strong>${inferGrado}</strong></span>
               </div>
+              ${chipsHTML}
             </div>
-            <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end">
+            <div style="display:flex;gap:7px;flex-wrap:wrap;align-items:flex-end;flex-shrink:0">
               <div>
-                <div style="font-size:0.72rem;color:#8ab;margin-bottom:3px">Nombre completo</div>
+                <div style="font-size:0.7rem;color:#8ab;margin-bottom:2px">Nombre</div>
                 <input id="rec-nom-${i}" type="text" placeholder="Apellido Nombre"
-                  style="background:#1a1a2e;border:1px solid #334;color:#e8e8f0;border-radius:5px;padding:5px 9px;width:200px;font-size:0.85rem">
+                  style="background:#1a1a2e;border:1px solid #334;color:#e8e8f0;border-radius:5px;padding:4px 8px;width:190px;font-size:0.83rem">
               </div>
               <div>
-                <div style="font-size:0.72rem;color:#8ab;margin-bottom:3px">Grado</div>
-                <select id="rec-grd-${i}" style="background:#1a1a2e;border:1px solid #334;color:#e8e8f0;border-radius:5px;padding:5px 8px;font-size:0.85rem">
+                <div style="font-size:0.7rem;color:#8ab;margin-bottom:2px">Grado</div>
+                <select id="rec-grd-${i}" style="background:#1a1a2e;border:1px solid #334;color:#e8e8f0;border-radius:5px;padding:4px 7px;font-size:0.83rem">
                   <option value="">—</option>
                   <option value="8">8°</option>
                   <option value="9">9°</option>
-                  <option value="10"${inferGrado === 10 ? ' selected' : ''}>10°</option>
+                  <option value="10"${inferNum === 10 ? ' selected' : ''}>10°</option>
                 </select>
               </div>
               <div>
-                <div style="font-size:0.72rem;color:#8ab;margin-bottom:3px">Curso</div>
-                <select id="rec-cur-${i}" style="background:#1a1a2e;border:1px solid #334;color:#e8e8f0;border-radius:5px;padding:5px 8px;font-size:0.85rem">
+                <div style="font-size:0.7rem;color:#8ab;margin-bottom:2px">Curso</div>
+                <select id="rec-cur-${i}" style="background:#1a1a2e;border:1px solid #334;color:#e8e8f0;border-radius:5px;padding:4px 7px;font-size:0.83rem">
                   <option value="">— elige grado —</option>
                 </select>
               </div>
               <button onclick="window._recGuardar(${i},'${p.sesKey}','${p.uid}')"
                 id="rec-btn-${i}"
-                style="background:#27ae60;color:#fff;border:none;border-radius:6px;padding:6px 14px;cursor:pointer;font-size:0.85rem;white-space:nowrap">
+                style="background:#27ae60;color:#fff;border:none;border-radius:6px;padding:5px 12px;cursor:pointer;font-size:0.83rem;white-space:nowrap">
                 💾 Guardar
               </button>
             </div>
@@ -2294,6 +2347,17 @@ async function _rkRecuperar(cont) {
     grdEl.addEventListener('change', actualizarCursosRec);
     if (grdEl.value) actualizarCursosRec();
   });
+
+  // Auto-rellenar al clicar un chip de candidato
+  window._recFill = (i, c) => {
+    const nomEl = document.getElementById('rec-nom-' + i);
+    const grdEl = document.getElementById('rec-grd-' + i);
+    const curEl = document.getElementById('rec-cur-' + i);
+    if (nomEl) nomEl.value = c.nombre;
+    if (grdEl) { grdEl.value = c.grado; grdEl.dispatchEvent(new Event('change')); }
+    // Esperar un tick para que se pueble el select de curso, luego seleccionar
+    setTimeout(() => { if (curEl) curEl.value = c.curso; }, 50);
+  };
 
   window._recGuardar = async (i, sesKey, uid) => {
     const nombre = document.getElementById('rec-nom-' + i)?.value.trim();
