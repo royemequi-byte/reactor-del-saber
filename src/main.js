@@ -924,12 +924,18 @@ function finalizarExamen() {
   }).catch(() => {});
 
   if (sala.monitorUid) {
+    const base = `actividad-actual/estudiantes/${sala.monitorUid}`;
     update(ref(db), {
-      [`actividad-actual/estudiantes/${sala.monitorUid}/estado`]:   'terminado',
-      [`actividad-actual/estudiantes/${sala.monitorUid}/puntaje`]:  estado.puntaje,
-      [`actividad-actual/estudiantes/${sala.monitorUid}/nota`]:     nota,
-      [`actividad-actual/estudiantes/${sala.monitorUid}/aciertos`]: { ...estado.aciertos },
-      [`actividad-actual/estudiantes/${sala.monitorUid}/tiempo`]:   estado.tiempoTotal,
+      [`${base}/nombre`]:   estado.estudiante.nombre,
+      [`${base}/grado`]:    estado.estudiante.grado,
+      [`${base}/curso`]:    estado.estudiante.curso,
+      [`${base}/colegio`]:  estado.estudiante.colegio || '',
+      [`${base}/avatar`]:   estado.estudiante.avatar,
+      [`${base}/estado`]:   'terminado',
+      [`${base}/puntaje`]:  estado.puntaje,
+      [`${base}/nota`]:     nota,
+      [`${base}/aciertos`]: { ...estado.aciertos },
+      [`${base}/tiempo`]:   estado.tiempoTotal,
     }).catch(() => {});
   }
   const ranking = JSON.parse(localStorage.getItem('ranking') || '[]');
