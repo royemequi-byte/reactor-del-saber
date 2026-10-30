@@ -435,7 +435,10 @@ document.getElementById('form-registro').addEventListener('submit', async (e) =>
   const curso    = document.getElementById('inp-curso').value.trim();
   const avatar   = inpAvatar.value.trim().toUpperCase();
 
-  if (!avatar) { alert('Por favor escribe tu apodo de científico ⚗️'); return; }
+  if (!nombre)          { alert('Por favor escribe tu nombre completo.'); return; }
+  if (!grado || isNaN(grado)) { alert('Por favor selecciona tu grado.'); return; }
+  if (!curso)           { alert('Por favor selecciona tu curso.'); return; }
+  if (!avatar)          { alert('Por favor escribe tu apodo de científico ⚗️'); return; }
 
   // Bloquear segundo intento — localStorage (rápido) + Firebase (antifraude)
   const errYaParticipo = document.getElementById('error-ya-participo');

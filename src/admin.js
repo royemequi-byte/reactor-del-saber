@@ -1797,6 +1797,7 @@ function _rkRenderTab(tab, { sesiones, soloUno, multiples }, cont) {
   if (tab === 'general')     _rkGeneral(soloUno, sesiones, cont);
   if (tab === 'sesion')      _rkPorSesion(soloUno, sesiones, cont);
   if (tab === 'irregulares') _rkIrregulares(multiples, cont);
+  if (tab === 'recuperar')   _rkRecuperar(cont);
 }
 
 // Normaliza variantes libres de curso al formato canónico: "801", "902", "1001"
@@ -2193,6 +2194,129 @@ window._irrToggle = function(tr, detId) {
   det.style.display = visible ? 'none' : 'table-row';
   if (arr) arr.textContent = visible ? '▶' : '▼';
 };
+
+// ── Recuperar sin identificar ───────────────────────────────────────────────
+async function _rkRecuperar(cont) {
+  cont.innerHTML = '<p class="admin-vacio">⏳ Buscando registros sin identificar…</p>';
+  const snap = await get(ref(db, 'historial'));
+  if (!snap.exists()) { cont.innerHTML = '<p class="admin-vacio">Sin historial.</p>'; return; }
+
+  const sesiones = Object.entries(snap.val())
+    .map(([key, val]) => ({ key, ...val }))
+    .sort((a, b) => a.timestamp - b.timestamp);
+
+  const problemas = [];
+  sesiones.forEach((ses, idx) => {
+    Object.entries(ses.estudiantes || {}).forEach(([uid, e]) => {
+      if (e.estado === 'terminado' && (e.grado === 0 || !e.grado || e.curso === 'sin-identificar')) {
+        problemas.push({ sesKey: ses.key, uid, e, sesNum: idx + 1, fecha: ses.fecha });
+      }
+    });
+  });
+
+  if (!problemas.length) {
+    cont.innerHTML = '<p style="color:#39ff14;padding:20px;text-align:center">✅ No hay registros sin identificar. ¡Todo en orden!</p>';
+    return;
+  }
+
+  const fmtT = t => t ? Math.floor(t / 60) + 'm ' + String(t % 60).padStart(2, '0') + 's' : '—';
+
+  cont.innerHTML = `
+    <div style="background:#1a1100;border:1px solid #ff9f1c55;border-radius:10px;padding:14px 18px;margin-bottom:20px">
+      <h3 style="color:#ff9f1c;font-size:1.05rem;margin:0 0 6px">🔧 Recuperar identificaciones — ${problemas.length} registro${problemas.length !== 1 ? 's' : ''}</h3>
+      <p style="color:#8ab;font-size:0.82rem;margin:0">
+        Los resultados del examen están intactos. Completa nombre, grado y curso para cada estudiante y presiona 💾.
+        El <em>grado inferido</em> se deduce del patrón de aciertos (quimica alta → Grado 10; biologia alta → Grado 8/9).
+      </p>
+    </div>
+    ${problemas.map((p, i) => {
+      const ac = p.e.aciertos || {};
+      const inferGrado = ac.quimica > 4 ? 10 : (ac.biologia > 6 ? '8/9' : '?');
+      return `
+        <div id="rec-card-${i}" style="background:#0d1117;border:1px solid #2a2a4a;border-radius:10px;padding:14px;margin-bottom:10px;transition:opacity .3s">
+          <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:flex-start">
+            <div style="flex:1;min-width:200px">
+              <div style="color:#ffd600;font-weight:700;font-size:0.9rem">
+                S${p.sesNum} · ${p.fecha} · <span style="color:#ff9f1c">${p.e.nombre}</span>
+              </div>
+              <div style="color:#8ab;font-size:0.78rem;margin:4px 0">
+                Nota: <strong style="color:#39ff14">${p.e.nota}/500</strong> &nbsp;·&nbsp;
+                Pts: <strong style="color:#ffd600">${Number(p.e.puntaje).toLocaleString('es-CO')}</strong> &nbsp;·&nbsp;
+                Tiempo: <strong style="color:#fff">${fmtT(p.e.tiempo)}</strong>
+              </div>
+              <div style="color:#8ab;font-size:0.75rem">
+                🌿Bio:${ac.biologia || 0} &nbsp;⚡Fis:${ac.fisica || 0} &nbsp;⚗️Qui:${ac.quimica || 0} &nbsp;📋CTS:${ac.cts || 0} &nbsp;🧠Rzn:${ac.razonamiento || 0}
+                &nbsp;→&nbsp; <span style="color:#ff9f1c">Grado inferido: <strong>${inferGrado}</strong></span>
+              </div>
+            </div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end">
+              <div>
+                <div style="font-size:0.72rem;color:#8ab;margin-bottom:3px">Nombre completo</div>
+                <input id="rec-nom-${i}" type="text" placeholder="Apellido Nombre"
+                  style="background:#1a1a2e;border:1px solid #334;color:#e8e8f0;border-radius:5px;padding:5px 9px;width:200px;font-size:0.85rem">
+              </div>
+              <div>
+                <div style="font-size:0.72rem;color:#8ab;margin-bottom:3px">Grado</div>
+                <select id="rec-grd-${i}" style="background:#1a1a2e;border:1px solid #334;color:#e8e8f0;border-radius:5px;padding:5px 8px;font-size:0.85rem">
+                  <option value="">—</option>
+                  <option value="8">8°</option>
+                  <option value="9">9°</option>
+                  <option value="10"${inferGrado === 10 ? ' selected' : ''}>10°</option>
+                </select>
+              </div>
+              <div>
+                <div style="font-size:0.72rem;color:#8ab;margin-bottom:3px">Curso</div>
+                <select id="rec-cur-${i}" style="background:#1a1a2e;border:1px solid #334;color:#e8e8f0;border-radius:5px;padding:5px 8px;font-size:0.85rem">
+                  <option value="">— elige grado —</option>
+                </select>
+              </div>
+              <button onclick="window._recGuardar(${i},'${p.sesKey}','${p.uid}')"
+                id="rec-btn-${i}"
+                style="background:#27ae60;color:#fff;border:none;border-radius:6px;padding:6px 14px;cursor:pointer;font-size:0.85rem;white-space:nowrap">
+                💾 Guardar
+              </button>
+            </div>
+          </div>
+        </div>`;
+    }).join('')}`;
+
+  // Wiring: actualizar opciones de curso al cambiar grado
+  problemas.forEach((_, i) => {
+    const grdEl = document.getElementById('rec-grd-' + i);
+    const curEl = document.getElementById('rec-cur-' + i);
+    function actualizarCursosRec() {
+      const g = parseInt(grdEl.value);
+      if (!g) { curEl.innerHTML = '<option value="">— elige grado —</option>'; return; }
+      const base = g === 10 ? 1001 : g === 9 ? 901 : 801;
+      curEl.innerHTML = '<option value="">— curso —</option>' +
+        [1,2,3,4,5,6,7,8].map(n => `<option value="${base + n - 1}">${base + n - 1}</option>`).join('');
+    }
+    grdEl.addEventListener('change', actualizarCursosRec);
+    if (grdEl.value) actualizarCursosRec();
+  });
+
+  window._recGuardar = async (i, sesKey, uid) => {
+    const nombre = document.getElementById('rec-nom-' + i)?.value.trim();
+    const grado  = parseInt(document.getElementById('rec-grd-' + i)?.value);
+    const curso  = document.getElementById('rec-cur-' + i)?.value;
+    if (!nombre) { alert('Escribe el nombre del estudiante.'); return; }
+    if (!grado)  { alert('Selecciona el grado.'); return; }
+    if (!curso)  { alert('Selecciona el curso.'); return; }
+    const btn = document.getElementById('rec-btn-' + i);
+    if (btn) { btn.disabled = true; btn.textContent = '⏳ Guardando…'; }
+    try {
+      await update(ref(db, `historial/${sesKey}/estudiantes/${uid}`), {
+        nombre, grado, curso, colegio: 'I.E.M Instituto Técnico Industrial', avatar: '🔧',
+      });
+      const card = document.getElementById('rec-card-' + i);
+      if (card) { card.style.opacity = '0.45'; card.style.border = '1px solid #27ae6088'; }
+      if (btn)  { btn.textContent = '✅ Guardado'; btn.style.background = '#1a6e38'; }
+    } catch (err) {
+      if (btn) { btn.disabled = false; btn.textContent = '💾 Guardar'; }
+      alert('Error al guardar: ' + err.message);
+    }
+  };
+}
 
 // ─── BLOQUEADOS ────────────────────────────────────────────────────────────
 async function renderizarBloqueados() {
