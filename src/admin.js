@@ -1797,6 +1797,7 @@ function _rkRenderTab(tab, { sesiones, soloUno, multiples }, cont) {
   if (tab === 'general')     _rkGeneral(soloUno, sesiones, cont);
   if (tab === 'sesion')      _rkPorSesion(soloUno, sesiones, cont);
   if (tab === 'irregulares') _rkIrregulares(multiples, cont);
+  if (tab === 'recuperar')   _rkRecuperar(cont);
 }
 
 // Normaliza variantes libres de curso al formato canónico: "801", "902", "1001"
@@ -2193,6 +2194,193 @@ window._irrToggle = function(tr, detId) {
   det.style.display = visible ? 'none' : 'table-row';
   if (arr) arr.textContent = visible ? '▶' : '▼';
 };
+
+// ── Recuperar sin identificar ───────────────────────────────────────────────
+async function _rkRecuperar(cont) {
+  cont.innerHTML = '<p class="admin-vacio">⏳ Buscando registros sin identificar…</p>';
+  const snap = await get(ref(db, 'historial'));
+  if (!snap.exists()) { cont.innerHTML = '<p class="admin-vacio">Sin historial.</p>'; return; }
+
+  const sesiones = Object.entries(snap.val())
+    .map(([key, val]) => ({ key, ...val }))
+    .sort((a, b) => a.timestamp - b.timestamp);
+
+  // Identificar problemas (grado=0 o curso=sin-identificar)
+  const problemas = [];
+  sesiones.forEach((ses, idx) => {
+    Object.entries(ses.estudiantes || {}).forEach(([uid, e]) => {
+      if (e.estado === 'terminado' && (e.grado === 0 || !e.grado || e.curso === 'sin-identificar')) {
+        problemas.push({ sesKey: ses.key, uid, e, sesNum: idx + 1, fecha: ses.fecha });
+      }
+    });
+  });
+
+  if (!problemas.length) {
+    cont.innerHTML = '<p style="color:#39ff14;padding:20px;text-align:center">✅ No hay registros sin identificar. ¡Todo en orden!</p>';
+    return;
+  }
+
+  // Construir lista de candidatos: estudiantes de sesiones anteriores que no aparecen
+  // como identificados en la sesión problemática (misma sesKey).
+  // Agrupa por sesión problemática para manejar múltiples sesiones con sin-identificar.
+  const sesionesSinId = [...new Set(problemas.map(p => p.sesKey))];
+  const candidatosPorSes = {}; // sesKey → [{ nombre, grado, curso, colegio }]
+
+  sesionesSinId.forEach(sesKey => {
+    const idxSes = sesiones.findIndex(s => s.key === sesKey);
+    // Nombres ya identificados en esa sesión
+    const yaIdent = new Set(
+      Object.values(sesiones[idxSes]?.estudiantes || {})
+        .filter(e => e.grado !== 0 && e.grado && e.curso !== 'sin-identificar' && e.nombre)
+        .map(e => e.nombre.toLowerCase().trim())
+    );
+    // Buscar en TODAS las sesiones anteriores + la sesión inmediata anterior (p.ej. S11)
+    const pool = {};
+    sesiones.slice(0, idxSes).forEach(ses => {
+      Object.values(ses.estudiantes || {}).forEach(e => {
+        if (!e.nombre || !e.grado || !e.curso) return;
+        const key = e.nombre.toLowerCase().trim();
+        if (!yaIdent.has(key) && !pool[key]) {
+          pool[key] = { nombre: e.nombre, grado: e.grado, curso: e.curso, colegio: e.colegio || '' };
+        }
+      });
+    });
+    candidatosPorSes[sesKey] = Object.values(pool).sort((a, b) => a.nombre.localeCompare(b.nombre));
+  });
+
+  const fmtT = t => t ? Math.floor(t / 60) + 'm ' + String(t % 60).padStart(2, '0') + 's' : '—';
+
+  // Ordenar problemas por nota desc para facilitar identificación
+  problemas.sort((a, b) => (b.e.nota || 0) - (a.e.nota || 0));
+
+  cont.innerHTML = `
+    <div style="background:#1a1100;border:1px solid #ff9f1c55;border-radius:10px;padding:14px 18px;margin-bottom:16px">
+      <h3 style="color:#ff9f1c;font-size:1.05rem;margin:0 0 5px">🔧 Recuperar identificaciones — ${problemas.length} registro${problemas.length !== 1 ? 's' : ''}</h3>
+      <p style="color:#8ab;font-size:0.82rem;margin:0">
+        Resultados intactos. Usa los chips de candidatos para auto-rellenar, o escribe manualmente.
+        El grado se infiere de aciertos: <strong>quimica &gt; 4 → G10</strong> · <strong>biologia &gt; 6 → G8/9</strong>.
+        Pregunta a cada estudiante su <strong>nota /500</strong> para identificarlos.
+      </p>
+    </div>
+    ${problemas.map((p, i) => {
+      const ac = p.e.aciertos || {};
+      const inferGrado = ac.quimica > 4 ? 10 : (ac.biologia > 6 ? '8/9' : '?');
+      const inferNum   = ac.quimica > 4 ? 10 : 0;
+      const candidatos = (candidatosPorSes[p.sesKey] || []).filter(c => {
+        if (inferNum === 10) return c.grado === 10;
+        if (inferNum === 0 && ac.biologia > 6) return c.grado === 8 || c.grado === 9;
+        return true;
+      });
+      const chipsHTML = candidatos.length
+        ? `<div style="margin-top:8px">
+            <div style="font-size:0.7rem;color:#6b7280;margin-bottom:4px;text-transform:uppercase;letter-spacing:.06em">Candidatos sesiones anteriores (clic → auto-rellenar)</div>
+            <div style="display:flex;flex-wrap:wrap;gap:5px">
+              ${candidatos.map(c =>
+                `<button onclick="window._recFill(${i},${JSON.stringify(c).replace(/"/g,'&quot;')})"
+                  style="background:#1a2a1e;border:1px solid #2d5a3a;color:#8ff4a8;border-radius:20px;padding:3px 10px;font-size:0.73rem;cursor:pointer;white-space:nowrap">
+                  ${c.nombre} · ${c.grado}°${c.curso}
+                </button>`
+              ).join('')}
+            </div>
+          </div>`
+        : '';
+      return `
+        <div id="rec-card-${i}" style="background:#0d1117;border:1px solid #2a2a4a;border-radius:10px;padding:14px;margin-bottom:10px;transition:opacity .3s">
+          <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:flex-start">
+            <div style="flex:1;min-width:200px">
+              <div style="font-size:0.82rem;font-weight:700;color:#ffd600">
+                S${p.sesNum} · ${p.fecha} · <span style="color:#ff9f1c">${p.e.nombre}</span>
+              </div>
+              <div style="color:#8ab;font-size:0.78rem;margin:3px 0">
+                Nota: <strong style="color:#39ff14;font-size:1rem">${p.e.nota}/500</strong> &nbsp;·&nbsp;
+                Tiempo: <strong style="color:#fff">${fmtT(p.e.tiempo)}</strong> &nbsp;·&nbsp;
+                Pts: <strong style="color:#ffd600">${Number(p.e.puntaje).toLocaleString('es-CO')}</strong>
+              </div>
+              <div style="color:#8ab;font-size:0.74rem">
+                🌿${ac.biologia||0} ⚡${ac.fisica||0} ⚗️${ac.quimica||0} 📋${ac.cts||0} 🧠${ac.razonamiento||0}
+                &nbsp;→&nbsp;<span style="color:#ff9f1c">G.inferido: <strong>${inferGrado}</strong></span>
+              </div>
+              ${chipsHTML}
+            </div>
+            <div style="display:flex;gap:7px;flex-wrap:wrap;align-items:flex-end;flex-shrink:0">
+              <div>
+                <div style="font-size:0.7rem;color:#8ab;margin-bottom:2px">Nombre</div>
+                <input id="rec-nom-${i}" type="text" placeholder="Apellido Nombre"
+                  style="background:#1a1a2e;border:1px solid #334;color:#e8e8f0;border-radius:5px;padding:4px 8px;width:190px;font-size:0.83rem">
+              </div>
+              <div>
+                <div style="font-size:0.7rem;color:#8ab;margin-bottom:2px">Grado</div>
+                <select id="rec-grd-${i}" style="background:#1a1a2e;border:1px solid #334;color:#e8e8f0;border-radius:5px;padding:4px 7px;font-size:0.83rem">
+                  <option value="">—</option>
+                  <option value="8">8°</option>
+                  <option value="9">9°</option>
+                  <option value="10"${inferNum === 10 ? ' selected' : ''}>10°</option>
+                </select>
+              </div>
+              <div>
+                <div style="font-size:0.7rem;color:#8ab;margin-bottom:2px">Curso</div>
+                <select id="rec-cur-${i}" style="background:#1a1a2e;border:1px solid #334;color:#e8e8f0;border-radius:5px;padding:4px 7px;font-size:0.83rem">
+                  <option value="">— elige grado —</option>
+                </select>
+              </div>
+              <button onclick="window._recGuardar(${i},'${p.sesKey}','${p.uid}')"
+                id="rec-btn-${i}"
+                style="background:#27ae60;color:#fff;border:none;border-radius:6px;padding:5px 12px;cursor:pointer;font-size:0.83rem;white-space:nowrap">
+                💾 Guardar
+              </button>
+            </div>
+          </div>
+        </div>`;
+    }).join('')}`;
+
+  // Wiring: actualizar opciones de curso al cambiar grado
+  problemas.forEach((_, i) => {
+    const grdEl = document.getElementById('rec-grd-' + i);
+    const curEl = document.getElementById('rec-cur-' + i);
+    function actualizarCursosRec() {
+      const g = parseInt(grdEl.value);
+      if (!g) { curEl.innerHTML = '<option value="">— elige grado —</option>'; return; }
+      const base = g === 10 ? 1001 : g === 9 ? 901 : 801;
+      curEl.innerHTML = '<option value="">— curso —</option>' +
+        [1,2,3,4,5,6,7,8].map(n => `<option value="${base + n - 1}">${base + n - 1}</option>`).join('');
+    }
+    grdEl.addEventListener('change', actualizarCursosRec);
+    if (grdEl.value) actualizarCursosRec();
+  });
+
+  // Auto-rellenar al clicar un chip de candidato
+  window._recFill = (i, c) => {
+    const nomEl = document.getElementById('rec-nom-' + i);
+    const grdEl = document.getElementById('rec-grd-' + i);
+    const curEl = document.getElementById('rec-cur-' + i);
+    if (nomEl) nomEl.value = c.nombre;
+    if (grdEl) { grdEl.value = c.grado; grdEl.dispatchEvent(new Event('change')); }
+    // Esperar un tick para que se pueble el select de curso, luego seleccionar
+    setTimeout(() => { if (curEl) curEl.value = c.curso; }, 50);
+  };
+
+  window._recGuardar = async (i, sesKey, uid) => {
+    const nombre = document.getElementById('rec-nom-' + i)?.value.trim();
+    const grado  = parseInt(document.getElementById('rec-grd-' + i)?.value);
+    const curso  = document.getElementById('rec-cur-' + i)?.value;
+    if (!nombre) { alert('Escribe el nombre del estudiante.'); return; }
+    if (!grado)  { alert('Selecciona el grado.'); return; }
+    if (!curso)  { alert('Selecciona el curso.'); return; }
+    const btn = document.getElementById('rec-btn-' + i);
+    if (btn) { btn.disabled = true; btn.textContent = '⏳ Guardando…'; }
+    try {
+      await update(ref(db, `historial/${sesKey}/estudiantes/${uid}`), {
+        nombre, grado, curso, colegio: 'I.E.M Instituto Técnico Industrial', avatar: '🔧',
+      });
+      const card = document.getElementById('rec-card-' + i);
+      if (card) { card.style.opacity = '0.45'; card.style.border = '1px solid #27ae6088'; }
+      if (btn)  { btn.textContent = '✅ Guardado'; btn.style.background = '#1a6e38'; }
+    } catch (err) {
+      if (btn) { btn.disabled = false; btn.textContent = '💾 Guardar'; }
+      alert('Error al guardar: ' + err.message);
+    }
+  };
+}
 
 // ─── BLOQUEADOS ────────────────────────────────────────────────────────────
 async function renderizarBloqueados() {
